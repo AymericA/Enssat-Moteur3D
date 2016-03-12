@@ -4,14 +4,17 @@
 void multiplicationVecteur3d(t_point3d *v1, double m[4][4], t_point3d *v2) // v1 = m*v2
 {
   int i, j;
+  double tmp;
   //printf("bula4.8.1.0\n");
   for(i=0;i<4;i++){
     //printf("bula4.8.1.%d\n",i);
-    v1->xyzt[i]=0;
+    tmp=0;
     for(j=0;j<4;j++){
       //printf("bula4.8.1.%d.%d\n",i,j);
-      v1->xyzt[i]=v1->xyzt[i]+m[i][j]*v2->xyzt[j];
+
+      tmp=tmp+(m[i][j])*(v2->xyzt[j]);
     }
+    v1->xyzt[i]=tmp;       
   }
 }
 

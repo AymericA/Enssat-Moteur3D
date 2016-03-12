@@ -5,6 +5,7 @@
 #include "lib_2d.h"
 #include "lib_3d.h"
 #include "lib_objet3d.h"
+#include "debug.h"
 
 //#define T2D
 #define T3D
@@ -24,6 +25,7 @@ int main(int argc,char** argv)
 
 #ifdef T3D
   t_point3d *p10 = definirPoint3d(10,50,100), *p20 = definirPoint3d(100,240,100), *p30 = definirPoint3d(50,300,100);
+  t_point3d *pt=definirVecteur3d(30,30,30);
   printf("bula1\n");
   t_triangle3d *t10 = definirTriangle3d(p10, p20, p30);
   printf("bula2\n");
@@ -41,7 +43,7 @@ int main(int argc,char** argv)
   timestart = SDL_GetTicks();
 
 
-  while(i<10)
+  while(i<20)
     {
       effacerFenetre(surface, 0);
 
@@ -50,7 +52,7 @@ int main(int argc,char** argv)
        * etape 1 : ce n'est qu'un exemple... il faut desactiver le define T2D pour la suite
        */
       remplirTriangle2d(surface, t1, echelle_de_couleur(30*i));
-      SDL_Delay(500);
+      SDL_Delay(1);
 #endif
       //printf("bula3\n");
 #ifdef T3D
@@ -61,10 +63,13 @@ int main(int argc,char** argv)
        * - terminer avec les autres fonctions
        */
       //printf("bula4\n");
+      //affTri(t10);
       rotationTriangle3d(t10, p10, 0, 10, 0); // rotation d'axe Y
+      //translationTriangle3d(t10,pt);
       //printf("bula5\n");
+      //affTri(t10);
       remplirTriangle3d(surface, t10, echelle_de_couleur(30*i));
-      printf("bula6\n");
+      //printf("bula6\n");
       SDL_Delay(500);
 #endif
 #ifdef O3D
