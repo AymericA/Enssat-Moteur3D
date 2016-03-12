@@ -210,7 +210,7 @@ void libererObjet3d(t_objet3d *o)
 //effectue un tri des faces de l'objet dans l'ordre des z decroissants => cf algorithme du peintre
 void __trier_objet(t_objet3d *pt_objet)
 {
-  // TODO
+  
 
 }
 
