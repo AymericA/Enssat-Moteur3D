@@ -25,9 +25,12 @@ int main(int argc,char** argv)
 
 #ifdef T3D
   t_point3d *p10 = definirPoint3d(10,50,100), *p20 = definirPoint3d(100,240,100), *p30 = definirPoint3d(50,300,100);
-  t_point3d *pt=definirVecteur3d(30,30,30);
+
+  t_point3d *p11 = definirPoint3d(0,0,0), *p21 = definirPoint3d(30,30,0), *p31 = definirPoint3d(30,0,0);
+  t_point3d *pt=definirVecteur3d(10,10,10);
   printf("bula1\n");
   t_triangle3d *t10 = definirTriangle3d(p10, p20, p30);
+  t_triangle3d *t20 = definirTriangle3d(p11, p21, p31);
   printf("bula2\n");
 #endif
 
@@ -43,7 +46,7 @@ int main(int argc,char** argv)
   timestart = SDL_GetTicks();
 
 
-  while(i<20)
+  while(i<10)
     {
       effacerFenetre(surface, 0);
 
@@ -56,21 +59,18 @@ int main(int argc,char** argv)
 #endif
       //printf("bula3\n");
 #ifdef T3D
-      /*
-       * etape 2 : ecrire le corps des fonctions de lib_mat.c et lib_3d.c
-       * - commencer par definirTriangle3d et rotationTriangle3d
-       * - tester en activant le define T3D
-       * - terminer avec les autres fonctions
-       */
+
       //printf("bula4\n");
-      //affTri(t10);
+ 
       rotationTriangle3d(t10, p10, 0, 10, 0); // rotation d'axe Y
-      //translationTriangle3d(t10,pt);
+      translationTriangle3d(t20,pt);
       //printf("bula5\n");
-      //affTri(t10);
-      remplirTriangle3d(surface, t10, echelle_de_couleur(30*i));
+     
+      //remplirTriangle3d(surface, t10, echelle_de_couleur(30*i));
+      remplirTriangle3d(surface, t20, echelle_de_couleur(30*i));
+
       //printf("bula6\n");
-      SDL_Delay(500);
+      SDL_Delay(100);
 #endif
 #ifdef O3D
       /*
