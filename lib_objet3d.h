@@ -5,25 +5,26 @@
 #include "lib_3d.h"
 
 typedef enum {
-	false=0, true
+  false=0, true
 } t_bool;
 
 typedef struct __liste3d t_maillon;
 
 struct __liste3d
 {
-    t_triangle3d *face;
-    Uint32 couleur;
-    t_maillon *pt_suiv;
+  t_triangle3d *face;
+  Uint32 couleur;
+  t_maillon *pt_suiv;
+  double z_index;
 };
 
 typedef struct __objet3d t_objet3d;
 
 struct __objet3d
 {
-	t_bool est_trie;
-    t_bool est_camera;
-    t_maillon *tete;
+  t_bool est_trie;
+  t_bool est_camera;
+  t_maillon *tete;
 };
 
 // retourne un object alloue mais avec une liste vide de faces

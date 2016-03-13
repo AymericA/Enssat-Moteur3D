@@ -33,7 +33,7 @@ int main(int argc,char** argv)
 
 #ifdef O3D
   t_point3d *origine = definirPoint3d(0,0,0), *vecteur;
-  t_objet3d *cube=parallelepipede(100,50,200);
+  t_objet3d *cube=parallelepipede(100,100,100);
   //t_objet3d *o10 = sphere_amiga(80, 8, 16);
   //rotationObjet3d(o10, origine, 90, 0,0);
 #endif
@@ -44,7 +44,7 @@ int main(int argc,char** argv)
   timestart = SDL_GetTicks();
 
 
-  while(i<50)
+  while(i<25*10)
     {
       effacerFenetre(surface, 0);
 
@@ -73,9 +73,9 @@ int main(int argc,char** argv)
       //translationObjet3d(o10, vecteur);
       //dessinerObjet3d(surface, o10);
       dessinerObjet3d(surface, cube);
-      rotationObjet3d(cube,origine,0,5,0);
+      rotationObjet3d(cube,origine,-5,0,0);
       free(vecteur);
-      SDL_Delay(500);
+      SDL_Delay(40);
 #endif
 
       majEcran(surface);

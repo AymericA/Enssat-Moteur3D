@@ -6,29 +6,27 @@
 #include "lib_surface.h"
 
 
-// cree un nouveau maillon, cf cours algo
 t_maillon* __cree_maillon(t_triangle3d *face, Uint32 couleur)
 {
   t_maillon* pt_maillon = malloc(sizeof(t_maillon));
   pt_maillon->face=face;
   pt_maillon->couleur=couleur;
   pt_maillon->pt_suiv=NULL;
-
+  pt_maillon->z_index=moy_z(face);
   return pt_maillon;
 }
 
-// insere en tete le maillon, cf cours algo
+
 void __insere_tete(t_objet3d *pt_objet, t_maillon *pt_maillon)
 {
   pt_maillon->pt_suiv=pt_objet->tete;
   pt_objet->tete=pt_maillon;
-
 }
 
 t_objet3d *objet_vide()
 {
   t_objet3d *pt_objet = malloc(sizeof(t_objet3d));
-  pt_objet->est_trie=false;
+  pt_objet->est_trie=true;
   pt_objet->est_camera=false;
   pt_objet->tete=NULL;
   return pt_objet;
@@ -37,7 +35,7 @@ t_objet3d *objet_vide()
 t_objet3d *camera()
 {
   t_objet3d *pt_objet = malloc(sizeof(t_objet3d));
-  pt_objet->est_trie=false;
+  pt_objet->est_trie=true;
   pt_objet->est_camera=true;
   pt_objet->tete=NULL;
   return pt_objet;
@@ -65,7 +63,7 @@ t_objet3d* parallelepipede(double lx, double ly, double lz)
   t_point3d *p32 = definirPoint3d(x,-y,z);
   t_point3d *p33 = definirPoint3d(x,-y,-z);
 
-  t_triangle3d *t3 = definirTriangle3d(p31, p32, p23);
+  t_triangle3d *t3 = definirTriangle3d(p31, p32, p33);
 
   t_point3d *p41 = definirPoint3d(x,y,z);
   t_point3d *p42 = definirPoint3d(x,y,-z);
@@ -122,18 +120,18 @@ t_objet3d* parallelepipede(double lx, double ly, double lz)
   t_triangle3d *t12 = definirTriangle3d(p121, p122, p123);
 
 
-  __insere_tete(pt_objet, __cree_maillon(t1,GRISF));
-  __insere_tete(pt_objet, __cree_maillon(t2,BLANC));
-  __insere_tete(pt_objet, __cree_maillon(t3,GRISF));
-  __insere_tete(pt_objet, __cree_maillon(t4,BLANC));
-  __insere_tete(pt_objet, __cree_maillon(t5,GRISF));
-  __insere_tete(pt_objet, __cree_maillon(t6,BLANC));
+  __insere_tete(pt_objet, __cree_maillon(t1,ROUGEF));
+  __insere_tete(pt_objet, __cree_maillon(t2,ROUGEC));
+  __insere_tete(pt_objet, __cree_maillon(t3,VERTF));
+  __insere_tete(pt_objet, __cree_maillon(t4,VERTC));
+  __insere_tete(pt_objet, __cree_maillon(t5,BLEUF));
+  __insere_tete(pt_objet, __cree_maillon(t6,BLEUC));
 
-  __insere_tete(pt_objet, __cree_maillon(t7,GRISF));
-  __insere_tete(pt_objet, __cree_maillon(t8,BLANC));
-  __insere_tete(pt_objet, __cree_maillon(t9,GRISF));
-  __insere_tete(pt_objet, __cree_maillon(t10,BLANC));
-  __insere_tete(pt_objet, __cree_maillon(t11,GRISF));
+  __insere_tete(pt_objet, __cree_maillon(t7,JAUNEF));
+  __insere_tete(pt_objet, __cree_maillon(t8,JAUNEC));
+  __insere_tete(pt_objet, __cree_maillon(t9,ROSEF));
+  __insere_tete(pt_objet, __cree_maillon(t10,ROSEC));
+  __insere_tete(pt_objet, __cree_maillon(t11,GRISC));
   __insere_tete(pt_objet, __cree_maillon(t12,BLANC));
 
   return pt_objet;
@@ -207,15 +205,46 @@ void libererObjet3d(t_objet3d *o)
 
 }
 
+
+//insere un maillon dans une liste en fonction des z_index
+void __insertion_z_index(t_maillon *pt_maillon,t_maillon *liste)
+{
+  if(liste==NULL){
+    pt_maillon->pt_suiv=NULL;
+    liste=pt_maillon;
+  }
+  else{
+    if(pt_maillon->z_index<liste->z_index){
+      pt_maillon->pt_suiv=liste;
+      liste=pt_maillon;
+    }
+    else{
+      __insertion_z_index(pt_maillon,liste->pt_suiv);
+    }
+  }
+}
+
+
+//trie la chaine de maillon en fonction du z_index
+void __trier_maillon(t_maillon *pt_maillon)
+{
+  if(pt_maillon!=NULL)
+    __insertion_z_index(pt_maillon,pt_maillon->pt_suiv);
+}
+
+
 //effectue un tri des faces de l'objet dans l'ordre des z decroissants => cf algorithme du peintre
 void __trier_objet(t_objet3d *pt_objet)
 {
-  // TODO
-
+  if(!(pt_objet->est_trie)){
+    __trier_maillon(pt_objet->tete);
+  }
+  pt_objet->est_trie=true;
 }
 
 void dessinerObjet3d(t_surface *surface, t_objet3d* pt_objet)
 {
+  __trier_objet(pt_objet);
   t_maillon *tmp=pt_objet->tete;
   do{
     remplirTriangle3d(surface, tmp->face,tmp->couleur);
@@ -236,10 +265,11 @@ void rotationObjet3d(t_objet3d* pt_objet, t_point3d *centre, float degreX, float
   t_maillon *tmp=pt_objet->tete;
   do{
     rotationTriangle3d(tmp->face,centre,degreX,degreY,degreZ);
+    tmp->z_index=moy_z(tmp->face);
     tmp=tmp->pt_suiv;
   }
   while(tmp!=NULL);
-
+  pt_objet->est_trie=false;
 }
 
 void transformationObjet3d(t_objet3d* pt_objet, double mat[4][4])

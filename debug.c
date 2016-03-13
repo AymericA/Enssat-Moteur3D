@@ -23,3 +23,8 @@ void affMatrice(double m[4][4])
   printf("        (%f,%f,%f,%f))\n",m[3][0],m[3][1],m[3][2],m[3][3]);
   printf("\n");
 }
+
+double moy_z(t_triangle3d *t)
+{
+  return ((t->abc[0]->xyzt[2])+(t->abc[1]->xyzt[2])+(t->abc[0]->xyzt[2]))/3;
+}

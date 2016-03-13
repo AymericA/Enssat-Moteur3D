@@ -10,3 +10,5 @@ void affPoint(t_point3d *p);
 void affTri(t_triangle3d *t);
 
 void affMatrice(double m[4][4]);
+
+double moy_z(t_triangle3d *t);
