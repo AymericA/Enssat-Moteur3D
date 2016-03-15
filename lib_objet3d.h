@@ -25,12 +25,16 @@ struct __objet3d
   t_bool est_trie;
   t_bool est_camera;
   t_maillon *tete;
+  int nb_face;
 };
 
 // retourne un object alloue mais avec une liste vide de faces
 t_objet3d* objet_vide();
 // retourne un object de type camera alloue (liste vide de faces evidement)
 t_objet3d* camera(); // == objet vide
+
+//objet test
+t_objet3d* objtest(double a,double b,double c);
 
 // retourne un object alloue mais avec une liste de 12 faces centrees sur (0,0,0) de dimension lx,ly,lz
 t_objet3d* parallelepipede(double lx, double ly, double lz);

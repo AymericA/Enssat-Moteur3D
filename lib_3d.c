@@ -25,7 +25,7 @@ t_point3d *definirPoint3d(double x, double y, double z)	// attention malloc
   return p;
 }
 
-t_point3d *definirVecteur3d(double x, double y, double z)	// attention malloc
+t_point3d *definirVecteur3d(double x, double y, double z)
 {
   t_point3d *p = NULL;
 
@@ -37,7 +37,7 @@ t_point3d *definirVecteur3d(double x, double y, double z)	// attention malloc
   return p;
 }
 
-t_triangle3d *definirTriangle3d(t_point3d * a, t_point3d * b, t_point3d * c)	// attention malloc
+t_triangle3d *definirTriangle3d(t_point3d * a, t_point3d * b, t_point3d * c)
 {
   t_triangle3d *t = NULL;
   t = (t_triangle3d*) malloc(sizeof(t_triangle3d));
@@ -51,10 +51,10 @@ t_triangle3d *definirTriangle3d(t_point3d * a, t_point3d * b, t_point3d * c)	// 
 t_triangle3d *copierTriangle3d(t_triangle3d *t)
 {
   t_triangle3d *n = NULL;
-t_point3d *a=definirPoint3d(t->abc[0]->xyzt[0],t->abc[0]->xyzt[1],t->abc[0]->xyzt[2]);
-t_point3d *b=definirPoint3d(t->abc[1]->xyzt[0],t->abc[1]->xyzt[1],t->abc[1]->xyzt[2]);
-t_point3d *c=definirPoint3d(t->abc[2]->xyzt[0],t->abc[2]->xyzt[1],t->abc[2]->xyzt[2]);
-n= definirTriangle3d(a,b,c);
+  t_point3d *a=definirPoint3d(t->abc[0]->xyzt[0],t->abc[0]->xyzt[1],t->abc[0]->xyzt[2]);
+  t_point3d *b=definirPoint3d(t->abc[1]->xyzt[0],t->abc[1]->xyzt[1],t->abc[1]->xyzt[2]);
+  t_point3d *c=definirPoint3d(t->abc[2]->xyzt[0],t->abc[2]->xyzt[1],t->abc[2]->xyzt[2]);
+  n= definirTriangle3d(a,b,c);
   return n;
 
 }
@@ -117,46 +117,49 @@ void translationTriangle3d(t_triangle3d *t, t_point3d *vecteur)
 		  {0, 0, 1,vecteur->xyzt[2]},\
 		  {0, 0, 0, 1}};
   transformationTriangle3d(t,m);
-  
 }
 
 void rotationTriangle3d(t_triangle3d *t, t_point3d *centre, float degreX, float degreY, float degreZ)
 {
-  //printf("bula4.1\n");
   float x,y,z;
-  x=degreX*2*pi/360;
-  y=degreY*2*pi/360;
-  z=degreZ*2*pi/360;
-  //printf("bula4.2\n");
-  double mx[4][4]={{1, 0, 0, 0},		\
+  x=degreX*pi/180;
+  y=degreY*pi/180;
+  z=degreZ*pi/180;
+  double transfo[4][4];
+
+  double m[4][4]={{1, 0, 0,centre->xyzt[0]},\
+		  {0, 1, 0,centre->xyzt[1]},\
+		  {0, 0, 1,centre->xyzt[2]},\
+		  {0, 0, 0, 1}};
+  double mx[4][4]={{1, 0, 0, 0},\
 		   {0, cos(x),-sin(x), 0},\
 		   {0, sin(x), cos(x), 0},\
 		   {0, 0, 0, 1}};
-  //printf("bula4.3\n");
   double my[4][4]={{cos(y), 0, sin(y), 0},\
 		   {0, 1, 0, 0},\
 		   {-sin(y), 0, cos(y), 0},\
 		   {0, 0, 0, 1}};
-  //printf("bula4.4\n");
   double mz[4][4]={{cos(z),-sin(z), 0, 0},\
 		   {sin(z), cos(z), 0, 0},\
 		   {0, 0, 1, 0},\
 		   {0, 0, 0, 1}};
-  //printf("bula4.5\n");
-  transformationTriangle3d(t,mx);
-  //printf("bula4.6\n");
-  transformationTriangle3d(t,my);
-  //printf("bula4.7\n");
-  transformationTriangle3d(t,mz);
-  //printf("bula4.8\n");
+  double minv[4][4]={{1, 0, 0,-centre->xyzt[0]},\
+		     {0, 1, 0,-centre->xyzt[1]},\
+		     {0, 0, 1,-centre->xyzt[2]},\
+		     {0, 0, 0, 1}};
+  
+  multiplicationMatrice3d(transfo,m,mx);
+  multiplicationMatrice3d(transfo,transfo,my);
+  multiplicationMatrice3d(transfo,transfo,mz);
+  multiplicationMatrice3d(transfo,transfo,minv);
+
+  transformationTriangle3d(t,transfo);
 }
 
 void transformationTriangle3d(t_triangle3d *t, double mat[4][4])
 {
   int i;
-  //printf("bula4.8.1\n");
   for(i=0;i<3;i++){
-    //printf("bula4.8.1.%d\n",i);
     multiplicationVecteur3d(t->abc[i],mat,t->abc[i]);
   }
 }
