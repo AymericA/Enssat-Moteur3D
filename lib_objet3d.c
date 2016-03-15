@@ -189,12 +189,12 @@ t_objet3d* sphere(double r, double nlat, double nlong)
 {
   t_objet3d *pt_objet = NULL;
 
-  t_point3D tab[nlat][nlong];
+  t_point3d tab[(int)nlat][(int)nlong];
   int i,j;
   
   for(i=0;i<nlat;i++){
     for(j=0;j<nlong;j++){
-      tab[i][j]=definirPoint3d(-r*cos(i*pi/nlat),r*sin(i*pi/nlong)*sin(j*2*pi/nlong),r*sin(i*pi/nlat)*cos(j*2*pi/nlong));
+      //tab[i][j]=definirPoint3d(-r*cos(i*M_PI/nlat),r*sin(i*M_PI/nlong)*sin(j*2*M_PI/nlong),r*sin(i*M_PI/nlat)*cos(j*2*M_PI/nlong));
     }
   }
 
