@@ -4,7 +4,7 @@
 
 void affPoint(t_point3d *p)
 {
-  printf("point(%f,%f,%f,%f)\n",p->xyzt[0],p->xyzt[1],p->xyzt[2],p->xyzt[3]);
+  printf("(%d,%d,%d)",(int)p->xyzt[0],(int)p->xyzt[1],(int)p->xyzt[2]);
 }
 
 

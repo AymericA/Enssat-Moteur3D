@@ -18,6 +18,14 @@ struct __liste3d
   double z_index;
 };
 
+typedef struct __listep3d t_chaine;
+
+struct __listep3d
+{
+  t_point3d *point;
+  t_chaine *pt_suiv;
+};
+
 typedef struct __objet3d t_objet3d;
 
 struct __objet3d
@@ -25,7 +33,7 @@ struct __objet3d
   t_bool est_trie;
   t_bool est_camera;
   t_maillon *tete;
-  int nb_face;
+  t_chaine *chaine;
 };
 
 // retourne un object alloue mais avec une liste vide de faces

@@ -33,9 +33,8 @@ int main(int argc,char** argv)
 
 #ifdef O3D
   t_point3d *origine = definirPoint3d(0,0,0), *vecteur;
-  t_objet3d *test=objtest(100,200,300);
   t_objet3d *cube=parallelepipede(200,200,200);
-  //printf("nb face : %d\n",cube->nb_face);
+  //rotationObjet3d(cube,origine,5,0,0);
   //t_objet3d *o10 = sphere_amiga(80, 8, 16);
   //rotationObjet3d(o10, origine, 90, 0,0);
 #endif
@@ -46,7 +45,7 @@ int main(int argc,char** argv)
   timestart = SDL_GetTicks();
 
 
-  while(i<25*6)
+  while(i<25)
     {
       effacerFenetre(surface, 0);
 
@@ -56,30 +55,23 @@ int main(int argc,char** argv)
 #endif
       
 #ifdef T3D
-      //affTri(t10);
-      rotationTriangle3d(t10, pt, 0, 10, 0);
-      //affTri(t10);
-      //translationTriangle3d(t20,pt);     
+      rotationTriangle3d(t10, pt, 0, 10, 0);      
       remplirTriangle3d(surface, t10, echelle_de_couleur(30*i));
-      //remplirTriangle3d(surface, t20, echelle_de_couleur(30*i));
       SDL_Delay(40);
 #endif
 
 #ifdef O3D
-      /*
-       * etape 3 : ecrire le corps des fonctions de lib_objet3d.c
-       * - commencer par la definition d'un objet simple (parallelepipede) et l'affichage,
-       * - continuer par les transformations
-       * - finir par le tri des faces d'un objet et la composition des objets
-       */
-      vecteur = definirPoint3d(sin(i*M_PI/180),cos(i*M_PI/180),0);
+      //vecteur = definirPoint3d(5*sin(i*M_PI/180),5*cos(i*M_PI/180),0);
+      vecteur = definirPoint3d(50,50,0);
       //translationObjet3d(o10, vecteur);
-      //dessinerObjet3d(surface, o10);
+      //affi_chaine(cube->chaine);
+      printf("\n\n");
       dessinerObjet3d(surface,cube);
-      //dessinerObjet3d(surface,test);
-      rotationObjet3d(cube,origine,0,5,0);
+      check(cube);
+      rotationObjet3d(cube,origine,0,30,0);
+      //translationObjet3d(cube,vecteur);
       free(vecteur);
-      SDL_Delay(40);
+      SDL_Delay(120);
 #endif
 
       majEcran(surface);
