@@ -45,6 +45,10 @@ t_objet3d* camera(); // == objet vide
 t_objet3d* parallelepipede(double lx, double ly, double lz);
 // retourne un object alloue mais avec une liste de faces centrees sur (0,0,0) de rayon r avec nlat latitudes et nlong longitudes
 t_objet3d* sphere(double r, double nlat, double nlong);
+
+t_objet3d* geode(double r);
+
+
 // retourne un object alloue mais avec une liste de faces centrees sur (0,0,0) de rayon r avec nlat latitudes et nlong longitudes, prend des couleurs rouges et blanches sur des carres adjacents, cf google
 t_objet3d* sphere_amiga(double r, double nlat, double nlong);
 // retourne un object alloue mais avec une liste de faces centrees sur (0,0,0) : c'est un rectangle marron (plusieurs marrons possibles) et une pyramide au verte (plusieurs verts possibles) au sommet
