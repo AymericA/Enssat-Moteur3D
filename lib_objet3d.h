@@ -41,9 +41,6 @@ t_objet3d* objet_vide();
 // retourne un object de type camera alloue (liste vide de faces evidement)
 t_objet3d* camera(); // == objet vide
 
-//objet test
-t_objet3d* objtest(double a,double b,double c);
-
 // retourne un object alloue mais avec une liste de 12 faces centrees sur (0,0,0) de dimension lx,ly,lz
 t_objet3d* parallelepipede(double lx, double ly, double lz);
 // retourne un object alloue mais avec une liste de faces centrees sur (0,0,0) de rayon r avec nlat latitudes et nlong longitudes

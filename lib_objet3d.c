@@ -262,17 +262,44 @@ t_objet3d *copierObjet3d(t_objet3d *o) // attention, effectue une copie mirroir
 
 void composerObjet3d(t_objet3d* o, t_objet3d* o2) /* o = o+o2, o2 ne signifiera plus rien */
 {
+  t_maillon *tmp=o->tete;
+  while(tmp->pt_suiv!=NULL){
+    tmp=tmp->pt_suiv;
+  }
+  tmp->pt_suiv=o2->tete;
 
-  // TODO
+  t_chaine *tmp2=o->chaine;
+  while(tmp2->pt_suiv!=NULL){
+    tmp2=tmp2->pt_suiv;
+  }
+  tmp2->pt_suiv=o2->chaine;
+  free(o2);
+}
 
+void libererMaillon(t_maillon *pt_maillon)
+{
+  if(pt_maillon!=NULL){ 
+    libererMaillon(pt_maillon->pt_suiv);
+    free(pt_maillon->face);
+    free(pt_maillon);
+  }
+}
+
+void libererChaine(t_chaine *pt_chaine)
+{
+  if(pt_chaine!=NULL){
+    libererChaine(pt_chaine->pt_suiv);
+    free(pt_chaine->point);
+    free(pt_chaine);
+  }
 }
 
 void libererObjet3d(t_objet3d *o)
 {
-  // TODO
-
+  libererMaillon(o->tete);
+  libererChaine(o->chaine);
+  free(o);
 }
-
 
 void affi_maillon(t_maillon *pt_maillon)
 {
@@ -280,8 +307,8 @@ void affi_maillon(t_maillon *pt_maillon)
     printf("NULL\n");
   else
     {
-    printf("(%f)->",pt_maillon->z_index);
-    affi_maillon(pt_maillon->pt_suiv);
+      printf("(%f)->",pt_maillon->z_index);
+      affi_maillon(pt_maillon->pt_suiv);
     }
 }
 
@@ -337,11 +364,7 @@ void translationObjet3d(t_objet3d* pt_objet, t_point3d *vecteur)
 		  {0, 1, 0,vecteur->xyzt[1]},\
 		  {0, 0, 1,vecteur->xyzt[2]},\
 		  {0, 0, 0, 1}};
-  do{
-    multiplicationVecteur3d(tmp->point,m,tmp->point);
-    tmp=tmp->pt_suiv;
-  }
-  while(tmp!=NULL);
+  transformationObjet3d(pt_objet,m); 
 }
 
 void rotationObjet3d(t_objet3d* pt_objet, t_point3d *centre, float degreX, float degreY, float degreZ)
@@ -380,13 +403,7 @@ void rotationObjet3d(t_objet3d* pt_objet, t_point3d *centre, float degreX, float
   //printf("avant transfo :\n");
   //affi_chaine(tmp);
   //printf("-------------------\n");
-  do{
-    multiplicationVecteur3d(tmp->point,mat,tmp->point);
-    //printf("application au kieme point\n");
-    //affi_chaine(tmp);
-    tmp=tmp->pt_suiv;
-  }
-  while(tmp!=NULL);
+  transformationObjet3d(pt_objet,mat); 
   pt_objet->est_trie=false;
 }
 

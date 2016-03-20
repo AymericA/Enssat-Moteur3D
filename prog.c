@@ -44,10 +44,22 @@ int main(int argc,char** argv)
 
 #ifdef O3D
   t_point3d *origine = definirPoint3d(0,0,0), *vecteur;
-  t_objet3d *cube=parallelepipede(200,200,200);
-  rotationObjet3d(cube,origine,0,0,-10);
-  t_objet3d *sph=sphere(100,10,20);
-  rotationObjet3d(sph,origine,0,0,-45);
+  //t_objet3d *cube=parallelepipede(200,200,200);
+  //rotationObjet3d(cube,origine,0,0,-10);
+  t_objet3d *sph1=sphere(50,10,20);
+  vecteur = definirPoint3d(0,-150,0);
+  translationObjet3d(sph1,vecteur);
+
+  t_objet3d *sph3=sphere(50,10,20);
+  vecteur = definirPoint3d(0,150,0);
+  translationObjet3d(sph3,vecteur);
+
+  t_objet3d *sph2=sphere(100,10,20);
+  composerObjet3d(sph2,sph1);
+  composerObjet3d(sph2,sph3);
+
+  //rotationObjet3d(sph2,origine,-90,0,0);
+  //rotationObjet3d(sph2,origine,0,-90,0);
   //t_objet3d *o10 = sphere_amiga(80, 8, 16);
   //rotationObjet3d(o10, origine, 90, 0,0);
 #endif
@@ -77,18 +89,19 @@ int main(int argc,char** argv)
 
 #ifdef O3D
       //vecteur = definirPoint3d(5*sin(i*M_PI/180),5*cos(i*M_PI/180),0);
-      vecteur = definirPoint3d(50,50,0);
+      //vecteur = definirPoint3d(50,50,0);
       //translationObjet3d(o10, vecteur);
-      //affi_chaine(cube->chaine);
-      //printf("\n\n");
-      dessinerObjet3d(surface,sph);
+      //affi_chaine(cube->chaine);  
+      //dessinerObjet3d(surface,sph1);
+      dessinerObjet3d(surface,sph2);
       //check(cube);
       //printf("%deme passe:\n",i);
-      rotationObjet3d(sph,origine,10,10,0);
+      //rotationObjet3d(sph1,origine,0,-5,0);
+      rotationObjet3d(sph2,origine,5,5,2);
       //translationObjet3d(cube,vecteur);
-      free(vecteur);
+      //free(vecteur);
       //printf("\n\n");
-      SDL_Delay(60);
+      SDL_Delay(30);
 #endif
 
       majEcran(surface);
