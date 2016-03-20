@@ -64,14 +64,13 @@ int main(int argc,char** argv)
   rotationObjet3d(plan,origine,-90,0,0);
   */
 
-  t_objet3d *geo=geode(200);
+  //t_objet3d *geo=geode(200);
 
-
+  t_objet3d *ami = sphere_amiga(80, 8, 16);
+  rotationObjet3d(ami, origine,-90, 0,0);
 
   //rotationObjet3d(sph2,origine,-90,0,0);
   //rotationObjet3d(sph2,origine,0,-90,0);
-  //t_objet3d *o10 = sphere_amiga(80, 8, 16);
-  //rotationObjet3d(o10, origine, 90, 0,0);
 #endif
 
   int i=0;
@@ -105,9 +104,13 @@ int main(int argc,char** argv)
       //dessinerObjet3d(surface,sph1);
       //dessinerObjet3d(surface,plan);
       //dessinerObjet3d(surface,sph2);
+
+      dessinerObjet3d(surface,ami);
+      rotationObjet3d(ami,origine,0,5,0);
+
    
-      dessinerObjet3d(surface,geo);
-      rotationObjet3d(geo,origine,0,5,0);
+      //dessinerObjet3d(surface,geo);
+      //rotationObjet3d(geo,origine,0,5,0);
 
       //printf("%deme passe:\n",i);
 
