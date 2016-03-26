@@ -47,7 +47,7 @@ int main(int argc,char** argv)
   //t_objet3d *cube=parallelepipede(200,200,200);
   //rotationObjet3d(cube,origine,0,0,-10);
 
-  /*
+  
   t_objet3d *sph1=sphere(50,10,20);
   vecteur = definirPoint3d(0,-150,0);
   translationObjet3d(sph1,vecteur);
@@ -62,12 +62,12 @@ int main(int argc,char** argv)
 
   t_objet3d *plan=damier(200,200,10,10);
   rotationObjet3d(plan,origine,-90,0,0);
-  */
+  
 
   //t_objet3d *geo=geode(200);
 
-  t_objet3d *ami = sphere_amiga(80, 8, 16);
-  rotationObjet3d(ami, origine,-90, 0,0);
+  t_objet3d *ami = sphere_amiga(80, 7, 16);
+  //rotationObjet3d(ami, origine,-90, 0,0);
 
   //rotationObjet3d(sph2,origine,-90,0,0);
   //rotationObjet3d(sph2,origine,0,-90,0);
@@ -116,7 +116,7 @@ int main(int argc,char** argv)
 
       
       //rotationObjet3d(sph1,origine,0,-5,0);
-      //rotationObjet3d(sph2,origine,5,5,2);
+      //rotationObjet3d(sph2,origine,0,5,0);
       //translationObjet3d(plan,vecteur);
 
 

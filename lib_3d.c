@@ -48,6 +48,12 @@ t_triangle3d *definirTriangle3d(t_point3d * a, t_point3d * b, t_point3d * c)
   return t;
 }
 
+
+t_point3d *copierPoint3d(t_point3d *p)
+{
+  return definirPoint3d(p->xyzt[0],p->xyzt[1],p->xyzt[2]);
+}
+
 t_triangle3d *copierTriangle3d(t_triangle3d *t)
 {
   t_triangle3d *n = NULL;

@@ -339,30 +339,42 @@ t_objet3d *pt_objet = NULL;
   }
   
   for(j=0;j<nlong-1;j++){
-
-
     if((j+1)%2){
     tmp = definirTriangle3d(p0,tp[0][j],tp[0][j+1]);
     __insere_tete(pt_objet, __cree_maillon(tmp,ROUGEC));
-
-    tmp = definirTriangle3d(tp[(int)nlat-1][j],tp[(int)nlat-1][j+1],p1);
-    __insere_tete(pt_objet, __cree_maillon(tmp,BLANC));
     }
     else{
       tmp = definirTriangle3d(p0,tp[0][j],tp[0][j+1]);
       __insere_tete(pt_objet, __cree_maillon(tmp,BLANC));
+    }
 
+    if((j+(int)nlat)%2){
+      tmp = definirTriangle3d(tp[(int)nlat-1][j],tp[(int)nlat-1][j+1],p1);
+      __insere_tete(pt_objet, __cree_maillon(tmp,BLANC));
+    }
+    else{
       tmp = definirTriangle3d(tp[(int)nlat-1][j],tp[(int)nlat-1][j+1],p1);
       __insere_tete(pt_objet, __cree_maillon(tmp,ROUGEC));
-
     }
+
+  }
+  if(((int)nlong)%2){
+    tmp = definirTriangle3d(p0,tp[0][(int)nlong-1],tp[0][0]);
+    __insere_tete(pt_objet, __cree_maillon(tmp,ROUGEC));
+  }
+  else{
+    tmp = definirTriangle3d(p0,tp[0][(int)nlong-1],tp[0][0]);
+    __insere_tete(pt_objet, __cree_maillon(tmp,BLANC));
   }
 
-  tmp = definirTriangle3d(p0,tp[0][(int)nlong-1],tp[0][0]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,GRISC));
-
-  tmp = definirTriangle3d(tp[(int)nlat-1][(int)nlong-1],tp[(int)nlat-1][0],p1);
-  __insere_tete(pt_objet, __cree_maillon(tmp,GRISF));
+  if(((int)nlong+(int)nlat)%2){
+    tmp = definirTriangle3d(tp[(int)nlat-1][(int)nlong-1],tp[(int)nlat-1][0],p1);
+    __insere_tete(pt_objet, __cree_maillon(tmp,ROUGEC));
+  }
+  else{
+    tmp = definirTriangle3d(tp[(int)nlat-1][(int)nlong-1],tp[(int)nlat-1][0],p1);
+    __insere_tete(pt_objet, __cree_maillon(tmp,BLANC));
+  }
   
   pt_objet->est_trie=false;
   return pt_objet;
@@ -415,14 +427,95 @@ t_objet3d* damier(double lx, double lz, double nx, double nz)
   return pt_objet;
 }
 
+/*
+t_chaine *copierChaine(t_chaine *pt_chaine)
+{
+  t_chaine *res=NULL;
+  if(pt_chaine!=NULL)
+    {
+      res=__cree_chaine(copierPoint3d(pt_chaine->point));
+      res->pt_suiv=copierChaine(pt_chaine->pt_suiv);
+    }
+  return res;
+}
+
+t_bool different(t_chaine *pt_chaine1,t_chaine *pt_chaine2)
+{
+  if(pt_chaine1->point->xyzt[0]==pt_chaine2->point->xyzt[0]&&
+     pt_chaine1->point->xyzt[1]==pt_chaine2->point->xyzt[1]&&
+     pt_chaine1->point->xyzt[2]==pt_chaine2->point->xyzt[2])
+    return false;
+  else
+    return true;
+}
+
+
+void inserer_q(t_chaine *pt_chaine,t_chaine *liste)
+{
+  if(different(pt_chaine,liste)){
+    if(liste->pt_suiv==NULL){
+      liste->pt_suiv=pt_chaine;
+	}
+    else{
+      inserer_q(pt_chaine,liste->pt_suiv);	
+    }
+  }
+  else{
+    //liberer chaine(pt_chaine);
+    //libere les points aussi
+  }
+}
+
+t_maillon *copierMaillon41(t_maillon *pt_maillon,t_chaine *l)
+{
+t_maillon *res=NULL;
+  if(pt_maillon!=NULL)
+    {
+      
+    }
+  //insere seulement le premer maillon avec une insersion en tete des chaine sans comparaison !
+
+
+}
+
+
+t_maillon *copierMaillon(t_maillon *pt_maillon,t_chaine *l)
+{
+  t_maillon *res=NULL;
+  if(pt_maillon!=NULL)
+    {
+      res=__cree_maillon(copierTriangle3d(pt_maillon->face),res->couleur);
+      inserer_q(__creer__chaine(res->face->abc[0]->xyzt[0]),l);
+      inserer_q(__creer__chaine(res->face->abc[0]->xyzt[1]),l);
+      inserer_q(__creer__chaine(res->face->abc[0]->xyzt[2]),l);
+            
+      inserer_q(__creer__chaine(res->face->abc[1]->xyzt[0]),l);
+      inserer_q(__creer__chaine(res->face->abc[1]->xyzt[1]),l);
+      inserer_q(__creer__chaine(res->face->abc[1]->xyzt[2]),l);
+      
+      inserer_q(__creer__chaine(res->face->abc[2]->xyzt[0]),l);
+      inserer_q(__creer__chaine(res->face->abc[2]->xyzt[1]),l);
+      inserer_q(__creer__chaine(res->face->abc[2]->xyzt[2]),l);
+ 
+      res->pt_suiv=copierMaillon(pt_chaine->pt_suiv);
+    }
+  return res;
+}
+
+
 t_objet3d *copierObjet3d(t_objet3d *o) // attention, effectue une copie mirroir
 {
   t_objet3d *n = objet_vide();
-
-  // TODO
+  n->est_trie=o->est_trie;
+  n->est_camera=o->est_camera;
+  n->chaine=copierChaine(o->chaine);
+  n->tete=copierMaillon(o->tete);
+ 
 
   return n;
 }
+
+*/
 
 void composerObjet3d(t_objet3d* o, t_objet3d* o2) /* o = o+o2, o2 ne signifiera plus rien */
 {
