@@ -6,6 +6,7 @@
 typedef struct
 {
   double xyzt[4]; // vu en TD, coordonnées homogènes
+  //t_chaine *copie;
 } t_point3d;
 
 typedef struct

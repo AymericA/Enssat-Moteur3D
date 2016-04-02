@@ -12,7 +12,6 @@ typedef struct
 t_point3d *definirPoint3d(double x, double y, double z)	// attention malloc
 {
   t_point3d *p;
-
   p  = (t_point3d*) malloc(sizeof(t_point3d));
   if (p!=NULL)
     {
@@ -20,20 +19,20 @@ t_point3d *definirPoint3d(double x, double y, double z)	// attention malloc
       p->xyzt[1] = y;
       p->xyzt[2] = z;
       p->xyzt[3] = 1;
+      //p->copie=NULL;
     }
-
   return p;
 }
 
 t_point3d *definirVecteur3d(double x, double y, double z)
 {
   t_point3d *p = NULL;
-
   p=  (t_point3d*) malloc(sizeof(t_point3d));
   p->xyzt[0] = x;
   p->xyzt[1] = y;
   p->xyzt[2] = z;
   p->xyzt[3] = 0;
+  //p->copie=NULL;
   return p;
 }
 

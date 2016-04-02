@@ -47,7 +47,7 @@ int main(int argc,char** argv)
   //t_objet3d *cube=parallelepipede(200,200,200);
   //rotationObjet3d(cube,origine,0,0,-10);
 
-  
+  /*
   t_objet3d *sph1=sphere(50,10,20);
   vecteur = definirPoint3d(0,-150,0);
   translationObjet3d(sph1,vecteur);
@@ -56,15 +56,26 @@ int main(int argc,char** argv)
   vecteur = definirPoint3d(0,150,0);
   translationObjet3d(sph3,vecteur);
 
-  t_objet3d *sph2=sphere(100,10,20);
+  t_objet3d *sph12=sphere(50,10,20);
+  vecteur = definirPoint3d(150,0,0);
+  translationObjet3d(sph12,vecteur);
+
+  t_objet3d *sph32=sphere(50,10,20);
+  vecteur = definirPoint3d(-150,0,0);
+  translationObjet3d(sph32,vecteur);
+
+
+  t_objet3d *sph2=sphere_amiga(100,10,20);
   composerObjet3d(sph2,sph1);
   composerObjet3d(sph2,sph3);
+  composerObjet3d(sph2,sph12);
+  composerObjet3d(sph2,sph32);
 
   t_objet3d *plan=damier(200,200,10,10);
   rotationObjet3d(plan,origine,-90,0,0);
-  
+  */
 
-  //t_objet3d *geo=geode(200);
+  t_objet3d *n=n64(200);
 
   t_objet3d *ami = sphere_amiga(80, 7, 16);
   //rotationObjet3d(ami, origine,-90, 0,0);
@@ -79,7 +90,7 @@ int main(int argc,char** argv)
   timestart = SDL_GetTicks();
 
 
-  while(i<25*5)
+  while(i<25*10)
     {
       effacerFenetre(surface, 0);
 
@@ -104,11 +115,14 @@ int main(int argc,char** argv)
       //dessinerObjet3d(surface,sph1);
       //dessinerObjet3d(surface,plan);
       //dessinerObjet3d(surface,sph2);
+      //rotationObjet3d(sph2,origine,0,5,0);
+      //translationObjet3d(sph2,vecteur);
+      //dessinerObjet3d(surface,ami);
+      //rotationObjet3d(ami,origine,0,5,0);
 
-      dessinerObjet3d(surface,ami);
-      rotationObjet3d(ami,origine,0,5,0);
+      dessinerObjet3d(surface,n);
+     rotationObjet3d(n,origine,0,-5,0);
 
-   
       //dessinerObjet3d(surface,geo);
       //rotationObjet3d(geo,origine,0,5,0);
 
@@ -122,7 +136,7 @@ int main(int argc,char** argv)
 
       //free(vecteur);
       //printf("\n\n");
-      SDL_Delay(50);
+      SDL_Delay(40);
 #endif
 
       majEcran(surface);

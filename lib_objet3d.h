@@ -48,6 +48,7 @@ t_objet3d* sphere(double r, double nlat, double nlong);
 
 t_objet3d* geode(double r);
 
+t_objet3d* n64(double r);
 
 // retourne un object alloue mais avec une liste de faces centrees sur (0,0,0) de rayon r avec nlat latitudes et nlong longitudes, prend des couleurs rouges et blanches sur des carres adjacents, cf google
 t_objet3d* sphere_amiga(double r, double nlat, double nlong);
