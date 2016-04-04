@@ -76,6 +76,8 @@ int main(int argc,char** argv)
   */
 
   t_objet3d *n=n64(200);
+  t_objet3d *to=tore(200,50,25,50);
+  t_objet3d *cyli=cone(200,100,10,10);
 
   t_objet3d *ami = sphere_amiga(80, 7, 16);
   //rotationObjet3d(ami, origine,-90, 0,0);
@@ -120,8 +122,11 @@ int main(int argc,char** argv)
       //dessinerObjet3d(surface,ami);
       //rotationObjet3d(ami,origine,0,5,0);
 
-      dessinerObjet3d(surface,n);
-     rotationObjet3d(n,origine,0,-5,0);
+      dessinerObjet3d(surface,cyli);
+      rotationObjet3d(cyli,origine,1,5,-10);
+
+      //dessinerObjet3d(surface,n);
+      //rotationObjet3d(n,origine,0,5,0);
 
       //dessinerObjet3d(surface,geo);
       //rotationObjet3d(geo,origine,0,5,0);

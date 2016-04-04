@@ -47,6 +47,9 @@ t_objet3d* parallelepipede(double lx, double ly, double lz);
 t_objet3d* sphere(double r, double nlat, double nlong);
 
 t_objet3d* geode(double r);
+t_objet3d* cone(double lh,double r, double nlat, double nlong);
+t_objet3d* cylindre(double lh,double r, double nlong);
+t_objet3d* tore(double r1,double r2,double nlat,double nlong);
 
 t_objet3d* n64(double r);
 
