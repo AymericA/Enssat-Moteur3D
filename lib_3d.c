@@ -3,7 +3,7 @@
 #include "lib_2d.h"
 #include "lib_mat.h"
 #include <math.h>
-#define pi (3.141592653589793)
+
 typedef struct
 {
   double m[4][4];
@@ -13,26 +13,25 @@ t_point3d *definirPoint3d(double x, double y, double z)	// attention malloc
 {
   t_point3d *p;
   p  = (t_point3d*) malloc(sizeof(t_point3d));
-  if (p!=NULL)
-    {
-      p->xyzt[0] = x;
-      p->xyzt[1] = y;
-      p->xyzt[2] = z;
-      p->xyzt[3] = 1;
-      //p->copie=NULL;
-    }
+  if (p!=NULL){
+    p->xyzt[0] = x;
+    p->xyzt[1] = y;
+    p->xyzt[2] = z;
+    p->xyzt[3] = 1;
+    p->copie=NULL;
+  }
   return p;
 }
 
 t_point3d *definirVecteur3d(double x, double y, double z)
 {
   t_point3d *p = NULL;
-  p=  (t_point3d*) malloc(sizeof(t_point3d));
+  p=(t_point3d*) malloc(sizeof(t_point3d));
   p->xyzt[0] = x;
   p->xyzt[1] = y;
   p->xyzt[2] = z;
   p->xyzt[3] = 0;
-  //p->copie=NULL;
+  p->copie=NULL;
   return p;
 }
 
@@ -43,10 +42,8 @@ t_triangle3d *definirTriangle3d(t_point3d * a, t_point3d * b, t_point3d * c)
   t->abc[0]=a;
   t->abc[1]=b;
   t->abc[2]=c;
-  
   return t;
 }
-
 
 t_point3d *copierPoint3d(t_point3d *p)
 {
@@ -61,7 +58,6 @@ t_triangle3d *copierTriangle3d(t_triangle3d *t)
   t_point3d *c=definirPoint3d(t->abc[2]->xyzt[0],t->abc[2]->xyzt[1],t->abc[2]->xyzt[2]);
   n= definirTriangle3d(a,b,c);
   return n;
-
 }
 
 void libererTriangle3d(t_triangle3d *t)
@@ -82,16 +78,12 @@ t_point2d *__conversion_2d_3d(t_point3d *p3d)
 				   {0, 0, 1, 0},\
 				   {0, 0, 0, 1}};
 
-
   p2d = NULL;
   p3dtmp = (t_point3d*)malloc(sizeof(t_point3d));
-  if (p3dtmp!=NULL)
-    {
-      multiplicationVecteur3d(p3dtmp, matrice_projection, p3d);
-
-      p2d = definirPoint2d(p3dtmp->xyzt[0]+RX/2, p3dtmp->xyzt[1]+RY/2); // malloc implicite il faut faire un free plus tard... (dans une vingtaine de lignes)
-    }
-
+  if (p3dtmp!=NULL){
+    multiplicationVecteur3d(p3dtmp, matrice_projection, p3d);
+    p2d = definirPoint2d(p3dtmp->xyzt[0]+RX/2, p3dtmp->xyzt[1]+RY/2); // malloc implicite il faut faire un free plus tard... (dans une vingtaine de lignes)
+  }
   free(p3dtmp);
   return p2d;
 }
@@ -103,16 +95,12 @@ void remplirTriangle3d(t_surface * surface, t_triangle3d * triangle, Uint32 c)
   p2da = __conversion_2d_3d(triangle->abc[0]);
   p2db = __conversion_2d_3d(triangle->abc[1]);
   p2dc = __conversion_2d_3d(triangle->abc[2]);
-
   t2d = definirTriangle2d(p2da, p2db, p2dc);
-
   remplirTriangle2d(surface, t2d, c);
-
   free(t2d);
   free(p2da); // le free est fait ici :)
   free(p2db);
   free(p2dc);
-
 }
 
 void translationTriangle3d(t_triangle3d *t, t_point3d *vecteur)
@@ -127,11 +115,10 @@ void translationTriangle3d(t_triangle3d *t, t_point3d *vecteur)
 void rotationTriangle3d(t_triangle3d *t, t_point3d *centre, float degreX, float degreY, float degreZ)
 {
   float x,y,z;
-  x=degreX*pi/180;
-  y=degreY*pi/180;
-  z=degreZ*pi/180;
+  x=degreX*M_PI/180;
+  y=degreY*M_PI/180;
+  z=degreZ*M_PI/180;
   double transfo[4][4];
-
   double m[4][4]={{1, 0, 0,centre->xyzt[0]},\
 		  {0, 1, 0,centre->xyzt[1]},\
 		  {0, 0, 1,centre->xyzt[2]},\
@@ -152,12 +139,10 @@ void rotationTriangle3d(t_triangle3d *t, t_point3d *centre, float degreX, float 
 		     {0, 1, 0,-centre->xyzt[1]},\
 		     {0, 0, 1,-centre->xyzt[2]},\
 		     {0, 0, 0, 1}};
-  
   multiplicationMatrice3d(transfo,m,mx);
   multiplicationMatrice3d(transfo,transfo,my);
   multiplicationMatrice3d(transfo,transfo,mz);
   multiplicationMatrice3d(transfo,transfo,minv);
-
   transformationTriangle3d(t,transfo);
 }
 
