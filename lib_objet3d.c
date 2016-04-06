@@ -968,9 +968,6 @@ void rotationObjet3d(t_objet3d* pt_objet, t_point3d *centre, float degreX, float
   multiplicationMatrice3d(mat,mat,my);
   multiplicationMatrice3d(mat,mat,mz);
   multiplicationMatrice3d(mat,mat,minv);
-  //printf("avant transfo :\n");
-  //affi_chaine(tmp);
-  //printf("-------------------\n");
   transformationObjet3d(pt_objet,mat); 
   pt_objet->est_trie=false;
 }
