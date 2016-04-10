@@ -69,38 +69,43 @@ void libererTriangle3d(t_triangle3d *t)
 }
 
 // effectue une conversion de 2D en 3D
-t_point2d *__conversion_2d_3d(t_point3d *p3d)
+t_point2d *__conversion_2d_3d(t_point3d *p3d, double h)
 {
   t_point2d *p2d;
   t_point3d *p3dtmp;
-  double matrice_projection[4][4]={{1, 0, 0, 0},\
-				   {0, 1, 0, 0},\
-				   {0, 0, 1, 0},\
-				   {0, 0, 0, 1}};
-
   p2d = NULL;
   p3dtmp = (t_point3d*)malloc(sizeof(t_point3d));
   if (p3dtmp!=NULL){
-    multiplicationVecteur3d(p3dtmp, matrice_projection, p3d);
+    double lala= h/p3d->xyzt[2];
+    //printf("valeur de h : %lf\n",h);
+
+    double tmp[4][4]={{lala, 0, 0, 0},\
+		      {0, lala, 0, 0},\
+		      {0, 0, lala, 0},\
+		      {0, 0, 0, 1}};   
+
+    multiplicationVecteur3d(p3dtmp, tmp, p3d);
     p2d = definirPoint2d(p3dtmp->xyzt[0]+RX/2, p3dtmp->xyzt[1]+RY/2); // malloc implicite il faut faire un free plus tard... (dans une vingtaine de lignes)
   }
   free(p3dtmp);
   return p2d;
 }
 
-void remplirTriangle3d(t_surface * surface, t_triangle3d * triangle, Uint32 c)
+void remplirTriangle3d(t_surface * surface, t_triangle3d * triangle, Uint32 c,double h)
 {
+  if(triangle->abc[0]->xyzt[2]<h && triangle->abc[1]->xyzt[2]<h && triangle->abc[2]->xyzt[2]<h){
   t_point2d *p2da, *p2db, *p2dc;
   t_triangle2d *t2d;
-  p2da = __conversion_2d_3d(triangle->abc[0]);
-  p2db = __conversion_2d_3d(triangle->abc[1]);
-  p2dc = __conversion_2d_3d(triangle->abc[2]);
+  p2da = __conversion_2d_3d(triangle->abc[0],h);
+  p2db = __conversion_2d_3d(triangle->abc[1],h);
+  p2dc = __conversion_2d_3d(triangle->abc[2],h);
   t2d = definirTriangle2d(p2da, p2db, p2dc);
   remplirTriangle2d(surface, t2d, c);
   free(t2d);
   free(p2da); // le free est fait ici :)
   free(p2db);
   free(p2dc);
+  }
 }
 
 void translationTriangle3d(t_triangle3d *t, t_point3d *vecteur)

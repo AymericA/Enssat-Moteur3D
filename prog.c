@@ -43,15 +43,26 @@ int main(int argc,char** argv)
 #endif
 
 #ifdef O3D
-  t_point3d *origine = definirPoint3d(0,0,0), *vecteur;
-  //t_objet3d *cube=parallelepipede(200,200,200);
-  //rotationObjet3d(cube,origine,0,0,-10);
+  t_point3d *origine = definirPoint3d(0,0,0), *vecteur,*centre=definirPoint3d(0,0,0);
+  double h = -500;
 
   /*
-  t_objet3d *sph1=sphere(50,10,20);
-  vecteur = definirPoint3d(0,-150,0);
-  translationObjet3d(sph1,vecteur);
+  
+  t_objet3d *cube=parallelepipede(400,400,400);
+  //rotationObjet3d(cube,origine,0,0,-10);
 
+  vecteur = definirPoint3d(0,0,-1400);
+  translationObjet3d(cube, vecteur);
+  centre=definirPoint3d(0,0,-1400);
+  */
+
+  t_objet3d *sph1=sphere(400,10,20);
+
+ vecteur = definirPoint3d(0,0,-1400);
+  translationObjet3d(sph1, vecteur);
+  centre=definirPoint3d(0,0,-1400);
+
+  /*
   t_objet3d *sph3=sphere(50,10,20);
   vecteur = definirPoint3d(0,150,0);
   translationObjet3d(sph3,vecteur);
@@ -93,7 +104,7 @@ int main(int argc,char** argv)
   timestart = SDL_GetTicks();
 
 
-  while(i<25*10)
+  while(i<25*20)
     {
       effacerFenetre(surface, 0);
 
@@ -111,8 +122,8 @@ int main(int argc,char** argv)
 #endif
 
 #ifdef O3D
-      //vecteur = definirPoint3d(5*sin(i*M_PI/180),5*cos(i*M_PI/180),0);
-      //vecteur = definirPoint3d(0,0,-5);
+      vecteur = definirPoint3d(0,0,10*sin(i*M_PI/180));
+      //vecteur = definirPoint3d(0,0,-10);
       //translationObjet3d(o10, vecteur);
 
       //dessinerObjet3d(surface,sph1);
@@ -123,9 +134,14 @@ int main(int argc,char** argv)
       //dessinerObjet3d(surface,ami);
       //rotationObjet3d(ami,origine,0,5,0);
 
-      dessinerObjet3d(surface,to);
-      rotationObjet3d(to,origine,1,5,0);
-      
+      dessinerObjet3d(surface,sph1,h);
+     rotationObjet3d(sph1,centre,0,0,5);
+     translationObjet3d(sph1, vecteur);
+
+     //centre=definirPoint3d(0,0,(i+1)*-1);
+
+      //printf("coor en z %f\n",cube->tete->face->abc[0]->xyzt[2]);
+
       //dessinerObjet3d(surface,n);
       //rotationObjet3d(n,origine,0,5,0);
 
