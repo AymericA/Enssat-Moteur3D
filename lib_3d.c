@@ -91,21 +91,41 @@ t_point2d *__conversion_2d_3d(t_point3d *p3d, double h)
   return p2d;
 }
 
-void remplirTriangle3d(t_surface * surface, t_triangle3d * triangle, Uint32 c,double h)
+void remplirTriangle3d(t_surface * surface, t_triangle3d * triangle, Uint32 c,double h,int i)
 {
-  if(triangle->abc[0]->xyzt[2]<h && triangle->abc[1]->xyzt[2]<h && triangle->abc[2]->xyzt[2]<h){
-  t_point2d *p2da, *p2db, *p2dc;
+   t_point2d *p2da, *p2db, *p2dc;
   t_triangle2d *t2d;
+  double A,B,C,D,acx,acy,acz,bcx,bcy,bcz;
   p2da = __conversion_2d_3d(triangle->abc[0],h);
   p2db = __conversion_2d_3d(triangle->abc[1],h);
   p2dc = __conversion_2d_3d(triangle->abc[2],h);
   t2d = definirTriangle2d(p2da, p2db, p2dc);
-  remplirTriangle2d(surface, t2d, c);
+
+  //calcul d'un vecteur normal a t3d
+
+  acx=triangle->abc[2]->xyzt[0]-triangle->abc[0]->xyzt[0];
+  acy=triangle->abc[2]->xyzt[1]-triangle->abc[0]->xyzt[1];
+  acz=triangle->abc[2]->xyzt[2]-triangle->abc[0]->xyzt[2];
+
+  bcx=triangle->abc[2]->xyzt[0]-triangle->abc[1]->xyzt[0];
+  bcy=triangle->abc[2]->xyzt[1]-triangle->abc[1]->xyzt[1];
+  bcz=triangle->abc[2]->xyzt[2]-triangle->abc[1]->xyzt[2];
+
+  A=acy*bcz-acz*bcy;
+  B=acz*bcx-acx*bcz;
+  C=acx*bcy-acy*bcx;
+
+  //équation du t3d : Ax+By+Cz+D=0
+  
+  D=-(triangle->abc[0]->xyzt[0]*A+triangle->abc[0]->xyzt[1]*B+triangle->abc[0]->xyzt[2]*C);
+
+
+  remplirTriangle2d(surface,t2d,A,B,C,D,h,c,i);
   free(t2d);
   free(p2da); // le free est fait ici :)
   free(p2db);
   free(p2dc);
-  }
+  
 }
 
 void translationTriangle3d(t_triangle3d *t, t_point3d *vecteur)

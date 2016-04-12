@@ -114,8 +114,9 @@ void __imprimerTriangle2d(t_triangle2d * triangle)
 /*
  * Algo "scanline"
  */
-void remplirTriangle2d(t_surface * surface, t_triangle2d * triangle, Uint32 c)
+void remplirTriangle2d(t_surface * surface, t_triangle2d * triangle,double A,double B,double C,double D,double h, Uint32 c,int i)
 {
+  double t;
   int ymin, ymax;
   int *xmin = surface->xmin, *xmax = surface->xmax;
   int x, y;
@@ -127,6 +128,7 @@ void remplirTriangle2d(t_surface * surface, t_triangle2d * triangle, Uint32 c)
     xmax[y] = 0;
     xmin[y] = RX-1;
   }
+
   __calculerBornes(triangle->t[0].x, triangle->t[0].y,
 		   triangle->t[1].x, triangle->t[1].y,
 		   xmin,xmax,ymin);
@@ -136,9 +138,49 @@ void remplirTriangle2d(t_surface * surface, t_triangle2d * triangle, Uint32 c)
   __calculerBornes(triangle->t[2].x, triangle->t[2].y,
 		   triangle->t[1].x, triangle->t[1].y,
 		   xmin,xmax,ymin);
+  //printf("calcul de la profondeur pour un triangle ! \n");
+
+  //printf("\nvaleur de A : %f,B : %f,C : %f,D : %f\n",A,B,C,D);
+
+
+
   for (y = MAX(0,ymin) ; y <= MIN(RY-1,ymax) ; y++ ){
+
+    //if(i==38)
+    //printf("debug1.3.%d\n",y);
+    
     for (x = xmin[y] ; x <= xmax[y] ; x++ ){
-      definirPixel(surface, x, y, c);
+
+      //if(i==38)
+      //printf("valeur de x : %d, y : %d RX : %d , RY : %d \n",x,y,RX,RY);
+
+      if(x>0 && x<=RX && y>0 && y<= RY){
+
+
+	//z=t*h
+	t=-D/(1+A*(x-RX/2)+B*(y-RY/2)+C*h);
+	//printf("valeur de x : %d, y : %d\n",x-RX/2,y-RY/2);
+	//printf("calcul de la profondeur %f ! \n",t*h);
+
+	//printf("calcul de la profondeur %f ! \n",t*h);
+	//printf("val déja présente : %f \n",screen[x][y].z);
+	if(t*h>screen[y][x].z && t*h<h){
+	  //printf("ça colorie ! \n");
+	  //printf("calcul de la profondeur %f ! \n",t*h);
+	  screen[y][x].couleur=c;
+	}
+	else{/*
+	
+	printf("ça colorie pas\n");
+	printf("valeur de A : %f,B : %f,C : %f,D : %f\n",A,B,C,D);
+
+	printf("valeur de x : %d, y : %d\n",x-RX/2,y-RY/2);
+	printf("calcul de la profondeur %f ! \n",t*h);
+	printf("profondeur de l'écran %f \n",h);
+	//printf("val déja présente : %f \n",screen[x][y].z);
+	//exit(EXIT_SUCCESS);*/
+	}
+      }
     }
   }
 }

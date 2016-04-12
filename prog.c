@@ -55,13 +55,13 @@ int main(int argc,char** argv)
   translationObjet3d(cube, vecteur);
   centre=definirPoint3d(0,0,-1400);
   */
-
+  /*
   t_objet3d *sph1=sphere(400,10,20);
 
  vecteur = definirPoint3d(0,0,-1400);
   translationObjet3d(sph1, vecteur);
   centre=definirPoint3d(0,0,-1400);
-
+  */
   /*
   t_objet3d *sph3=sphere(50,10,20);
   vecteur = definirPoint3d(0,150,0);
@@ -81,12 +81,20 @@ int main(int argc,char** argv)
   composerObjet3d(sph2,sph3);
   composerObjet3d(sph2,sph12);
   composerObjet3d(sph2,sph32);
-
-  t_objet3d *plan=damier(200,200,10,10);
-  rotationObjet3d(plan,origine,-90,0,0);
   */
 
+  t_objet3d *plan=damier(200,200,3,3);
+  rotationObjet3d(plan,origine,90,0,0);
+  vecteur = definirPoint3d(0,0,-1000);
+  translationObjet3d(plan, vecteur);
+  centre=definirPoint3d(0,0,-1000);
+
   t_objet3d *n=n64(200);
+  vecteur = definirPoint3d(0,0,-1000);
+  translationObjet3d(n, vecteur);
+  centre=definirPoint3d(0,0,-1000);
+
+
   t_objet3d *to=tore(200,50,5,10);
   t_objet3d *cyli=cylindre(200,100,3);
   //t_objet3d *bou=copierObjet3d(to);
@@ -104,8 +112,10 @@ int main(int argc,char** argv)
   timestart = SDL_GetTicks();
 
 
-  while(i<25*20)
+  while(i<25*10)
     {
+      //printf("%deme passe:\n",i);
+      init();
       effacerFenetre(surface, 0);
 
 #ifdef T2D
@@ -122,7 +132,7 @@ int main(int argc,char** argv)
 #endif
 
 #ifdef O3D
-      vecteur = definirPoint3d(0,0,10*sin(i*M_PI/180));
+      vecteur = definirPoint3d(0,0,100*sin(5*i*M_PI/180));
       //vecteur = definirPoint3d(0,0,-10);
       //translationObjet3d(o10, vecteur);
 
@@ -133,10 +143,13 @@ int main(int argc,char** argv)
       //translationObjet3d(sph2,vecteur);
       //dessinerObjet3d(surface,ami);
       //rotationObjet3d(ami,origine,0,5,0);
+      
 
-      dessinerObjet3d(surface,sph1,h);
-     rotationObjet3d(sph1,centre,0,0,5);
-     translationObjet3d(sph1, vecteur);
+      dessinerObjet3d(surface,n,h,i);
+      rotationObjet3d(n,centre,0,5,0);
+      
+
+      //translationObjet3d(plan, vecteur);
 
      //centre=definirPoint3d(0,0,(i+1)*-1);
 
@@ -158,11 +171,14 @@ int main(int argc,char** argv)
 
       //free(vecteur);
       //printf("\n\n");
-      SDL_Delay(40);
+      
 #endif
+      
 
+      screen[10][10].couleur=BLANC;
+      afficherFenetre(surface,screen);
       majEcran(surface);
-
+      SDL_Delay(40);
       i += 1;
 
       cpt++;
