@@ -12,5 +12,5 @@ typedef struct
 
 t_point2d *definirPoint2d(int x, int y);
 t_triangle2d *definirTriangle2d(t_point2d * a, t_point2d * b, t_point2d * c);
-void remplirTriangle2d(t_surface * surface, t_triangle2d * triangle,double A,double B,double C,double D,double h, Uint32 c,int i);
+void remplirTriangle2d(t_surface * surface, t_triangle2d * triangle,double A,double B,double C,double D,double h, Uint32 c);
 #endif

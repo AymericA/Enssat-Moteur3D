@@ -25,7 +25,7 @@ t_triangle3d *copierTriangle3d(t_triangle3d *t);
 //libere la memoire occupee par le triangle, il faut aussi liberer les points...
 void libererTriangle3d(t_triangle3d *t);
 //affiche le triangle sur la surface avec la couleur passee en parametre
-void remplirTriangle3d(t_surface * surface, t_triangle3d * triangle, Uint32 c,double h,int i);
+void remplirTriangle3d(t_surface * surface, t_triangle3d * triangle, Uint32 c,double h);
 // effectue une translation sur les points du triangle selon le vecteur donne en parametre
 void translationTriangle3d(t_triangle3d *t, t_point3d *vecteur);
 // effectue une rotation sur les points du triangle selon le l'angle en X, en Y et en Z

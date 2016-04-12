@@ -39,7 +39,6 @@ int main(int argc,char** argv)
   t_triangle3d *t3 = definirTriangle3d(p01, p03, p05);
 
   t_point3d *vecteur=definirVecteur3d(0,0,0);
-  
 #endif
 
 #ifdef O3D
@@ -89,7 +88,7 @@ int main(int argc,char** argv)
   translationObjet3d(plan, vecteur);
   centre=definirPoint3d(0,0,-1000);
 
-  t_objet3d *n=n64(200);
+  t_objet3d *n=n64(400);
   vecteur = definirPoint3d(0,0,-1000);
   translationObjet3d(n, vecteur);
   centre=definirPoint3d(0,0,-1000);
@@ -132,48 +131,13 @@ int main(int argc,char** argv)
 #endif
 
 #ifdef O3D
-      vecteur = definirPoint3d(0,0,100*sin(5*i*M_PI/180));
-      //vecteur = definirPoint3d(0,0,-10);
-      //translationObjet3d(o10, vecteur);
+      vecteur = definirPoint3d(0,0,100*sin(5*i*M_PI/180));   
 
-      //dessinerObjet3d(surface,sph1);
-      //dessinerObjet3d(surface,plan);
-      //dessinerObjet3d(surface,sph2);
-      //rotationObjet3d(sph2,origine,0,5,0);
-      //translationObjet3d(sph2,vecteur);
-      //dessinerObjet3d(surface,ami);
-      //rotationObjet3d(ami,origine,0,5,0);
-      
-
-      dessinerObjet3d(surface,n,h,i);
-      rotationObjet3d(n,centre,0,5,0);
-      
-
-      //translationObjet3d(plan, vecteur);
-
-     //centre=definirPoint3d(0,0,(i+1)*-1);
-
-      //printf("coor en z %f\n",cube->tete->face->abc[0]->xyzt[2]);
-
-      //dessinerObjet3d(surface,n);
-      //rotationObjet3d(n,origine,0,5,0);
-
-      //dessinerObjet3d(surface,geo);
-      //rotationObjet3d(geo,origine,0,5,0);
-
-      //printf("%deme passe:\n",i);
-
-      
-      //rotationObjet3d(sph1,origine,0,-5,0);
-      //rotationObjet3d(sph2,origine,0,5,0);
-      //translationObjet3d(plan,vecteur);
-
-
-      //free(vecteur);
-      //printf("\n\n");
-      
+      dessinerObjet3d(surface,n,h);
+      rotationObjet3d(n,centre,-5,5,5);
+ 
+      free(vecteur);
 #endif
-      
 
       screen[10][10].couleur=BLANC;
       afficherFenetre(surface,screen);
