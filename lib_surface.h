@@ -66,7 +66,18 @@ typedef struct {
 	int *xmax;
 } t_surface;
 
+
+typedef struct {
+  double z;
+  Uint32 couleur;
+} t_zbuffer;
+
+t_zbuffer screen[RY][RX];
+
+void init();
+
 t_surface *creerFenetre(int x, int y);
+void afficherFenetre(t_surface *surface,t_zbuffer screen[RY][RX]);
 void effacerFenetre(t_surface * surface, Uint32 couleur);
 // donne une couleur a un pixel de la surface (a la position x,y)
 void definirPixel(t_surface *surface, int x, int y, Uint32 pixel);

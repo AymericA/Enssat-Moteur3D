@@ -64,7 +64,7 @@ t_objet3d* arbre(double lx, double ly, double lz);
 // retourne un object alloue mais avec une liste de faces centrees sur (0,0,0) de taille lx,0,lz decoupe avec nx et nz carres alternativement noirs et blancs
 t_objet3d* damier(double lx, double lz, double nx, double nz);
 // affiche toutes les faces de l'objet sur la surface
-void dessinerObjet3d(t_surface *surface, t_objet3d* pt_objet);
+void dessinerObjet3d(t_surface *surface, t_objet3d* pt_objet,double h);
 // retourne un object alloue dont toutes les faces sont une copie des faces de l'objet d'origine
 t_objet3d *copierObjet3d(t_objet3d *o); // attention, effectue une copie
 // o = o + o2 : transforme l'objet o en la somme des deux objets, il suffit de brancher la liste des faces de o2 a la fin de celle de o

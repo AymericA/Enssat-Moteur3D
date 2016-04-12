@@ -914,13 +914,12 @@ void __trier_objet(t_objet3d *pt_objet)
   }
 }
 
-void dessinerObjet3d(t_surface *surface, t_objet3d* pt_objet)
+void dessinerObjet3d(t_surface *surface, t_objet3d* pt_objet, double h)
 {
-  __trier_objet(pt_objet);
   t_maillon *tmp=pt_objet->tete;
   while(tmp!=NULL)
     {
-      remplirTriangle3d(surface, tmp->face,tmp->couleur);
+      remplirTriangle3d(surface, tmp->face,tmp->couleur,h);
       tmp=tmp->pt_suiv;
     }
 }

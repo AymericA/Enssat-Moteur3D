@@ -1,4 +1,5 @@
 #include "lib_surface.h"
+#include <float.h>
 
 void definirPixel(t_surface *surface, int x, int y, Uint32 pixel)
 {
@@ -8,6 +9,17 @@ void definirPixel(t_surface *surface, int x, int y, Uint32 pixel)
     p = (unsigned char *)ecran->pixels + y * ecran->pitch + x * bpp;
     *(Uint32*)p = pixel;
 }
+
+
+void init(){
+int i,j;
+  for(i=0;i<RY;i++){
+    for(j=0;j<RX;j++){
+      screen[i][j].z=-DBL_MAX;
+      screen[i][j].couleur=NOIR;
+    }}
+}
+
 
 t_surface *creerFenetre(int x, int y)
 {
@@ -35,6 +47,14 @@ t_surface *creerFenetre(int x, int y)
         }
     }
     return S;
+}
+
+void afficherFenetre(t_surface *surface,t_zbuffer screen[RY][RX]){
+  int i,j;
+  for(i=0;i<RY;i++){
+    for(j=0;j<RX;j++){
+      definirPixel(surface,j,i,screen[i][j].couleur);
+    }}
 }
 
 void effacerFenetre(t_surface * surface, Uint32 couleur)

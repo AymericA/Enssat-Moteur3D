@@ -114,8 +114,9 @@ void __imprimerTriangle2d(t_triangle2d * triangle)
 /*
  * Algo "scanline"
  */
-void remplirTriangle2d(t_surface * surface, t_triangle2d * triangle, Uint32 c)
+void remplirTriangle2d(t_surface * surface, t_triangle2d * triangle,double A,double B,double C,double D,double h, Uint32 c)
 {
+  double t;
   int ymin, ymax;
   int *xmin = surface->xmin, *xmax = surface->xmax;
   int x, y;
@@ -136,9 +137,17 @@ void remplirTriangle2d(t_surface * surface, t_triangle2d * triangle, Uint32 c)
   __calculerBornes(triangle->t[2].x, triangle->t[2].y,
 		   triangle->t[1].x, triangle->t[1].y,
 		   xmin,xmax,ymin);
+
   for (y = MAX(0,ymin) ; y <= MIN(RY-1,ymax) ; y++ ){
     for (x = xmin[y] ; x <= xmax[y] ; x++ ){
-      definirPixel(surface, x, y, c);
+      if(x>0 && x<=RX && y>0 && y<= RY){
+	//z=t*h
+	t=-D/(1+A*(x-RX/2)+B*(y-RY/2)+C*h);
+	if(t*h>screen[y][x].z && t*h<h){
+	  screen[y][x].couleur=c;
+	  screen[y][x].z=t*h;
+	}
+      }
     }
   }
 }
