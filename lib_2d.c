@@ -143,7 +143,7 @@ void remplirTriangle2d(t_surface * surface, t_triangle2d * triangle,double A,dou
       if(x>0 && x<=RX && y>0 && y<= RY){
 	//z=t*h
 	t=-D/(1+A*(x-RX/2)+B*(y-RY/2)+C*h);
-	if(t*h>screen[y][x].z && t*h<h){
+	if(t*h>screen[y][x].z && t*h<0){
 	  screen[y][x].couleur=c;
 	  screen[y][x].z=t*h;
 	}

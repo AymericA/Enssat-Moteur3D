@@ -916,12 +916,13 @@ void __trier_objet(t_objet3d *pt_objet)
 
 void dessinerObjet3d(t_surface *surface, t_objet3d* pt_objet, double h)
 {
-  t_maillon *tmp=pt_objet->tete;
-  while(tmp!=NULL)
-    {
+  if(!pt_objet->est_camera){
+    t_maillon *tmp=pt_objet->tete;
+    while(tmp!=NULL){
       remplirTriangle3d(surface, tmp->face,tmp->couleur,h);
       tmp=tmp->pt_suiv;
     }
+  }
 }
 
 void translationObjet3d(t_objet3d* pt_objet, t_point3d *vecteur)

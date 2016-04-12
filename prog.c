@@ -83,7 +83,7 @@ int main(int argc,char** argv)
   */
 
   t_objet3d *plan=damier(200,200,3,3);
-  rotationObjet3d(plan,origine,90,0,0);
+  rotationObjet3d(plan,origine,90,0,45);
   vecteur = definirPoint3d(0,0,-1000);
   translationObjet3d(plan, vecteur);
   centre=definirPoint3d(0,0,-1000);
@@ -131,10 +131,10 @@ int main(int argc,char** argv)
 #endif
 
 #ifdef O3D
-      vecteur = definirPoint3d(0,0,100*sin(5*i*M_PI/180));   
+      vecteur = definirPoint3d(0,0,7*sin(i*M_PI/180));   
 
-      dessinerObjet3d(surface,n,h);
-      rotationObjet3d(n,centre,-5,5,5);
+      dessinerObjet3d(surface,plan,h);
+      translationObjet3d(plan,vecteur);
  
       free(vecteur);
 #endif
