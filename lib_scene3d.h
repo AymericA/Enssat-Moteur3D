@@ -38,6 +38,7 @@ matrice * matTranslationinv(t_point3d *vecteur);
 matrice * matRotation(t_point3d *centre,float degreX, float degreY, float degreZ);
 matrice * matRotationinv(t_point3d *centre,float degreX, float degreY, float degreZ);
 
+t_point3d * getCentre(t_scene3d* pt_scene3d,int pos);
 
 
 void translationScene3d(t_scene3d* pt_scene3d,t_point3d *vecteur);

@@ -79,6 +79,17 @@ matrice * matRotationinv(t_point3d *centre,float degreX, float degreY, float deg
   return matRotation(centre,-degreX,-degreY,-degreZ);
 }
 
+t_point3d * getCentre(t_scene3d* pt_scene3d,int pos)
+{
+  double mat[4][4]={{1,0,0,0},			\
+		    {0,1,0,0},			\
+		    {0,0,1,0},			\
+		    {0,0,0,1}};
+  t_scene3d*tmp= rechercheScene3dv2(pos,pt_scene3d,mat);
+  t_point3d * res= definirPoint3d(0,0,0);
+  multiplicationVecteur3d(res,mat,res);
+  return res;
+}
 
 void translationScene3d(t_scene3d* pt_scene3d,t_point3d *vecteur)
 {
@@ -133,6 +144,11 @@ void rotationScene3d(t_scene3d* pt_scene3d,t_point3d *centre, float degreX, floa
 void transformationScene3d(t_scene3d *pt_scene3d,double mat[4][4])
 {
   if(pt_scene3d!=NULL){
+    double m[4][4];
+    multiplicationMatrice3d(m,mat,pt_scene3d->mat->mat);
+    matrice*tmp=creerMatrice(m);
+    free(pt_scene3d->mat);
+    pt_scene3d->mat=tmp;
     transformationObjet3d(pt_scene3d->objet3d,mat);
     transformationFils(mat,pt_scene3d->lifils);
   }

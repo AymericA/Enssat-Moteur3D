@@ -190,10 +190,17 @@ int main(int argc,char** argv)
 #endif
 
 #ifdef S3D     
-
-      rotationScene3d(scube,centre1,5,0,0);
       
-      rotationScene3d(scube2,centre2,0,5,0);
+      free(centre1);
+      centre1=getCentre(scene,1);
+      
+      free(centre2);
+      centre2=getCentre(scene,2);
+      
+     
+      rotationScene3d(scube,centre1,0,0,5);
+      
+      rotationScene3d(scube2,centre2,1,0,0);
 
       
       //translationScene3d(scube,vecteur);
