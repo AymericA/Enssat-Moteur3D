@@ -18,6 +18,8 @@ int main(int argc,char** argv)
   int cpt = 0;
   int timestart;
   char buf[50];
+  SDL_Event event;
+  t_bool fin=true;
 
 #ifdef T2D
   t_point2d *p1 = definirPoint2d(10,50), *p2 = definirPoint2d(100,240), *p3 = definirPoint2d(50,300);
@@ -117,7 +119,7 @@ int main(int argc,char** argv)
   t_objet3d *plan=damier(200,200,3,3);
   t_objet3d *cube=parallelepipede(200,200,200);
 
-  t_objet3d *cube2=parallelepipede(100,100,100);
+  t_objet3d *cube2=tore(100,10,10,50);
   
   double m1[4][4]={{1,0,0,0},			\
 		   {0,1,0,0},			\
@@ -148,6 +150,8 @@ int main(int argc,char** argv)
   centre1=definirPoint3d(0,0,-500);
   centre2=definirPoint3d(0,150,-500);
 
+  vecteur = definirPoint3d(0,0,0);
+
 #endif
 
 
@@ -157,7 +161,7 @@ int main(int argc,char** argv)
   timestart = SDL_GetTicks();
 
 
-  while(i<25*10)
+  while(i<25*10000 && fin)
     {
       //printf("%deme passe:\n",i);
       init();
@@ -186,18 +190,64 @@ int main(int argc,char** argv)
 #endif
 
 #ifdef S3D     
-      
+
       rotationScene3d(scube,centre1,5,0,0);
       
       rotationScene3d(scube2,centre2,0,5,0);
 
-      dessinerScene3d(surface,scene,h);
+      
+      //translationScene3d(scube,vecteur);
 
+      
+      dessinerScene3d(surface,scene,h);
+      
+      
+      SDL_PollEvent(&event);
+      switch(event.type){
+	case SDL_KEYDOWN:
+	  switch(event.key.keysym.sym){
+	  case SDLK_UP:
+	    free(vecteur);
+	    vecteur=definirVecteur3d(0,-5,0);
+	    break;
+	  case SDLK_DOWN:
+	    free(vecteur);
+	    vecteur=definirVecteur3d(0,5,0);
+	    break;
+	  case SDLK_RIGHT:
+	    free(vecteur);
+	    vecteur=definirVecteur3d(5,0,0);
+	    break;
+	  case SDLK_LEFT:
+	    free(vecteur);
+	    vecteur=definirVecteur3d(-5,0,0);
+	    break;
+	  case SDLK_a:
+	    free(vecteur);
+	    vecteur=definirVecteur3d(0,0,5);
+	    break;
+	  case SDLK_e:
+	    free(vecteur);
+	    vecteur=definirVecteur3d(0,0,-5);
+	    break;
+	  case SDLK_SPACE:
+	    free(vecteur);
+	    vecteur=definirVecteur3d(0,0,0);
+	    break;
+	  case SDLK_ESCAPE:
+	    fin=false;
+	    break;
+	  }
+	  break;
+      }
+
+      translationScene3d(scene,vecteur);
+   
 #endif
 
       afficherFenetre(surface,screen);
       majEcran(surface);
-      SDL_Delay(10);
+      SDL_Delay(20);
       i += 1;
 
       cpt++;

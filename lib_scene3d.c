@@ -82,46 +82,50 @@ matrice * matRotationinv(t_point3d *centre,float degreX, float degreY, float deg
 
 void translationScene3d(t_scene3d* pt_scene3d,t_point3d *vecteur)
 {
- double mat[4][4]={{1,0,0,vecteur->xyzt[0]},	\
-		    {0,1,0,vecteur->xyzt[1]},	\
-		    {0,0,1,vecteur->xyzt[2]},	\
-		    {0,0,0,1}};
- transformationScene3d(pt_scene3d,mat);
+  if(vecteur!=NULL){
+    double mat[4][4]={{1,0,0,vecteur->xyzt[0]},	\
+		      {0,1,0,vecteur->xyzt[1]},	\
+		      {0,0,1,vecteur->xyzt[2]},	\
+		      {0,0,0,1}};
+    transformationScene3d(pt_scene3d,mat);
+  }
 }
 
 void rotationScene3d(t_scene3d* pt_scene3d,t_point3d *centre, float degreX, float degreY, float degreZ)
 {
-float x,y,z;
-  x=degreX*M_PI/180;
-  y=degreY*M_PI/180;
-  z=degreZ*M_PI/180;
-  double mat[4][4];
-  double m[4][4]={{1,0,0,centre->xyzt[0]},\
-		  {0,1,0,centre->xyzt[1]},\
-		  {0,0,1,centre->xyzt[2]},\
-		  {0,0,0,1}};
-  double mx[4][4]={{1,0,0,0},\
-		   {0,cos(x),-sin(x),0},\
-		   {0,sin(x),cos(x),0},\
-		   {0,0,0,1}};
-  double my[4][4]={{cos(y),0,sin(y),0},\
-		   {0,1,0,0},\
-		   {-sin(y),0,cos(y),0},\
-		   {0,0,0,1}};
-  double mz[4][4]={{cos(z),-sin(z),0,0},\
-		   {sin(z),cos(z),0,0},\
-		   {0,0,1,0},\
-		   {0,0,0,1}};
-  double minv[4][4]={{1,0,0,-centre->xyzt[0]},\
-		     {0,1,0,-centre->xyzt[1]},\
-		     {0,0,1,-centre->xyzt[2]},\
+  if(centre!=NULL){
+    float x,y,z;
+    x=degreX*M_PI/180;
+    y=degreY*M_PI/180;
+    z=degreZ*M_PI/180;
+    double mat[4][4];
+    double m[4][4]={{1,0,0,centre->xyzt[0]},\
+		    {0,1,0,centre->xyzt[1]},\
+		    {0,0,1,centre->xyzt[2]},\
+		    {0,0,0,1}};
+    double mx[4][4]={{1,0,0,0},\
+		     {0,cos(x),-sin(x),0},\
+		     {0,sin(x),cos(x),0},\
 		     {0,0,0,1}};
+    double my[4][4]={{cos(y),0,sin(y),0},\
+		     {0,1,0,0},\
+		     {-sin(y),0,cos(y),0},\
+		     {0,0,0,1}};
+    double mz[4][4]={{cos(z),-sin(z),0,0},\
+		     {sin(z),cos(z),0,0},\
+		     {0,0,1,0},\
+		     {0,0,0,1}};
+    double minv[4][4]={{1,0,0,-centre->xyzt[0]},\
+		       {0,1,0,-centre->xyzt[1]},\
+		       {0,0,1,-centre->xyzt[2]},\
+		       {0,0,0,1}};
 
-  multiplicationMatrice3d(mat,m,mx);
-  multiplicationMatrice3d(mat,mat,my);
-  multiplicationMatrice3d(mat,mat,mz);
-  multiplicationMatrice3d(mat,mat,minv);
-  transformationScene3d(pt_scene3d,mat);
+    multiplicationMatrice3d(mat,m,mx);
+    multiplicationMatrice3d(mat,mat,my);
+    multiplicationMatrice3d(mat,mat,mz);
+    multiplicationMatrice3d(mat,mat,minv);
+    transformationScene3d(pt_scene3d,mat);
+  }
 }
 
 
