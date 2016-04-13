@@ -5,11 +5,12 @@
 #include "lib_2d.h"
 #include "lib_3d.h"
 #include "lib_objet3d.h"
-
+#include "lib_scene3d.h"
 
 //#define T2D
 //#define T3D
-#define O3D
+//#define O3D
+#define S3D
 
 int main(int argc,char** argv)
 {
@@ -105,6 +106,49 @@ int main(int argc,char** argv)
   //rotationObjet3d(sph2,origine,0,-90,0);
 #endif
 
+  
+#ifdef S3D
+
+  
+  t_point3d *origine = definirPoint3d(0,0,0), *vecteur,*centre=definirPoint3d(0,0,0);
+  double h = -500;
+  
+  t_objet3d*cam1=camera();
+  t_objet3d *plan=damier(200,200,3,3);
+  t_objet3d *cube=parallelepipede(200,200,200);
+  
+  double m1[4][4]={{1,0,0,0},			\
+		   {0,1,0,0},			\
+		   {0,0,1,0},			\
+		   {0,0,0,1}};
+
+  double m2[4][4]={{1,0,0,0},			\
+		   {0,1,0,0},			\
+		   {0,0,1,0},			\
+		   {0,0,0,1}};
+  
+  
+  t_scene3d * scene=creerScene3d(cam1,creerMatrice(m1),creerMatrice(m2),0);
+    
+  vecteur = definirPoint3d(0,0,-1000);
+
+  //rotationObjet3d(plan,origine,90,0,0);
+
+
+
+  translationObjet3d(cube, vecteur);
+
+ 
+
+
+  t_scene3d * scube=creerScene3d(cube,matTranslation(vecteur),creerMatrice(m2),1);
+  
+  ajoutFilsNoeud(scene,scube,0);
+
+
+#endif
+
+
   int i=0;
 
   surface=creerFenetre(RX,RY);
@@ -139,10 +183,15 @@ int main(int argc,char** argv)
       free(vecteur);
 #endif
 
-      screen[10][10].couleur=BLANC;
+#ifdef S3D     
+      
+      dessinerScene3d(surface,scene,h);
+
+#endif
+
       afficherFenetre(surface,screen);
       majEcran(surface);
-      SDL_Delay(40);
+      SDL_Delay(30);
       i += 1;
 
       cpt++;

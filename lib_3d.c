@@ -79,11 +79,11 @@ t_point2d *__conversion_2d_3d(t_point3d *p3d, double h)
     double lala= h/p3d->xyzt[2];
     //printf("valeur de h : %lf\n",h);
 
-    double tmp[4][4]={{lala, 0, 0, 0},\
-		      {0, lala, 0, 0},\
-		      {0, 0, lala, 0},\
+    double tmp[4][4]={{lala, 0, 0, 0},		\
+		      {0, lala, 0, 0},		\
+		      {0, 0, lala, 0},		\
 		      {0, 0, 0, 1}};   
-
+    
     multiplicationVecteur3d(p3dtmp, tmp, p3d);
     p2d = definirPoint2d(p3dtmp->xyzt[0]+RX/2, p3dtmp->xyzt[1]+RY/2); // malloc implicite il faut faire un free plus tard... (dans une vingtaine de lignes)
   }

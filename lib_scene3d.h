@@ -10,6 +10,12 @@
 typedef struct __noeud t_scene3d;
 typedef struct __m_noeud m_noeud;
 
+typedef struct
+{
+  double mat[4][4];
+} matrice;
+
+
 struct __m_noeud
 {
   t_scene3d * fils;
@@ -18,16 +24,21 @@ struct __m_noeud
 
 struct __noeud
 {
-  double m[4][4];
+  matrice *mat;
+  matrice *inv;
   t_objet3d * objet3d;
   int nom;
   m_noeud * lifils;
 };
 
-t_scene3d * creerVide();
-void ajoutNoeud(t_scene3d *elem,t_scene3d *noeud,int pos);
+matrice * creerMatrice(double m[4][4]);
+matrice * matTranslation(t_point3d *vecteur);
+matrice * matTranslationinv(t_point3d *vecteur);
+matrice * matRotation(t_point3d *centre,float degreX, float degreY, float degreZ);
+matrice * matRotationinv(t_point3d *centre,float degreX, float degreY, float degreZ);
+t_scene3d * creerScene3d(t_objet3d * pt_objet3d,matrice * m1,matrice * m2,int nom);
 m_noeud * __creerMNoeud(t_scene3d * elem);
-m_noeud * ajoutFilsNoeud(t_scene3d * elem,m_noeud *pm_noeud,int pos);
+void ajoutFilsNoeud(t_scene3d *pt_scene3d,t_scene3d*elem,int pos);
 t_scene3d * rechercheScene3d(int val,t_scene3d* pt_scene3d);
 t_scene3d * rechercheFils(int val,m_noeud * lifils);
 void dessinerScene3d(t_surface *surface,t_scene3d * pt_scene3d,double h);

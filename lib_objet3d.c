@@ -927,7 +927,7 @@ void dessinerObjet3d(t_surface *surface, t_objet3d* pt_objet, double h)
 
 void translationObjet3d(t_objet3d* pt_objet, t_point3d *vecteur)
 {
-  t_chaine *tmp=pt_objet->chaine;
+  //t_chaine *tmp=pt_objet->chaine;
   double m[4][4]={{1, 0, 0,vecteur->xyzt[0]},\
 		  {0, 1, 0,vecteur->xyzt[1]},\
 		  {0, 0, 1,vecteur->xyzt[2]},\
@@ -937,7 +937,7 @@ void translationObjet3d(t_objet3d* pt_objet, t_point3d *vecteur)
 
 void rotationObjet3d(t_objet3d* pt_objet, t_point3d *centre, float degreX, float degreY, float degreZ)
 {
-  t_chaine *tmp=pt_objet->chaine;
+  //t_chaine *tmp=pt_objet->chaine;
   float x,y,z;
   x=degreX*M_PI/180;
   y=degreY*M_PI/180;
@@ -969,7 +969,7 @@ void rotationObjet3d(t_objet3d* pt_objet, t_point3d *centre, float degreX, float
   multiplicationMatrice3d(mat,mat,mz);
   multiplicationMatrice3d(mat,mat,minv);
   transformationObjet3d(pt_objet,mat); 
-  pt_objet->est_trie=false;
+  //pt_objet->est_trie=false;
 }
 
 void transformationObjet3d(t_objet3d* pt_objet, double mat[4][4])
@@ -982,4 +982,3 @@ void transformationObjet3d(t_objet3d* pt_objet, double mat[4][4])
   while(tmp!=NULL);
   pt_objet->est_trie=false;
 }
-

@@ -1,17 +1,97 @@
+#include <math.h>
 #include "lib_scene3d.h"
 
 
-t_scene3d * creerVide()
+
+//insersion dans arbre : in objet3d+idpère+relation père-objet
+
+//todo : appliquer a objet relation père-objet et relation racine-père
+//trouver le père (return ssarbre tq racine = père)
+//et (en mm temps) return relation racine-père
+
+
+
+matrice * creerMatrice(double m[4][4])
 {
-  t_scene3d * pt_scene3d=malloc(sizeof(t_scene3d));
-  pt_scene3d->objet3d=NULL;
-  pt_scene3d->lifils=NULL;
-  return pt_scene3d;
+  matrice * res=malloc(sizeof(matrice));
+  int i,j;
+  for(i=0;i<4;i++){
+    for(j=0;j<4;j++){
+      res->mat[i][j]=m[i][j];
+    }}
+  return res;
 }
 
-void ajoutNoeud(t_scene3d *elem,t_scene3d *noeud,int pos)
+
+matrice * matTranslation(t_point3d *vecteur){
+  double mat[4][4]={{1,0,0,vecteur->xyzt[0]},	\
+		    {0,1,0,vecteur->xyzt[1]},	\
+		    {0,0,1,vecteur->xyzt[2]},	\
+		    {0,0,0,1}};
+  return creerMatrice(mat);
+}
+
+matrice * matTranslationinv(t_point3d *vecteur){
+  double mat[4][4]={{1,0,0,-vecteur->xyzt[0]},	\
+		    {0,1,0,-vecteur->xyzt[1]},	\
+		    {0,0,1,-vecteur->xyzt[2]},	\
+		    {0,0,0,1}};
+  return creerMatrice(mat);
+}
+
+
+matrice * matRotation(t_point3d *centre,float degreX, float degreY, float degreZ)
 {
-  noeud->lifils=ajoutFilsNoeud(elem,noeud->lifils,pos);
+  float x,y,z;
+  x=degreX*M_PI/180;
+  y=degreY*M_PI/180;
+  z=degreZ*M_PI/180;
+  double mat[4][4];
+  double m[4][4]={{1,0,0,centre->xyzt[0]},\
+		  {0,1,0,centre->xyzt[1]},\
+		  {0,0,1,centre->xyzt[2]},\
+		  {0,0,0,1}};
+  double mx[4][4]={{1,0,0,0},\
+		   {0,cos(x),-sin(x),0},\
+		   {0,sin(x),cos(x),0},\
+		   {0,0,0,1}};
+  double my[4][4]={{cos(y),0,sin(y),0},\
+		   {0,1,0,0},\
+		   {-sin(y),0,cos(y),0},\
+		   {0,0,0,1}};
+  double mz[4][4]={{cos(z),-sin(z),0,0},\
+		   {sin(z),cos(z),0,0},\
+		   {0,0,1,0},\
+		   {0,0,0,1}};
+  double minv[4][4]={{1,0,0,-centre->xyzt[0]},\
+		     {0,1,0,-centre->xyzt[1]},\
+		     {0,0,1,-centre->xyzt[2]},\
+		     {0,0,0,1}};
+
+  multiplicationMatrice3d(mat,m,mx);
+  multiplicationMatrice3d(mat,mat,my);
+  multiplicationMatrice3d(mat,mat,mz);
+  multiplicationMatrice3d(mat,mat,minv);
+  return creerMatrice(mat);
+} 
+
+matrice * matRotationinv(t_point3d *centre,float degreX, float degreY, float degreZ){
+  return matRotation(centre,-degreX,-degreY,-degreZ);
+}
+
+
+
+
+t_scene3d * creerScene3d(t_objet3d * pt_objet3d,matrice *m1,matrice *m2,int nom)
+{
+  int i,j;
+  t_scene3d * pt_scene3d=malloc(sizeof(t_scene3d));
+  pt_scene3d->objet3d=pt_objet3d;
+  pt_scene3d->nom=nom; 
+  pt_scene3d->mat=m1;
+  pt_scene3d->mat=m2;
+  pt_scene3d->lifils=NULL;
+  return pt_scene3d;
 }
 
 m_noeud * __creerMNoeud(t_scene3d * elem){
@@ -19,8 +99,6 @@ m_noeud * __creerMNoeud(t_scene3d * elem){
   res->pt_suiv=NULL;
   res->fils=elem;
 }
-
-
 
 t_scene3d * rechercheScene3d(int val,t_scene3d* pt_scene3d)
 {
@@ -47,30 +125,38 @@ t_scene3d * rechercheFils(int val,m_noeud * lifils){
   return res;
 }
 
-//incorrect !
-m_noeud * ajoutFilsNoeud(t_scene3d * elem,m_noeud *pm_noeud,int pos)
+
+
+
+void ajoutFilsNoeud(t_scene3d *pt_scene3d,t_scene3d *elem,int pos)
 {
-  if(pos==0){
-    m_noeud*tmp=pm_noeud->pt_suiv;
-    pm_noeud->pt_suiv=__creerMNoeud(elem);
-    pm_noeud->pt_suiv->pt_suiv=tmp;
+  t_scene3d* pere=rechercheScene3d(pos,pt_scene3d);
+  if(pere!=NULL){
+    m_noeud *noeud=malloc(sizeof(m_noeud));;
+    noeud->fils=elem;
+    noeud->pt_suiv=pere->lifils;
+    pere->lifils=noeud;
   }
-  else
-    pm_noeud->pt_suiv=ajoutFilsNoeud(elem,pm_noeud,pos-1);
-  return pm_noeud;
+  else{
+    printf("insersion fail ! bouwia \n");
+  }
 }
 
 
 void dessinerScene3d(t_surface *surface,t_scene3d * pt_scene3d,double h){
   if(pt_scene3d!=NULL){
+    //printf("dessin de objet\n");
     dessinerObjet3d(surface,pt_scene3d->objet3d,h);
+    //printf("dessin de ses fils\n");
     dessinerFils(surface,pt_scene3d->lifils,h);
   }
 }
   
 void dessinerFils(t_surface * surface,m_noeud * lifils,double h){
   if(lifils!=NULL){
+    //printf("dessin de scene\n");
     dessinerScene3d(surface,lifils->fils,h);
+    //printf("dessin de ses fils\n");
     dessinerFils(surface,lifils->pt_suiv,h);
   }
 }
