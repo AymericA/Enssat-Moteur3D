@@ -980,5 +980,5 @@ void transformationObjet3d(t_objet3d* pt_objet, double mat[4][4])
     tmp=tmp->pt_suiv;
   }
   while(tmp!=NULL);
-  pt_objet->est_trie=false;
+  //pt_objet->est_trie=false;
 }

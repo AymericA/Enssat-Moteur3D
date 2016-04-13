@@ -110,12 +110,14 @@ int main(int argc,char** argv)
 #ifdef S3D
 
   
-  t_point3d *origine = definirPoint3d(0,0,0), *vecteur,*centre=definirPoint3d(0,0,0);
+  t_point3d *origine = definirPoint3d(0,0,0), *vecteur,*centre1,*centre2;
   double h = -500;
   
   t_objet3d*cam1=camera();
   t_objet3d *plan=damier(200,200,3,3);
   t_objet3d *cube=parallelepipede(200,200,200);
+
+  t_objet3d *cube2=parallelepipede(100,100,100);
   
   double m1[4][4]={{1,0,0,0},			\
 		   {0,1,0,0},			\
@@ -130,21 +132,21 @@ int main(int argc,char** argv)
   
   t_scene3d * scene=creerScene3d(cam1,creerMatrice(m1),creerMatrice(m2),0);
     
-  vecteur = definirPoint3d(0,0,-1000);
+  vecteur = definirPoint3d(0,0,-500);
 
-  //rotationObjet3d(plan,origine,90,0,0);
+  t_scene3d * scube=creerScene3d(cube,matTranslation(vecteur),matTranslationinv(vecteur),1);
 
+  vecteur = definirPoint3d(0,150,0);
 
-
-  translationObjet3d(cube, vecteur);
-
- 
+  t_scene3d * scube2=creerScene3d(cube2,matTranslation(vecteur),matTranslationinv(vecteur),2);
 
 
-  t_scene3d * scube=creerScene3d(cube,matTranslation(vecteur),creerMatrice(m2),1);
-  
   ajoutFilsNoeud(scene,scube,0);
 
+  ajoutFilsNoeud(scene,scube2,1);
+
+  centre1=definirPoint3d(0,0,-500);
+  centre2=definirPoint3d(0,150,-500);
 
 #endif
 
@@ -185,13 +187,17 @@ int main(int argc,char** argv)
 
 #ifdef S3D     
       
+      rotationScene3d(scube,centre1,5,0,0);
+      
+      rotationScene3d(scube2,centre2,0,5,0);
+
       dessinerScene3d(surface,scene,h);
 
 #endif
 
       afficherFenetre(surface,screen);
       majEcran(surface);
-      SDL_Delay(30);
+      SDL_Delay(10);
       i += 1;
 
       cpt++;
