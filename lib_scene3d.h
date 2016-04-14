@@ -48,6 +48,12 @@ void transformationScene3d(t_scene3d *pt_scene3d,double mat[4][4]);
 void transformationFils(double mat[4][4],m_noeud * lifils);
 
 
+void transformationScene3dv2(t_scene3d *pt_scene3d,double mat[4][4],int pos);
+
+void translationScene3dv2(t_scene3d* pt_scene3d,t_point3d *vecteur,int pos);
+void rotationScene3dv2(t_scene3d* pt_scene3d,t_point3d *centre, float degreX, float degreY, float degreZ,int pos);
+
+
 t_scene3d * creerScene3d(t_objet3d * pt_objet3d,matrice * m1,matrice * m2,int nom);
 m_noeud * __creerMNoeud(t_scene3d * elem);
 

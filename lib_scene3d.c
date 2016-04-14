@@ -144,11 +144,6 @@ void rotationScene3d(t_scene3d* pt_scene3d,t_point3d *centre, float degreX, floa
 void transformationScene3d(t_scene3d *pt_scene3d,double mat[4][4])
 {
   if(pt_scene3d!=NULL){
-    double m[4][4];
-    multiplicationMatrice3d(m,mat,pt_scene3d->mat->mat);
-    matrice*tmp=creerMatrice(m);
-    free(pt_scene3d->mat);
-    pt_scene3d->mat=tmp;
     transformationObjet3d(pt_scene3d->objet3d,mat);
     transformationFils(mat,pt_scene3d->lifils);
   }
@@ -159,6 +154,77 @@ void transformationFils(double mat[4][4],m_noeud * lifils)
   if(lifils!=NULL){
     transformationScene3d(lifils->fils,mat);
     transformationFils(mat,lifils->pt_suiv);
+  }
+}
+
+
+void transformationScene3dv2(t_scene3d *pt_scene3d,double mat[4][4],int pos)
+{
+  t_scene3d *tmp = rechercheScene3d(pos,pt_scene3d);
+  double m[4][4];
+  
+  
+  multiplicationMatrice3d(m,mat,tmp->mat->mat);
+  matrice*tmpmat=creerMatrice(m);
+  free(tmp->mat);
+  tmp->mat=tmpmat;
+  
+
+  /*  printf("modif matrice recherche\n");
+  affMatrice(tmpmat->mat);
+  printf("aka %d\n",tmp->nom);*/
+
+  
+  transformationScene3d(tmp,mat);
+
+  // exit(EXIT_SUCCESS);
+}
+
+void translationScene3dv2(t_scene3d* pt_scene3d,t_point3d *vecteur,int pos)
+{
+  if(vecteur!=NULL){
+    double mat[4][4]={{1,0,0,vecteur->xyzt[0]},	\
+		      {0,1,0,vecteur->xyzt[1]},	\
+		      {0,0,1,vecteur->xyzt[2]},	\
+		      {0,0,0,1}};
+    transformationScene3dv2(pt_scene3d,mat,pos);
+  }
+}
+
+void rotationScene3dv2(t_scene3d* pt_scene3d,t_point3d *centre, float degreX, float degreY, float degreZ,int pos)
+{
+ if(centre!=NULL){
+    float x,y,z;
+    x=degreX*M_PI/180;
+    y=degreY*M_PI/180;
+    z=degreZ*M_PI/180;
+    double mat[4][4];
+    double m[4][4]={{1,0,0,centre->xyzt[0]},\
+		    {0,1,0,centre->xyzt[1]},\
+		    {0,0,1,centre->xyzt[2]},\
+		    {0,0,0,1}};
+    double mx[4][4]={{1,0,0,0},\
+		     {0,cos(x),-sin(x),0},\
+		     {0,sin(x),cos(x),0},\
+		     {0,0,0,1}};
+    double my[4][4]={{cos(y),0,sin(y),0},\
+		     {0,1,0,0},\
+		     {-sin(y),0,cos(y),0},\
+		     {0,0,0,1}};
+    double mz[4][4]={{cos(z),-sin(z),0,0},\
+		     {sin(z),cos(z),0,0},\
+		     {0,0,1,0},\
+		     {0,0,0,1}};
+    double minv[4][4]={{1,0,0,-centre->xyzt[0]},\
+		       {0,1,0,-centre->xyzt[1]},\
+		       {0,0,1,-centre->xyzt[2]},\
+		       {0,0,0,1}};
+
+    multiplicationMatrice3d(mat,m,mx);
+    multiplicationMatrice3d(mat,mat,my);
+    multiplicationMatrice3d(mat,mat,mz);
+    multiplicationMatrice3d(mat,mat,minv);
+    transformationScene3dv2(pt_scene3d,mat,pos);
   }
 }
 
@@ -261,18 +327,14 @@ void ajoutFilsNoeud(t_scene3d *pt_scene3d,t_scene3d *elem,int pos)
 
 void dessinerScene3d(t_surface *surface,t_scene3d * pt_scene3d,double h){
   if(pt_scene3d!=NULL){
-    //printf("dessin de objet\n");
     dessinerObjet3d(surface,pt_scene3d->objet3d,h);
-    //printf("dessin de ses fils\n");
     dessinerFils(surface,pt_scene3d->lifils,h);
   }
 }
   
 void dessinerFils(t_surface * surface,m_noeud * lifils,double h){
   if(lifils!=NULL){
-    //printf("dessin de scene\n");
     dessinerScene3d(surface,lifils->fils,h);
-    //printf("dessin de ses fils\n");
     dessinerFils(surface,lifils->pt_suiv,h);
   }
 }

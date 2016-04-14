@@ -112,7 +112,7 @@ int main(int argc,char** argv)
 #ifdef S3D
 
   
-  t_point3d *origine = definirPoint3d(0,0,0), *vecteur,*centre1,*centre2;
+  t_point3d *origine = definirPoint3d(0,0,0), *vecteur,*vecteur2,*centre1,*centre2;
   double h = -500;
   
   t_objet3d*cam1=camera();
@@ -151,6 +151,8 @@ int main(int argc,char** argv)
   centre2=definirPoint3d(0,150,-500);
 
   vecteur = definirPoint3d(0,0,0);
+  vecteur2=definirVecteur3d(5,0,0);
+ 
 
 #endif
 
@@ -194,17 +196,32 @@ int main(int argc,char** argv)
       free(centre1);
       centre1=getCentre(scene,1);
       
+
       free(centre2);
       centre2=getCentre(scene,2);
       
+      //affMatrice(scene->mat->mat);
+      affMatrice(scube->mat->mat);
+      affMatrice(scube2->mat->mat);
+      
+      printf("centre1 : ");
+      affPoint(centre1);
+      
+      
+      printf("centre2 : ");
+      affPoint(centre2);
+           
      
-      rotationScene3d(scube,centre1,0,0,5);
-      
-      rotationScene3d(scube2,centre2,1,0,0);
+      rotationScene3dv2(scene,centre1,0,5,0,1);
 
-      
-      //translationScene3d(scube,vecteur);
 
+      rotationScene3dv2(scene,centre1,0,-5,0,2);
+
+      rotationScene3dv2(scene,centre2,1,0,0,2);
+     
+      //translationScene3dv2(scene,vecteur2,2);
+      
+     
       
       dessinerScene3d(surface,scene,h);
       
@@ -248,7 +265,8 @@ int main(int argc,char** argv)
 	  break;
       }
 
-      translationScene3d(scene,vecteur);
+      translationScene3dv2(scene,vecteur,1);     
+      //exit(EXIT_SUCCESS);
    
 #endif
 
