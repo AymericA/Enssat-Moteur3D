@@ -217,7 +217,7 @@ int main(int argc,char** argv)
 
       rotationScene3dv2(scene,centre1,0,-5,0,2);
 
-      rotationScene3dv2(scene,centre2,1,0,0,2);
+      //rotationScene3dv2(scene,centre2,1,0,0,2);
      
       //translationScene3dv2(scene,vecteur2,2);
       
