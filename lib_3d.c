@@ -96,6 +96,10 @@ void remplirTriangle3d(t_surface * surface, t_triangle3d * triangle, Uint32 c,do
    t_point2d *p2da, *p2db, *p2dc;
   t_triangle2d *t2d;
   double A,B,C,D,acx,acy,acz,bcx,bcy,bcz;
+
+  if(triangle->abc[0]->xyzt[2]<0 && triangle->abc[1]->xyzt[2]<0 && triangle->abc[2]->xyzt[2]<0)
+  {
+
   p2da = __conversion_2d_3d(triangle->abc[0],h);
   p2db = __conversion_2d_3d(triangle->abc[1],h);
   p2dc = __conversion_2d_3d(triangle->abc[2],h);
@@ -124,7 +128,7 @@ void remplirTriangle3d(t_surface * surface, t_triangle3d * triangle, Uint32 c,do
   free(p2da); // le free est fait ici :)
   free(p2db);
   free(p2dc);
-  
+    }
 }
 
 void translationTriangle3d(t_triangle3d *t, t_point3d *vecteur)

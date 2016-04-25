@@ -20,7 +20,7 @@ int main(int argc,char** argv)
   char buf[50];
   SDL_Event event;
   t_bool fin=true;
-
+  int turnlr=0,turnhb=0;
 #ifdef T2D
   t_point2d *p1 = definirPoint2d(10,50), *p2 = definirPoint2d(100,240), *p3 = definirPoint2d(50,300);
   t_triangle2d *t1 = definirTriangle2d(p1, p2, p3);
@@ -46,7 +46,7 @@ int main(int argc,char** argv)
 
 #ifdef O3D
   t_point3d *origine = definirPoint3d(0,0,0), *vecteur,*centre=definirPoint3d(0,0,0);
-  double h = -500;
+  double h = -800;
 
   /*
   
@@ -116,8 +116,8 @@ int main(int argc,char** argv)
   double h = -500;
   
   t_objet3d*cam1=camera();
-  t_objet3d *plan=damier(200,200,3,3);
-  t_objet3d *cube=parallelepipede(200,200,200);
+  t_objet3d *plan=damier(500,500,10,10);
+  t_objet3d *cube=sphere(100,10,20);
 
   t_objet3d *cube2=tore(100,10,10,50);
   
@@ -134,18 +134,22 @@ int main(int argc,char** argv)
   
   t_scene3d * scene=creerScene3d(cam1,creerMatrice(m1),creerMatrice(m2),0);
     
-  vecteur = definirPoint3d(0,0,-500);
+  vecteur = definirPoint3d(0,-200,0);
 
-  t_scene3d * scube=creerScene3d(cube,matTranslation(vecteur),matTranslationinv(vecteur),1);
+  t_scene3d * scube1=creerScene3d(cube,matTranslation(vecteur),matTranslationinv(vecteur),2);
 
   vecteur = definirPoint3d(0,150,0);
 
-  t_scene3d * scube2=creerScene3d(cube2,matTranslation(vecteur),matTranslationinv(vecteur),2);
+  t_scene3d * scube2=creerScene3d(cube2,matTranslation(vecteur),matTranslationinv(vecteur),3);
 
+ 
+  vecteur = definirPoint3d(0,150,-500);
+  t_scene3d * splan=creerScene3d(plan,matTranslation(vecteur),matTranslationinv(vecteur),1);
+  
 
-  ajoutFilsNoeud(scene,scube,0);
-
-  ajoutFilsNoeud(scene,scube2,1);
+  ajoutFilsNoeud(scene,splan,0);
+  ajoutFilsNoeud(scene,scube1,1);
+  ajoutFilsNoeud(scene,scube2,2);
 
   centre1=definirPoint3d(0,0,-500);
   centre2=definirPoint3d(0,150,-500);
@@ -201,7 +205,7 @@ int main(int argc,char** argv)
       centre2=getCentre(scene,2);
       
       //affMatrice(scene->mat->mat);
-      affMatrice(scube->mat->mat);
+      affMatrice(scube1->mat->mat);
       affMatrice(scube2->mat->mat);
       
       printf("centre1 : ");
@@ -212,15 +216,10 @@ int main(int argc,char** argv)
       affPoint(centre2);
            
      
-      rotationScene3dv2(scene,centre1,0,5,0,1);
+      //rotationScene3dv2(scene,centre1,0,5,0,2);
 
 
-      rotationScene3dv2(scene,centre1,0,-5,0,2);
-
-      //rotationScene3dv2(scene,centre2,1,0,0,2);
-     
-      //translationScene3dv2(scene,vecteur2,2);
-      
+      //rotationScene3dv2(scene,centre1,0,-5,0,3);
      
       
       dessinerScene3d(surface,scene,h);
@@ -240,11 +239,11 @@ int main(int argc,char** argv)
 	    break;
 	  case SDLK_RIGHT:
 	    free(vecteur);
-	    vecteur=definirVecteur3d(5,0,0);
+	    vecteur=definirVecteur3d(-5,0,0);
 	    break;
 	  case SDLK_LEFT:
 	    free(vecteur);
-	    vecteur=definirVecteur3d(-5,0,0);
+	    vecteur=definirVecteur3d(5,0,0);
 	    break;
 	  case SDLK_a:
 	    free(vecteur);
@@ -254,9 +253,23 @@ int main(int argc,char** argv)
 	    free(vecteur);
 	    vecteur=definirVecteur3d(0,0,-5);
 	    break;
+	  case SDLK_q:
+	    turnlr=-1;
+	    break;
+	  case SDLK_d:
+	    turnlr=1;
+	    break;
+	  case SDLK_z:
+	    turnhb=-1;
+	    break;
+	  case SDLK_s:
+	    turnhb=1;
+	    break;
 	  case SDLK_SPACE:
 	    free(vecteur);
 	    vecteur=definirVecteur3d(0,0,0);
+	    turnlr=0;
+	    turnhb=0;
 	    break;
 	  case SDLK_ESCAPE:
 	    fin=false;
@@ -264,6 +277,15 @@ int main(int argc,char** argv)
 	  }
 	  break;
       }
+
+      if(turnlr<0)
+	rotationScene3dv2(splan,origine,0,-1,0,1);
+      if(turnlr>0)
+	rotationScene3dv2(splan,origine,0,1,0,1);
+      if(turnhb<0)
+	rotationScene3dv2(splan,origine,1,0,0,1);
+      if(turnhb>0)
+	rotationScene3dv2(splan,origine,-1,0,0,1);
 
       translationScene3dv2(scene,vecteur,1);     
       //exit(EXIT_SUCCESS);
