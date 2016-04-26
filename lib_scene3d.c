@@ -1,340 +1,174 @@
-#include <math.h>
 #include "lib_scene3d.h"
+#include <math.h>
 
-
-
-//need fonction get centre de gravité -> point (0,0,0) auquel on applique la relation racine-objet
-//utiliser la fonction recherche v2
-
-
-
-
-
-
-matrice * creerMatrice(double m[4][4])
+void matTranslation(t_point3d*vecteur,double mat[4][4])
 {
-  matrice * res=malloc(sizeof(matrice));
-  int i,j;
-  for(i=0;i<4;i++){
-    for(j=0;j<4;j++){
-      res->mat[i][j]=m[i][j];
-    }}
-  return res;
+  if(vecteur!=NULL)
+    {
+      mat[0][0]=1;
+      mat[0][1]=0;
+      mat[0][2]=0;
+      mat[0][3]=vecteur->xyzt[0];
+
+      mat[1][0]=0;
+      mat[1][1]=1;
+      mat[1][2]=0;
+      mat[1][3]=vecteur->xyzt[1];
+
+      mat[2][0]=0;
+      mat[2][1]=0;
+      mat[2][2]=1;
+      mat[2][3]=vecteur->xyzt[2];
+
+      mat[3][0]=0;
+      mat[3][1]=0;
+      mat[3][2]=0;
+      mat[3][3]=1;
+    }
 }
 
 
-matrice * matTranslation(t_point3d *vecteur){
-  double mat[4][4]={{1,0,0,vecteur->xyzt[0]},	\
-		    {0,1,0,vecteur->xyzt[1]},	\
-		    {0,0,1,vecteur->xyzt[2]},	\
-		    {0,0,0,1}};
-  return creerMatrice(mat);
-}
-
-matrice * matTranslationinv(t_point3d *vecteur){
-  double mat[4][4]={{1,0,0,-vecteur->xyzt[0]},	\
-		    {0,1,0,-vecteur->xyzt[1]},	\
-		    {0,0,1,-vecteur->xyzt[2]},	\
-		    {0,0,0,1}};
-  return creerMatrice(mat);
-}
-
-
-matrice * matRotation(t_point3d *centre,float degreX, float degreY, float degreZ)
+void matTranslationinv(t_point3d*vecteur,double mat[4][4])
 {
-  float x,y,z;
-  x=degreX*M_PI/180;
-  y=degreY*M_PI/180;
-  z=degreZ*M_PI/180;
-  double mat[4][4];
-  double m[4][4]={{1,0,0,centre->xyzt[0]},\
-		  {0,1,0,centre->xyzt[1]},\
-		  {0,0,1,centre->xyzt[2]},\
-		  {0,0,0,1}};
-  double mx[4][4]={{1,0,0,0},\
-		   {0,cos(x),-sin(x),0},\
-		   {0,sin(x),cos(x),0},\
-		   {0,0,0,1}};
-  double my[4][4]={{cos(y),0,sin(y),0},\
-		   {0,1,0,0},\
-		   {-sin(y),0,cos(y),0},\
-		   {0,0,0,1}};
-  double mz[4][4]={{cos(z),-sin(z),0,0},\
-		   {sin(z),cos(z),0,0},\
-		   {0,0,1,0},\
-		   {0,0,0,1}};
-  double minv[4][4]={{1,0,0,-centre->xyzt[0]},\
-		     {0,1,0,-centre->xyzt[1]},\
-		     {0,0,1,-centre->xyzt[2]},\
-		     {0,0,0,1}};
+  if(vecteur!=NULL)
+    {
+      mat[0][0]=1;
+      mat[0][1]=0;
+      mat[0][2]=0;
+      mat[0][3]=-vecteur->xyzt[0];
 
-  multiplicationMatrice3d(mat,m,mx);
-  multiplicationMatrice3d(mat,mat,my);
-  multiplicationMatrice3d(mat,mat,mz);
-  multiplicationMatrice3d(mat,mat,minv);
-  return creerMatrice(mat);
-} 
+      mat[1][0]=0;
+      mat[1][1]=1;
+      mat[1][2]=0;
+      mat[1][3]=-vecteur->xyzt[1];
 
-matrice * matRotationinv(t_point3d *centre,float degreX, float degreY, float degreZ){
-  return matRotation(centre,-degreX,-degreY,-degreZ);
+      mat[2][0]=0;
+      mat[2][1]=0;
+      mat[2][2]=1;
+      mat[2][3]=-vecteur->xyzt[2];
+
+      mat[3][0]=0;
+      mat[3][1]=0;
+      mat[3][2]=0;
+      mat[3][3]=1;
+    }
 }
 
-t_point3d * getCentre(t_scene3d* pt_scene3d,int pos)
-{
-  double mat[4][4]={{1,0,0,0},			\
-		    {0,1,0,0},			\
-		    {0,0,1,0},			\
-		    {0,0,0,1}};
-  t_scene3d*tmp= rechercheScene3dv2(pos,pt_scene3d,mat);
-  t_point3d * res= definirPoint3d(0,0,0);
-  multiplicationVecteur3d(res,mat,res);
-  return res;
-}
 
-void translationScene3d(t_scene3d* pt_scene3d,t_point3d *vecteur)
+void matRotation(t_point3d*centre,float degreX,float degreY,float degreZ,double mat[4][4])
 {
-  if(vecteur!=NULL){
-    double mat[4][4]={{1,0,0,vecteur->xyzt[0]},	\
-		      {0,1,0,vecteur->xyzt[1]},	\
-		      {0,0,1,vecteur->xyzt[2]},	\
+  if(centre!=NULL)
+    {
+      float x,y,z;
+      x=degreX*M_PI/180;
+      y=degreY*M_PI/180;
+      z=degreZ*M_PI/180;
+      double m[4][4]={{1,0,0,centre->xyzt[0]},\
+		      {0,1,0,centre->xyzt[1]},\
+		      {0,0,1,centre->xyzt[2]},\
 		      {0,0,0,1}};
-    transformationScene3d(pt_scene3d,mat);
-  }
-}
-
-void rotationScene3d(t_scene3d* pt_scene3d,t_point3d *centre, float degreX, float degreY, float degreZ)
-{
-  if(centre!=NULL){
-    float x,y,z;
-    x=degreX*M_PI/180;
-    y=degreY*M_PI/180;
-    z=degreZ*M_PI/180;
-    double mat[4][4];
-    double m[4][4]={{1,0,0,centre->xyzt[0]},\
-		    {0,1,0,centre->xyzt[1]},\
-		    {0,0,1,centre->xyzt[2]},\
-		    {0,0,0,1}};
-    double mx[4][4]={{1,0,0,0},\
-		     {0,cos(x),-sin(x),0},\
-		     {0,sin(x),cos(x),0},\
-		     {0,0,0,1}};
-    double my[4][4]={{cos(y),0,sin(y),0},\
-		     {0,1,0,0},\
-		     {-sin(y),0,cos(y),0},\
-		     {0,0,0,1}};
-    double mz[4][4]={{cos(z),-sin(z),0,0},\
-		     {sin(z),cos(z),0,0},\
-		     {0,0,1,0},\
-		     {0,0,0,1}};
-    double minv[4][4]={{1,0,0,-centre->xyzt[0]},\
-		       {0,1,0,-centre->xyzt[1]},\
-		       {0,0,1,-centre->xyzt[2]},\
+      double mx[4][4]={{1,0,0,0},\
+		       {0,cos(x),-sin(x),0},\
+		       {0,sin(x),cos(x),0},\
 		       {0,0,0,1}};
+      double my[4][4]={{cos(y),0,sin(y),0},\
+		       {0,1,0,0},\
+		       {-sin(y),0,cos(y),0},\
+		       {0,0,0,1}};
+      double mz[4][4]={{cos(z),-sin(z),0,0},\
+		       {sin(z),cos(z),0,0},\
+		       {0,0,1,0},\
+		       {0,0,0,1}};
+      double minv[4][4]={{1,0,0,-centre->xyzt[0]},\
+			 {0,1,0,-centre->xyzt[1]},\
+			 {0,0,1,-centre->xyzt[2]},\
+			 {0,0,0,1}};
 
-    multiplicationMatrice3d(mat,m,mx);
-    multiplicationMatrice3d(mat,mat,my);
-    multiplicationMatrice3d(mat,mat,mz);
-    multiplicationMatrice3d(mat,mat,minv);
-    transformationScene3d(pt_scene3d,mat);
-  }
+      multiplicationMatrice3d(mat,m,mx);
+      multiplicationMatrice3d(mat,mat,my);
+      multiplicationMatrice3d(mat,mat,mz);
+      multiplicationMatrice3d(mat,mat,minv);
+    } 
 }
 
 
+void matRotationinv(t_point3d*centre,float degreX,float degreY,float degreZ,double mat[4][4]){
+  matRotation(centre,-degreX,-degreY,-degreZ,mat);
+}
 
-void transformationScene3d(t_scene3d *pt_scene3d,double mat[4][4])
+
+void translationScene3d(t_scene3d*pt_scene3d,t_point3d*vecteur)
+{
+  double mat[4][4];
+  double inv[4][4];
+  matTranslation(vecteur,mat);
+  matTranslationinv(vecteur,inv);
+  transformationScene3d(pt_scene3d,mat,inv);
+}
+
+
+void rotationScene3d(t_scene3d*pt_scene3d,t_point3d*centre,float degreX,float degreY,float degreZ)
+{
+  double mat[4][4];
+  double inv[4][4];
+  matRotation(centre,degreX,degreY,degreZ,mat);
+  matRotationinv(centre,degreX,degreY,degreZ,inv);
+  transformationScene3d(pt_scene3d,mat,inv);
+}
+
+
+void transformationScene3d(t_scene3d *pt_scene3d,double mat[4][4],double inv[4][4])
 {
   if(pt_scene3d!=NULL){
-    transformationObjet3d(pt_scene3d->objet3d,mat);
-    transformationFils(mat,pt_scene3d->lifils);
-  }
-}
-
-void transformationFils(double mat[4][4],m_noeud * lifils)
-{
-  if(lifils!=NULL){
-    transformationScene3d(lifils->fils,mat);
-    transformationFils(mat,lifils->pt_suiv);
+    multiplicationMatrice3d(pt_scene3d->mat,mat,pt_scene3d->mat);
+    multiplicationMatrice3d(pt_scene3d->inv,inv,pt_scene3d->inv);
+    transformationFils(pt_scene3d->fils,mat,inv);
   }
 }
 
 
-void transformationScene3dv2(t_scene3d *pt_scene3d,double mat[4][4],int pos)
+void transformationFils(t_scene3d *pt_scene3d,double mat[4][4],double inv[4][4])
 {
-  t_scene3d *tmp = rechercheScene3d(pos,pt_scene3d);
-  double m[4][4];
-  
-  
-  multiplicationMatrice3d(m,mat,tmp->mat->mat);
-  matrice*tmpmat=creerMatrice(m);
-  free(tmp->mat);
-  tmp->mat=tmpmat;
-  
-
-  /*  printf("modif matrice recherche\n");
-  affMatrice(tmpmat->mat);
-  printf("aka %d\n",tmp->nom);*/
-
-  
-  transformationScene3d(tmp,mat);
-
-  // exit(EXIT_SUCCESS);
-}
-
-void translationScene3dv2(t_scene3d* pt_scene3d,t_point3d *vecteur,int pos)
-{
-  if(vecteur!=NULL){
-    double mat[4][4]={{1,0,0,vecteur->xyzt[0]},	\
-		      {0,1,0,vecteur->xyzt[1]},	\
-		      {0,0,1,vecteur->xyzt[2]},	\
-		      {0,0,0,1}};
-    transformationScene3dv2(pt_scene3d,mat,pos);
-  }
-}
-
-void rotationScene3dv2(t_scene3d* pt_scene3d,t_point3d *centre, float degreX, float degreY, float degreZ,int pos)
-{
- if(centre!=NULL){
-    float x,y,z;
-    x=degreX*M_PI/180;
-    y=degreY*M_PI/180;
-    z=degreZ*M_PI/180;
-    double mat[4][4];
-    double m[4][4]={{1,0,0,centre->xyzt[0]},\
-		    {0,1,0,centre->xyzt[1]},\
-		    {0,0,1,centre->xyzt[2]},\
-		    {0,0,0,1}};
-    double mx[4][4]={{1,0,0,0},\
-		     {0,cos(x),-sin(x),0},\
-		     {0,sin(x),cos(x),0},\
-		     {0,0,0,1}};
-    double my[4][4]={{cos(y),0,sin(y),0},\
-		     {0,1,0,0},\
-		     {-sin(y),0,cos(y),0},\
-		     {0,0,0,1}};
-    double mz[4][4]={{cos(z),-sin(z),0,0},\
-		     {sin(z),cos(z),0,0},\
-		     {0,0,1,0},\
-		     {0,0,0,1}};
-    double minv[4][4]={{1,0,0,-centre->xyzt[0]},\
-		       {0,1,0,-centre->xyzt[1]},\
-		       {0,0,1,-centre->xyzt[2]},\
-		       {0,0,0,1}};
-
-    multiplicationMatrice3d(mat,m,mx);
-    multiplicationMatrice3d(mat,mat,my);
-    multiplicationMatrice3d(mat,mat,mz);
-    multiplicationMatrice3d(mat,mat,minv);
-    transformationScene3dv2(pt_scene3d,mat,pos);
+  if(pt_scene3d!=NULL){
+    multiplicationMatrice3d(pt_scene3d->mat,mat,pt_scene3d->mat);
+    multiplicationMatrice3d(pt_scene3d->inv,inv,pt_scene3d->inv);
+    transformationFils(pt_scene3d->fils,mat,inv);
+    transformationFils(pt_scene3d->frere,mat,inv);
   }
 }
 
 
-t_scene3d * creerScene3d(t_objet3d * pt_objet3d,matrice *m1,matrice *m2,int nom)
+t_scene3d*creerScene3d(t_objet3d*pt_objet3d)
 {
-  int i,j;
   t_scene3d * pt_scene3d=malloc(sizeof(t_scene3d));
+  t_point3d * vecteur=definirPoint3d(0,0,0);
   pt_scene3d->objet3d=pt_objet3d;
-  pt_scene3d->nom=nom; 
-  pt_scene3d->mat=m1;
-  pt_scene3d->inv=m2;
-  pt_scene3d->lifils=NULL;
+  pt_scene3d->pere=NULL;
+  pt_scene3d->fils=NULL;
+  pt_scene3d->frere=NULL;
+  matTranslation(vecteur,pt_scene3d->mat);
+  matTranslation(vecteur,pt_scene3d->inv);
+  free(vecteur);  
   return pt_scene3d;
 }
 
-m_noeud * __creerMNoeud(t_scene3d * elem){
-  m_noeud * res = malloc(sizeof(m_noeud));
-  res->pt_suiv=NULL;
-  res->fils=elem;
-}
 
-t_scene3d * rechercheScene3d(int val,t_scene3d* pt_scene3d)
+void ajoutObjet3d(t_scene3d*pt_scene3d,t_objet3d*pt_objet3d)
 {
-  t_scene3d *res=NULL;
-  if(pt_scene3d!=NULL){
-    if(pt_scene3d->nom==val){
-      return pt_scene3d;
-    }
-    else{
-      res=rechercheFils(val,pt_scene3d->lifils);
-    }
-  }
-  return res;
-}
-
-t_scene3d * rechercheFils(int val,m_noeud * lifils){
-  t_scene3d *res=NULL;
-  if(lifils!=NULL){
-    res=rechercheScene3d(val,lifils->fils);
-    if(res==NULL){
-      res=rechercheFils(val,lifils->pt_suiv);
-    }
-  }
-  return res;
+  t_scene3d * fils=creerScene3d(pt_objet3d);
+  fils->pere=pt_scene3d;
+  fils->frere=pt_scene3d->fils;
+  pt_scene3d->fils=fils;
 }
 
 
-t_scene3d * rechercheScene3dv2(int val,t_scene3d* pt_scene3d,double mat[4][4])
+void dessinerScene3d(t_surface*surface,t_scene3d*pt_scene3d,double h)
 {
-  t_scene3d *res=NULL;
   if(pt_scene3d!=NULL){
-    if(pt_scene3d->nom==val){
-      multiplicationMatrice3d(mat,mat,pt_scene3d->mat->mat);
-      return pt_scene3d;
-    }
-    else{
-      res=rechercheFilsv2(val,pt_scene3d->lifils,mat);
-      if(res!=NULL){
-	multiplicationMatrice3d(mat,mat,pt_scene3d->mat->mat);
-      }
-    }
-  }
-  return res;
-}
-
-t_scene3d * rechercheFilsv2(int val,m_noeud * lifils,double mat[4][4]){
-  t_scene3d *res=NULL;
-  if(lifils!=NULL){
-    res=rechercheScene3dv2(val,lifils->fils,mat);
-    if(res==NULL){
-      res=rechercheFilsv2(val,lifils->pt_suiv,mat);
-    }
-  }
-  return res;
-}
-
-
-void ajoutFilsNoeud(t_scene3d *pt_scene3d,t_scene3d *elem,int pos)
-{
-  double mat[4][4]={{1,0,0,0},			\
-		    {0,1,0,0},			\
-		    {0,0,1,0},			\
-		    {0,0,0,1}};
-  
-  t_scene3d* pere=rechercheScene3dv2(pos,pt_scene3d,mat);
-  if(pere!=NULL){
-    multiplicationMatrice3d(mat,mat,elem->mat->mat);
-    transformationObjet3d(elem->objet3d,mat);
-    m_noeud *noeud=malloc(sizeof(m_noeud));
-    noeud->fils=elem;
-    noeud->pt_suiv=pere->lifils;
-    pere->lifils=noeud;
-  }
-  else{
-    printf("insersion fail ! bouwia \n");
-  }
-}
-
-
-void dessinerScene3d(t_surface *surface,t_scene3d * pt_scene3d,double h){
-  if(pt_scene3d!=NULL){
+    transformationObjet3d(pt_scene3d->objet3d,pt_scene3d->mat);
     dessinerObjet3d(surface,pt_scene3d->objet3d,h);
-    dessinerFils(surface,pt_scene3d->lifils,h);
-  }
-}
-  
-void dessinerFils(t_surface * surface,m_noeud * lifils,double h){
-  if(lifils!=NULL){
-    dessinerScene3d(surface,lifils->fils,h);
-    dessinerFils(surface,lifils->pt_suiv,h);
+    transformationObjet3d(pt_scene3d->objet3d,pt_scene3d->inv);
+    dessinerScene3d(surface,pt_scene3d->fils,h);
+    dessinerScene3d(surface,pt_scene3d->frere,h);
   }
 }

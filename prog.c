@@ -19,8 +19,10 @@ int main(int argc,char** argv)
   int timestart;
   char buf[50];
   SDL_Event event;
+
   t_bool fin=true;
   int turnlr=0,turnhb=0;
+
 #ifdef T2D
   t_point2d *p1 = definirPoint2d(10,50), *p2 = definirPoint2d(100,240), *p3 = definirPoint2d(50,300);
   t_triangle2d *t1 = definirTriangle2d(p1, p2, p3);
@@ -110,166 +112,131 @@ int main(int argc,char** argv)
 
   
 #ifdef S3D
+  t_point3d *origine = definirPoint3d(0,0,0);
+  t_point3d *vecteur;
+  t_point3d *unitaire = definirPoint3d(1,1,1);
+  t_point3d *translation;
+  int Tx=0,Ty=0,Tz=0;
+  int Rx=0,Ry=0,Rz=0;
 
-  
-  t_point3d *origine = definirPoint3d(0,0,0), *vecteur,*vecteur2,*centre1,*centre2;
+  double mat[4][4];
+  double inv[4][4];
+
+  double tmpmat[4][4];
+  double tmpinv[4][4];
+
   double h = -500;
   
-  t_objet3d*cam1=camera();
-  t_objet3d *plan=damier(500,500,10,10);
-  t_objet3d *cube=sphere(100,10,20);
+  t_objet3d*c1=camera();
 
-  t_objet3d *cube2=tore(100,10,10,50);
+  t_objet3d*p1=damier(500,500,10,10);
+  t_objet3d*s1=sphere(100,10,20);
+  t_objet3d*t1=tore(100,10,10,50);
+
+  t_scene3d*scene=creerScene3d(c1);
+
+  ajoutObjet3d(scene,p1);
+  t_scene3d*sp1=scene->fils;
+
+  ajoutObjet3d(sp1,s1);
+  t_scene3d*ss1=sp1->fils;
   
-  double m1[4][4]={{1,0,0,0},			\
-		   {0,1,0,0},			\
-		   {0,0,1,0},			\
-		   {0,0,0,1}};
+  ajoutObjet3d(ss1,t1);
+  t_scene3d*st1=ss1->fils;
 
-  double m2[4][4]={{1,0,0,0},			\
-		   {0,1,0,0},			\
-		   {0,0,1,0},			\
-		   {0,0,0,1}};
+  vecteur=definirVecteur3d(0,150,-500);
+  translationScene3d(sp1,vecteur);
+  free(vecteur);
+
+  vecteur=definirVecteur3d(0,-150,0);
+  translationScene3d(ss1,vecteur);
+  free(vecteur);
+
+  vecteur=definirVecteur3d(0,100,0);
+  translationScene3d(st1,vecteur);
+  free(vecteur);
   
-  
-  t_scene3d * scene=creerScene3d(cam1,creerMatrice(m1),creerMatrice(m2),0);
-    
-  vecteur = definirPoint3d(0,-200,0);
-
-  t_scene3d * scube1=creerScene3d(cube,matTranslation(vecteur),matTranslationinv(vecteur),2);
-
-  vecteur = definirPoint3d(0,150,0);
-
-  t_scene3d * scube2=creerScene3d(cube2,matTranslation(vecteur),matTranslationinv(vecteur),3);
-
- 
-  vecteur = definirPoint3d(0,150,-500);
-  t_scene3d * splan=creerScene3d(plan,matTranslation(vecteur),matTranslationinv(vecteur),1);
-  
-
-  ajoutFilsNoeud(scene,splan,0);
-  ajoutFilsNoeud(scene,scube1,1);
-  ajoutFilsNoeud(scene,scube2,2);
-
-  centre1=definirPoint3d(0,0,-500);
-  centre2=definirPoint3d(0,150,-500);
-
-  vecteur = definirPoint3d(0,0,0);
-  vecteur2=definirVecteur3d(5,0,0);
- 
 
 #endif
-
 
   int i=0;
 
   surface=creerFenetre(RX,RY);
   timestart = SDL_GetTicks();
 
-
-  while(i<25*10000 && fin)
+  while(i<10000 && fin)
     {
-      //printf("%deme passe:\n",i);
+      printf("%deme passe:\n",i);
       init();
-      effacerFenetre(surface, 0);
+      effacerFenetre(surface,0);
 
 #ifdef T2D
       remplirTriangle2d(surface, t1, echelle_de_couleur(30*i));
-      SDL_Delay(500);
 #endif
       
 #ifdef T3D
-      //translationTriangle3d(t1,vecteur);
       rotationTriangle3d(t1, origine,0,0,0);      
       remplirTriangle3d(surface, t1, ROUGEF);
-      //remplirTriangle3d(surface, t3, VERTF);
-      SDL_Delay(40);
 #endif
 
 #ifdef O3D
       vecteur = definirPoint3d(0,0,7*sin(i*M_PI/180));   
-
       dessinerObjet3d(surface,plan,h);
       translationObjet3d(plan,vecteur);
- 
       free(vecteur);
 #endif
 
-#ifdef S3D     
-      
-      free(centre1);
-      centre1=getCentre(scene,1);
-      
-
-      free(centre2);
-      centre2=getCentre(scene,2);
-      
-      //affMatrice(scene->mat->mat);
-      affMatrice(scube1->mat->mat);
-      affMatrice(scube2->mat->mat);
-      
-      printf("centre1 : ");
-      affPoint(centre1);
-      
-      
-      printf("centre2 : ");
-      affPoint(centre2);
-           
-     
-      //rotationScene3dv2(scene,centre1,0,5,0,2);
-
-
-      //rotationScene3dv2(scene,centre1,0,-5,0,3);
-     
+#ifdef S3D
       
       dessinerScene3d(surface,scene,h);
-      
       
       SDL_PollEvent(&event);
       switch(event.type){
 	case SDL_KEYDOWN:
 	  switch(event.key.keysym.sym){
-	  case SDLK_UP:
-	    free(vecteur);
-	    vecteur=definirVecteur3d(0,-5,0);
+	  case SDLK_KP9:
+	    Ty++;
 	    break;
-	  case SDLK_DOWN:
-	    free(vecteur);
-	    vecteur=definirVecteur3d(0,5,0);
+	  case SDLK_KP3:
+	    Ty--;
 	    break;
-	  case SDLK_RIGHT:
-	    free(vecteur);
-	    vecteur=definirVecteur3d(-5,0,0);
+	  case SDLK_KP6:
+	    Tx--;
 	    break;
-	  case SDLK_LEFT:
-	    free(vecteur);
-	    vecteur=definirVecteur3d(5,0,0);
+	  case SDLK_KP4:
+	    Tx++;
+	    break;
+	  case SDLK_KP8:
+	    Tz++;
+	    break;
+	  case SDLK_KP2:
+	    Tz--;
 	    break;
 	  case SDLK_a:
-	    free(vecteur);
-	    vecteur=definirVecteur3d(0,0,5);
+	    Rz++;
 	    break;
 	  case SDLK_e:
-	    free(vecteur);
-	    vecteur=definirVecteur3d(0,0,-5);
+	    Rz--;
 	    break;
 	  case SDLK_q:
-	    turnlr=-1;
+	    Ry++;
 	    break;
 	  case SDLK_d:
-	    turnlr=1;
+	    Ry--;
 	    break;
 	  case SDLK_z:
-	    turnhb=-1;
+	    Rx--;
 	    break;
 	  case SDLK_s:
-	    turnhb=1;
+	    Rx++;
 	    break;
 	  case SDLK_SPACE:
-	    free(vecteur);
-	    vecteur=definirVecteur3d(0,0,0);
-	    turnlr=0;
-	    turnhb=0;
+	    Rx=0;
+	    Ry=0;
+	    Rz=0;
+	    Tx=0;
+	    Ty=0;
+	    Tz=0;
 	    break;
 	  case SDLK_ESCAPE:
 	    fin=false;
@@ -277,25 +244,56 @@ int main(int argc,char** argv)
 	  }
 	  break;
       }
+      /*
+      matTranslation(unitaire,mat);
+      matTranslation(unitaire,inv);
+      matTranslation(unitaire,tmpmat);
+      matTranslation(unitaire,tmpinv);
+      */
 
-      if(turnlr<0)
-	rotationScene3dv2(splan,origine,0,-1,0,1);
-      if(turnlr>0)
-	rotationScene3dv2(splan,origine,0,1,0,1);
-      if(turnhb<0)
-	rotationScene3dv2(splan,origine,1,0,0,1);
-      if(turnhb>0)
-	rotationScene3dv2(splan,origine,-1,0,0,1);
+      vecteur=definirPoint3d(0,0,-500);
 
-      translationScene3dv2(scene,vecteur,1);     
-      //exit(EXIT_SUCCESS);
+      rotationScene3d(ss1,vecteur,-0.05,0,0);
+
+      free(vecteur);
+
+      translation=definirPoint3d(Tx,Ty,Tz);
+      translationScene3d(scene,translation);
+      
+      
+      /*
+      matRotation(origine,Rx,Ry,Rz,tmpmat);
+      matRotationinv(origine,Rx,Ry,Rz,tmpinv);
+      
+      multiplicationMatrice3d(mat,tmpmat,mat);
+      multiplicationMatrice3d(inv,tmpinv,inv);
+      */
+      //affMatrice(mat);
+      if(Rx<0)
+	rotationScene3d(scene,origine,-1,0,0);
+      if(Ry<0)
+	rotationScene3d(scene,origine,0,-1,0);
+      if(Rz<0)
+	rotationScene3d(scene,origine,0,0,-1);
+      if(Rx>0)
+	rotationScene3d(scene,origine,1,0,0);
+      if(Ry>0)
+	rotationScene3d(scene,origine,0,1,0);
+      if(Rz>0)
+	rotationScene3d(scene,origine,0,0,1);
+
+      free(translation);
+      
+
+      // if(i>10)
+	//exit(EXIT_SUCCESS);
    
 #endif
 
       afficherFenetre(surface,screen);
       majEcran(surface);
       SDL_Delay(20);
-      i += 1;
+      i++;
 
       cpt++;
       sprintf(buf,"%d FPS",(int)(cpt*1000.0/(SDL_GetTicks()-timestart)));
