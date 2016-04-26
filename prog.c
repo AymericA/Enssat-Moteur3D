@@ -144,15 +144,15 @@ int main(int argc,char** argv)
   ajoutObjet3d(ss1,t1);
   t_scene3d*st1=ss1->fils;
 
-  vecteur=definirVecteur3d(0,150,-500);
+  vecteur=definirPoint3d(0,150,-500);
   translationScene3d(sp1,vecteur);
   free(vecteur);
 
-  vecteur=definirVecteur3d(0,-150,0);
+  vecteur=definirPoint3d(0,0,0);
   translationScene3d(ss1,vecteur);
   free(vecteur);
 
-  vecteur=definirVecteur3d(0,100,0);
+  vecteur=definirPoint3d(0,0,0);
   translationScene3d(st1,vecteur);
   free(vecteur);
   

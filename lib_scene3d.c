@@ -181,14 +181,14 @@ void dessinerScene3d_rec(t_surface*surface,t_scene3d*pt_scene3d,double h,double 
     double tmpmat[4][4];
     double tmpinv[4][4];
     
-    multiplicationMatrice3d(tmpmat,mat,pt_scene3d->mat);
-    multiplicationMatrice3d(tmpinv,inv,pt_scene3d->inv);
+    multiplicationMatrice3d(tmpmat,pt_scene3d->mat,mat);
+    multiplicationMatrice3d(tmpinv,pt_scene3d->inv,inv);
 
     transformationObjet3d(pt_scene3d->objet3d,tmpmat);
     dessinerObjet3d(surface,pt_scene3d->objet3d,h);
     transformationObjet3d(pt_scene3d->objet3d,tmpinv);
 
-    dessinerScene3d_rec(surface,pt_scene3d->fils,htmpmat,tmpinv);
+    dessinerScene3d_rec(surface,pt_scene3d->fils,h,tmpmat,tmpinv);
     dessinerScene3d_rec(surface,pt_scene3d->frere,h,mat,inv);
   }
 }
