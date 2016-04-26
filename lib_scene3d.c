@@ -161,14 +161,35 @@ void ajoutObjet3d(t_scene3d*pt_scene3d,t_objet3d*pt_objet3d)
   pt_scene3d->fils=fils;
 }
 
-
 void dessinerScene3d(t_surface*surface,t_scene3d*pt_scene3d,double h)
 {
+  double mat[4][4]={{1,0,0,0},			\
+		    {0,1,0,0},			\
+		    {0,0,1,0},			\
+		    {0,0,0,1}};
+  double inv[4][4]={{1,0,0,0},			\
+		    {0,1,0,0},			\
+		    {0,0,1,0},			\
+		    {0,0,0,1}};
+  dessinerScene3d_rec(surface,pt_scene3d,h,mat,inv);
+}
+
+ 
+void dessinerScene3d_rec(t_surface*surface,t_scene3d*pt_scene3d,double h,double mat[4][4],double inv[4][4])
+{
   if(pt_scene3d!=NULL){
-    transformationObjet3d(pt_scene3d->objet3d,pt_scene3d->mat);
+    double tmpmat[4][4];
+    double tmpinv[4][4];
+    
+    multiplicationMatrice3d(tmpmat,mat,pt_scene3d->mat);
+    multiplicationMatrice3d(tmpinv,inv,pt_scene3d->inv);
+
+    transformationObjet3d(pt_scene3d->objet3d,tmpmat);
     dessinerObjet3d(surface,pt_scene3d->objet3d,h);
-    transformationObjet3d(pt_scene3d->objet3d,pt_scene3d->inv);
-    dessinerScene3d(surface,pt_scene3d->fils,h);
-    dessinerScene3d(surface,pt_scene3d->frere,h);
+    transformationObjet3d(pt_scene3d->objet3d,tmpinv);
+
+    dessinerScene3d_rec(surface,pt_scene3d->fils,htmpmat,tmpinv);
+    dessinerScene3d_rec(surface,pt_scene3d->frere,h,mat,inv);
   }
 }
+ 

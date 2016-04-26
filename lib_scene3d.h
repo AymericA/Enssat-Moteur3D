@@ -34,4 +34,6 @@ t_scene3d*creerScene3d(t_objet3d*pt_objet3d);
 void ajoutObjet3d(t_scene3d*pt_scene3d,t_objet3d*pt_objet3d);
 
 void dessinerScene3d(t_surface*surface,t_scene3d*pt_scene3d,double h);
+void dessinerScene3d_rec(t_surface*surface,t_scene3d*pt_scene3d,double h,double mat[4][4],double inv[4][4];
+
 #endif

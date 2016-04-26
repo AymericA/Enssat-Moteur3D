@@ -253,7 +253,7 @@ int main(int argc,char** argv)
 
       vecteur=definirPoint3d(0,0,-500);
 
-      rotationScene3d(ss1,vecteur,-0.05,0,0);
+      //rotationScene3d(ss1,origine,-0.05,0,0);
 
       free(vecteur);
 
