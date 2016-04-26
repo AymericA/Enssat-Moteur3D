@@ -144,19 +144,20 @@ int main(int argc,char** argv)
   ajoutObjet3d(ss1,t1);
   t_scene3d*st1=ss1->fils;
 
+  t_point3d *centre = definirPoint3d(0,0,-500);
+
   vecteur=definirPoint3d(0,150,-500);
   translationScene3d(sp1,vecteur);
   free(vecteur);
 
-  vecteur=definirPoint3d(0,0,0);
+  vecteur=definirPoint3d(0,-150,0);
   translationScene3d(ss1,vecteur);
   free(vecteur);
 
-  vecteur=definirPoint3d(0,0,0);
+  vecteur=definirPoint3d(0,100,0);
   translationScene3d(st1,vecteur);
   free(vecteur);
-  
-
+ 
 #endif
 
   int i=0;
@@ -251,11 +252,11 @@ int main(int argc,char** argv)
       matTranslation(unitaire,tmpinv);
       */
 
-      vecteur=definirPoint3d(0,0,-500);
+      //vecteur=definirPoint3d(0,0,-500);
 
-      //rotationScene3d(ss1,origine,-0.05,0,0);
+      rotationScene3d(ss1,centre,0,1,0);
 
-      free(vecteur);
+      //free(vecteur);
 
       translation=definirPoint3d(Tx,Ty,Tz);
       translationScene3d(scene,translation);
@@ -268,7 +269,8 @@ int main(int argc,char** argv)
       multiplicationMatrice3d(mat,tmpmat,mat);
       multiplicationMatrice3d(inv,tmpinv,inv);
       */
-      //affMatrice(mat);
+      
+      /*
       if(Rx<0)
 	rotationScene3d(scene,origine,-1,0,0);
       if(Ry<0)
@@ -281,12 +283,9 @@ int main(int argc,char** argv)
 	rotationScene3d(scene,origine,0,1,0);
       if(Rz>0)
 	rotationScene3d(scene,origine,0,0,1);
-
+      */
       free(translation);
       
-
-      // if(i>10)
-	//exit(EXIT_SUCCESS);
    
 #endif
 

@@ -4,7 +4,7 @@
 void affPoint(t_point3d *p)
 {
   if(p!=NULL)
-    printf("(%d,%d,%d)\n",(int)p->xyzt[0],(int)p->xyzt[1],(int)p->xyzt[2]);
+    printf("(%d,%d,%d)",(int)p->xyzt[0],(int)p->xyzt[1],(int)p->xyzt[2]);
 }
 
 void affMatrice(double m[4][4])

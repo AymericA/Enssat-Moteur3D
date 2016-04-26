@@ -112,7 +112,7 @@ void rotationScene3d(t_scene3d*pt_scene3d,t_point3d*centre,float degreX,float de
   double mat[4][4];
   double inv[4][4];
   matRotation(centre,degreX,degreY,degreZ,mat);
-  matRotationinv(centre,degreX,degreY,degreZ,inv);
+  matRotationinv(centre,degreX,degreY,degreZ,inv);   
   transformationScene3d(pt_scene3d,mat,inv);
 }
 
@@ -121,19 +121,7 @@ void transformationScene3d(t_scene3d *pt_scene3d,double mat[4][4],double inv[4][
 {
   if(pt_scene3d!=NULL){
     multiplicationMatrice3d(pt_scene3d->mat,mat,pt_scene3d->mat);
-    multiplicationMatrice3d(pt_scene3d->inv,inv,pt_scene3d->inv);
-    transformationFils(pt_scene3d->fils,mat,inv);
-  }
-}
-
-
-void transformationFils(t_scene3d *pt_scene3d,double mat[4][4],double inv[4][4])
-{
-  if(pt_scene3d!=NULL){
-    multiplicationMatrice3d(pt_scene3d->mat,mat,pt_scene3d->mat);
-    multiplicationMatrice3d(pt_scene3d->inv,inv,pt_scene3d->inv);
-    transformationFils(pt_scene3d->fils,mat,inv);
-    transformationFils(pt_scene3d->frere,mat,inv);
+    multiplicationMatrice3d(pt_scene3d->inv,pt_scene3d->inv,inv);
   }
 }
 
@@ -179,15 +167,24 @@ void dessinerScene3d_rec(t_surface*surface,t_scene3d*pt_scene3d,double h,double 
 {
   if(pt_scene3d!=NULL){
     double tmpmat[4][4];
-    double tmpinv[4][4];
-    
+    double tmpinv[4][4];    
     multiplicationMatrice3d(tmpmat,pt_scene3d->mat,mat);
-    multiplicationMatrice3d(tmpinv,pt_scene3d->inv,inv);
+    multiplicationMatrice3d(tmpinv,inv,pt_scene3d->inv);
 
     transformationObjet3d(pt_scene3d->objet3d,tmpmat);
     dessinerObjet3d(surface,pt_scene3d->objet3d,h);
     transformationObjet3d(pt_scene3d->objet3d,tmpinv);
-
+    /*
+    double debug[4][4];
+    //affMatrice(tmpmat);
+    //affMatrice(tmpinv);
+    multiplicationMatrice3d(debug,mat,inv);
+    printf("debug1\n");
+    affMatrice(debug);
+    multiplicationMatrice3d(debug,pt_scene3d->mat,pt_scene3d->inv);
+    printf("debug2\n");
+    affMatrice(debug);
+    */
     dessinerScene3d_rec(surface,pt_scene3d->fils,h,tmpmat,tmpinv);
     dessinerScene3d_rec(surface,pt_scene3d->frere,h,mat,inv);
   }

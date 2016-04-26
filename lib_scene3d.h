@@ -27,7 +27,6 @@ void translationScene3d(t_scene3d*pt_scene3d,t_point3d*vecteur);
 void rotationScene3d(t_scene3d*pt_scene3d,t_point3d*centre,float degreX,float degreY,float degreZ);
 
 void transformationScene3d(t_scene3d*pt_scene3d,double mat[4][4],double inv[4][4]);
-void transformationFils(t_scene3d*pt_scene3d,double mat[4][4],double inv[4][4]);
 
 t_scene3d*creerScene3d(t_objet3d*pt_objet3d);
 
