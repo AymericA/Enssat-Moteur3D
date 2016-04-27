@@ -23,6 +23,9 @@ void matTranslationinv(t_point3d*vecteur,double mat[4][4]);
 void matRotation(t_point3d*centre,float degreX,float degreY,float degreZ,double mat[4][4]);
 void matRotationinv(t_point3d*centre,float degreX,float degreY,float degreZ,double mat[4][4]);
 
+t_point3d*Getcentre(t_scene3d*pt_scene3d);
+void Getcentre_rec(double mat[4][4],t_scene3d*pt_scene3d);
+
 void translationScene3d(t_scene3d*pt_scene3d,t_point3d*vecteur);
 void rotationScene3d(t_scene3d*pt_scene3d,t_point3d*centre,float degreX,float degreY,float degreZ);
 

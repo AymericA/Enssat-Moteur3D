@@ -97,6 +97,41 @@ void matRotationinv(t_point3d*centre,float degreX,float degreY,float degreZ,doub
 }
 
 
+t_point3d*Getcentre(t_scene3d*pt_scene3d)
+{
+  t_point3d*origine=definirPoint3d(0,0,0);
+  double mat[4][4];
+  matTranslation(origine,mat);
+  Getcentre_rec(mat,pt_scene3d);
+
+  /*  
+      printf("final\n");
+      affMatrice(mat);
+  */
+  
+  multiplicationVecteur3d(origine,mat,origine);
+  return origine;
+}
+
+
+void Getcentre_rec(double mat[4][4],t_scene3d*pt_scene3d)
+{
+  if(pt_scene3d->pere!=NULL)
+    {
+      Getcentre_rec(mat,pt_scene3d->pere);
+    }
+  /*
+  printf("pre\n");
+  affMatrice(pt_scene3d->mat);
+  */
+  multiplicationMatrice3d(mat,pt_scene3d->mat,mat);
+  /*  
+  printf("prefinal\n");
+  affMatrice(mat);
+  */
+}
+
+
 void translationScene3d(t_scene3d*pt_scene3d,t_point3d*vecteur)
 {
   double mat[4][4];
@@ -120,6 +155,7 @@ void rotationScene3d(t_scene3d*pt_scene3d,t_point3d*centre,float degreX,float de
 void transformationScene3d(t_scene3d *pt_scene3d,double mat[4][4],double inv[4][4])
 {
   if(pt_scene3d!=NULL){
+    //a reverif le coup de mat inv avant et mat après etc...  
     multiplicationMatrice3d(pt_scene3d->mat,mat,pt_scene3d->mat);
     multiplicationMatrice3d(pt_scene3d->inv,pt_scene3d->inv,inv);
   }
@@ -167,7 +203,9 @@ void dessinerScene3d_rec(t_surface*surface,t_scene3d*pt_scene3d,double h,double 
 {
   if(pt_scene3d!=NULL){
     double tmpmat[4][4];
-    double tmpinv[4][4];    
+    double tmpinv[4][4];
+
+    //a reverif le coup de mat inv avant et mat après etc...  
     multiplicationMatrice3d(tmpmat,pt_scene3d->mat,mat);
     multiplicationMatrice3d(tmpinv,inv,pt_scene3d->inv);
 
