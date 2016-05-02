@@ -11,6 +11,12 @@ double moy_z(t_triangle3d *t)
   return ((t->abc[0]->xyzt[2])+(t->abc[1]->xyzt[2])+(t->abc[0]->xyzt[2]))/3;
 }
 
+double max_z(t_triangle3d *t)
+{
+  return (fmax(fmax(t->abc[0]->xyzt[2],t->abc[1]->xyzt[2]),t->abc[0]->xyzt[2]));
+}
+
+
 void remplir_z_index(t_maillon *pt_maillon)
 {
   if(pt_maillon!=NULL)
@@ -918,8 +924,9 @@ void dessinerObjet3d(t_surface *surface, t_objet3d* pt_objet, double h)
 {
   if(!pt_objet->est_camera){
     t_maillon *tmp=pt_objet->tete;
+
     while(tmp!=NULL){
-      remplirTriangle3d(surface, tmp->face,tmp->couleur,h);
+      remplirTriangle3d(surface,tmp->face,tmp->couleur,h);
       tmp=tmp->pt_suiv;
     }
   }

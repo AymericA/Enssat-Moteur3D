@@ -52,39 +52,39 @@ int main(int argc,char** argv)
 
   /*
   
-  t_objet3d *cube=parallelepipede(400,400,400);
-  //rotationObjet3d(cube,origine,0,0,-10);
+    t_objet3d *cube=parallelepipede(400,400,400);
+    //rotationObjet3d(cube,origine,0,0,-10);
 
-  vecteur = definirPoint3d(0,0,-1400);
-  translationObjet3d(cube, vecteur);
-  centre=definirPoint3d(0,0,-1400);
+    vecteur = definirPoint3d(0,0,-1400);
+    translationObjet3d(cube, vecteur);
+    centre=definirPoint3d(0,0,-1400);
   */
   /*
-  t_objet3d *sph1=sphere(400,10,20);
+    t_objet3d *sph1=sphere(400,10,20);
 
- vecteur = definirPoint3d(0,0,-1400);
-  translationObjet3d(sph1, vecteur);
-  centre=definirPoint3d(0,0,-1400);
+    vecteur = definirPoint3d(0,0,-1400);
+    translationObjet3d(sph1, vecteur);
+    centre=definirPoint3d(0,0,-1400);
   */
   /*
-  t_objet3d *sph3=sphere(50,10,20);
-  vecteur = definirPoint3d(0,150,0);
-  translationObjet3d(sph3,vecteur);
+    t_objet3d *sph3=sphere(50,10,20);
+    vecteur = definirPoint3d(0,150,0);
+    translationObjet3d(sph3,vecteur);
 
-  t_objet3d *sph12=sphere(50,10,20);
-  vecteur = definirPoint3d(150,0,0);
-  translationObjet3d(sph12,vecteur);
+    t_objet3d *sph12=sphere(50,10,20);
+    vecteur = definirPoint3d(150,0,0);
+    translationObjet3d(sph12,vecteur);
 
-  t_objet3d *sph32=sphere(50,10,20);
-  vecteur = definirPoint3d(-150,0,0);
-  translationObjet3d(sph32,vecteur);
+    t_objet3d *sph32=sphere(50,10,20);
+    vecteur = definirPoint3d(-150,0,0);
+    translationObjet3d(sph32,vecteur);
 
 
-  t_objet3d *sph2=sphere_amiga(100,10,20);
-  composerObjet3d(sph2,sph1);
-  composerObjet3d(sph2,sph3);
-  composerObjet3d(sph2,sph12);
-  composerObjet3d(sph2,sph32);
+    t_objet3d *sph2=sphere_amiga(100,10,20);
+    composerObjet3d(sph2,sph1);
+    composerObjet3d(sph2,sph3);
+    composerObjet3d(sph2,sph12);
+    composerObjet3d(sph2,sph32);
   */
 
   t_objet3d *plan=damier(200,200,3,3);
@@ -112,6 +112,8 @@ int main(int argc,char** argv)
 
   
 #ifdef S3D
+  t_bool is_button_down=false;
+  double x,y;
   t_point3d *origine = definirPoint3d(0,0,0);
   t_point3d *vecteur,*centre;
   t_point3d *unitaire = definirPoint3d(1,1,1);
@@ -165,7 +167,7 @@ int main(int argc,char** argv)
 
   while(i<10000 && fin)
     {
-      printf("%deme passe:\n",i);
+      printf("\n%deme passe:\n",i);
       init();
       effacerFenetre(surface,0);
 
@@ -191,64 +193,97 @@ int main(int argc,char** argv)
       
       SDL_PollEvent(&event);
       switch(event.type){
-	case SDL_KEYDOWN:
-	  switch(event.key.keysym.sym){
-	  case SDLK_KP9:
-	    Ty++;
-	    break;
-	  case SDLK_KP3:
-	    Ty--;
-	    break;
-	  case SDLK_KP6:
-	    Tx--;
-	    break;
-	  case SDLK_KP4:
-	    Tx++;
-	    break;
-	  case SDLK_KP8:
-	    Tz++;
-	    break;
-	  case SDLK_KP2:
-	    Tz--;
-	    break;
-	  case SDLK_a:
-	    Rz++;
-	    break;
-	  case SDLK_e:
-	    Rz--;
-	    break;
-	  case SDLK_q:
-	    Ry++;
-	    break;
-	  case SDLK_d:
-	    Ry--;
-	    break;
-	  case SDLK_z:
-	    Rx--;
-	    break;
-	  case SDLK_s:
-	    Rx++;
-	    break;
-	  case SDLK_SPACE:
-	    Rx=0;
-	    Ry=0;
-	    Rz=0;
-	    Tx=0;
-	    Ty=0;
-	    Tz=0;
-	    break;
-	  case SDLK_ESCAPE:
-	    fin=false;
-	    break;
+	/*
+      case SDL_MOUSEMOTION:
+	if(is_button_down)
+	  {
+	    int xd,yd;
+	    t_point3d *centre = definirPoint3d(0, 0, 0);
+	    
+	    xd = event.motion.x;
+	    yd = event.motion.y;
+	
+	    //rotation de la caméra active
+	    // definition : 100px = rotation de 90° sur un axe
+	    rotationScene3d(scene, centre, 90.0*(yd-y)/100.0, 0, 0);
+	    rotationScene3d(scene, centre, 0, -90.0*(xd-x)/100.0, 0);
+
+	    x = xd;
+	    y = yd;
+
+	    free(centre);
 	  }
+	break;
+      case SDL_MOUSEBUTTONDOWN:
+        is_button_down = true;
+        x = event.motion.x;
+        y = event.motion.y;
+	break;
+      case SDL_MOUSEBUTTONUP:
+        is_button_down = false;
+	break;
+	*/
+      case SDL_KEYDOWN:
+	switch(event.key.keysym.sym){
+	case SDLK_KP9:
+	  Ty++;
 	  break;
+	case SDLK_KP3:
+	  Ty--;
+	  break;
+	case SDLK_KP6:
+	  Tx--;
+	  break;
+	case SDLK_KP4:
+	  Tx++;
+	  break;
+	case SDLK_KP8:
+	  Tz++;
+	  break;
+	case SDLK_KP2:
+	  Tz--;
+	  break;
+	case SDLK_a:
+	  Rz++;
+	  break;
+	case SDLK_e:
+	  Rz--;
+	  break;
+	case SDLK_q:
+	  Ry++;
+	  break;
+	case SDLK_d:
+	  Ry--;
+	  break;
+	case SDLK_z:
+	  Rx--;
+	  break;
+	case SDLK_s:
+	  Rx++;
+	  break;
+	case SDLK_SPACE:
+	  Rx=0;
+	  Ry=0;
+	  Rz=0;
+	  Tx=0;
+	  Ty=0;
+	  Tz=0;
+	  break;
+	case SDLK_ESCAPE:
+	  fin=false;
+	  break;
+	}
+	break;
       }
-      /*
-      centre=Getcentre(sp1);
       
-      rotationScene3d(sp1,centre,0,1,0);
+      centre=definirPoint3d(0,0,0);
+      rotationScene3d(ss1,centre,0,5,0);
+
+      rotationScene3d(st1,centre,5,0,0);
+
+
       free(centre);
-      */
+      
 
       translation=definirPoint3d(Tx,Ty,Tz);
       translationScene3d(scene,translation);

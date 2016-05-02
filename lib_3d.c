@@ -97,7 +97,8 @@ void remplirTriangle3d(t_surface * surface, t_triangle3d * triangle, Uint32 c,do
   t_triangle2d *t2d;
   double A,B,C,D,acx,acy,acz,bcx,bcy,bcz;
 
-  if(triangle->abc[0]->xyzt[2]<0 && triangle->abc[1]->xyzt[2]<0 && triangle->abc[2]->xyzt[2]<0)
+  if(triangle->abc[0]->xyzt[2]<0 && triangle->abc[1]->xyzt[2]<0 && triangle->abc[2]->xyzt[2]<0) //vérif si triangle est dans le demi espace des z négatifs
+    // (utile ?)
   {
 
   p2da = __conversion_2d_3d(triangle->abc[0],h);

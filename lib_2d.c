@@ -140,11 +140,12 @@ void remplirTriangle2d(t_surface * surface, t_triangle2d * triangle,double A,dou
 
   for (y = MAX(0,ymin) ; y <= MIN(RY-1,ymax) ; y++ ){
     for (x = xmin[y] ; x <= xmax[y] ; x++ ){
-      if(x>0 && x<=RX && y>0 && y<= RY){
+      if(x>0 && x<=RX && y>0 && y<= RY){    //première condition pixel dans le cadre (utile ?)
 	//z=t*h
-	if((A*(x-RX/2)+B*(y-RY/2)+C*h)!=0){
-	  t=-D/(1+A*(x-RX/2)+B*(y-RY/2)+C*h);
-	  if(t*h>screen[y][x].z && t*h<0){
+	double tmp =A*(x-RX/2)+B*(y-RY/2)+C*h;
+	if(tmp){ //vérif aplanéisme
+	  t=-D/tmp;
+	  if(t*h>screen[y][x].z && t*h<0){ //deuxième vérif pixel pas derrière caméra
 	    screen[y][x].couleur=c;
 	    screen[y][x].z=t*h;
 	  }
