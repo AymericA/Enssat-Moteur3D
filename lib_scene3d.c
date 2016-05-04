@@ -155,8 +155,8 @@ void rotationScene3d(t_scene3d*pt_scene3d,t_point3d*centre,float degreX,float de
 void transformationScene3d(t_scene3d *pt_scene3d,double mat[4][4],double inv[4][4])
 {
   if(pt_scene3d!=NULL){
-    multiplicationMatrice3d(pt_scene3d->mat,pt_scene3d->mat,mat);
-    multiplicationMatrice3d(pt_scene3d->inv,inv,pt_scene3d->inv);
+    multiplicationMatrice3d(pt_scene3d->mat,mat,pt_scene3d->mat);
+    multiplicationMatrice3d(pt_scene3d->inv,pt_scene3d->inv,inv);
   }
 }
 
