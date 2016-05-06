@@ -103,12 +103,6 @@ t_point3d*Getcentre(t_scene3d*pt_scene3d)
   double mat[4][4];
   matTranslation(origine,mat);
   Getcentre_rec(mat,pt_scene3d);
-
-  /*  
-      printf("final\n");
-      affMatrice(mat);
-  */
-  
   multiplicationVecteur3d(origine,mat,origine);
   return origine;
 }
@@ -120,15 +114,16 @@ void Getcentre_rec(double mat[4][4],t_scene3d*pt_scene3d)
     {
       Getcentre_rec(mat,pt_scene3d->pere);
     }
-  /*
-  printf("pre\n");
-  affMatrice(pt_scene3d->mat);
-  */
-  multiplicationMatrice3d(mat,pt_scene3d->mat,mat);
-  /*  
-  printf("prefinal\n");
-  affMatrice(mat);
-  */
+  multiplicationMatrice3d(mat,pt_scene3d->inv,mat);
+}
+
+
+t_point3d*GetcentreR(t_scene3d*pt_scene3d)
+{
+  t_point3d*res=definirPoint3d(0,0,0);
+  double mat[4][4];
+  multiplicationVecteur3d(res,pt_scene3d->mat,res);
+ return res;
 }
 
 
@@ -207,22 +202,92 @@ void dessinerScene3d_rec(t_surface*surface,t_scene3d*pt_scene3d,double h,double 
     multiplicationMatrice3d(tmpmat,mat,pt_scene3d->mat);
     multiplicationMatrice3d(tmpinv,pt_scene3d->inv,inv);
 
-    transformationObjet3d(pt_scene3d->objet3d,tmpmat);
-    dessinerObjet3d(surface,pt_scene3d->objet3d,h);
-    transformationObjet3d(pt_scene3d->objet3d,tmpinv);
-    /*
-    double debug[4][4];
-    //affMatrice(tmpmat);
-    //affMatrice(tmpinv);
-    multiplicationMatrice3d(debug,mat,inv);
-    printf("debug1\n");
-    affMatrice(debug);
-    multiplicationMatrice3d(debug,pt_scene3d->mat,pt_scene3d->inv);
-    printf("debug2\n");
-    affMatrice(debug);
-    */
+    t_objet3d* copie=copierObjet3d(pt_scene3d->objet3d);
+
+    transformationObjet3d(copie,tmpmat);
+    dessinerObjet3d(surface,copie,h);
+
+    //transformationObjet3d(pt_scene3d->objet3d,tmpinv);
+
+    libererObjet3d(copie);
+
     dessinerScene3d_rec(surface,pt_scene3d->fils,h,tmpmat,tmpinv);
     dessinerScene3d_rec(surface,pt_scene3d->frere,h,mat,inv);
   }
 }
  
+
+
+void extract(t_scene3d*pt_scene3d)
+{
+  t_scene3d*tmp=pt_scene3d->frere;
+  t_scene3d*var=pt_scene3d->pere->fils;
+  if(var!=pt_scene3d)
+    {
+      while(var->frere!=pt_scene3d)
+	{
+	  var=var->frere;
+	}
+      var->frere=tmp;
+    }
+  else{
+    pt_scene3d->pere->fils=tmp; 
+  }
+}
+
+
+void ajoutfils(t_scene3d*pere,t_scene3d*fils)
+{
+  fils->pere=pere;
+  fils->frere=pere->fils;
+  pere->fils=fils;
+}
+
+
+
+void Racine(t_scene3d*scene)
+{
+  if(scene->pere!=NULL)
+    {
+      Racine(scene->pere);
+      double mat[4][4];
+      double inv[4][4];
+      copierMatrice3d(mat,scene->pere->mat);
+      copierMatrice3d(inv,scene->pere->inv);
+
+      copierMatrice3d(scene->pere->mat,scene->inv);
+      copierMatrice3d(scene->pere->inv,scene->mat);
+
+      copierMatrice3d(scene->inv,mat);
+      copierMatrice3d(scene->mat,inv);
+
+      extract(scene);
+      ajoutfils(scene,scene->pere);
+      scene->pere=NULL;
+      scene->frere=NULL;
+    }
+}
+
+void affscene(t_scene3d*scene)
+{
+  if(scene==NULL)
+    printf("NULL\n");
+  else
+    {
+      printf("scene : %d(\n",scene);
+      if(scene->pere!=NULL)
+	printf("pere : %d\n",scene->pere);
+      else
+	printf("pere : NULL\n");
+
+      printf("frere :\n(");
+      affscene(scene->frere);
+      printf(")\n");
+
+      printf("fils :\n(");
+      affscene(scene->fils);
+      printf(")\n");
+      printf(")\n");
+
+    }
+}

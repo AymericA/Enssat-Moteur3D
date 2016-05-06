@@ -326,7 +326,7 @@ t_objet3d* n64(double lx)
   t_objet3d *pt_objet = NULL;
   pt_objet = objet_vide();
   double x=lx/2;
-  const double c=570/165;
+  const double c=2;
   t_point3d *tp[4][4][4];
   t_triangle3d *tmp;
   int i,j,k;
