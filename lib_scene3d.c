@@ -159,16 +159,14 @@ void transformationScene3d(t_scene3d *pt_scene3d,double mat[4][4],double inv[4][
 t_scene3d*creerScene3d(t_objet3d*pt_objet3d)
 {
   t_scene3d * pt_scene3d=malloc(sizeof(t_scene3d));
-  t_point3d * vect=definirPoint3d(0,0,0);
-
+  t_point3d * vecteur=definirPoint3d(0,0,0);
   pt_scene3d->objet3d=pt_objet3d;
   pt_scene3d->pere=NULL;
   pt_scene3d->fils=NULL;
   pt_scene3d->frere=NULL;
-
-  matTranslation(vect,pt_scene3d->mat);
-  matTranslation(vect,pt_scene3d->inv);
-  //free(vect);  
+  matTranslation(vecteur,pt_scene3d->mat);
+  matTranslation(vecteur,pt_scene3d->inv);
+  free(vecteur);  
   return pt_scene3d;
 }
 
@@ -272,8 +270,6 @@ void Racine(t_scene3d*scene)
 
 void affscene(t_scene3d*scene)
 {
-printf("scene : %p(\n",scene);
-  printf("bula\n");
   if(scene==NULL)
     printf("NULL\n");
   else
@@ -296,14 +292,18 @@ printf("scene : %p(\n",scene);
     }
 }
 
-t_scene3d*dragon(t_scene3d*** tab)
+t_scene3d*dragon(t_scene3d** tab[5])
 {
   t_scene3d* tete[1];
   t_scene3d* cou[5];
   t_scene3d* queue[12];
   t_scene3d* ailed[12];
   t_scene3d* aileg[12];
-  
+
+  t_scene3d* tmps;
+  t_objet3d* tmpo1;
+  t_objet3d* tmpo2;
+  int i;  
   t_point3d*tmp;
  
   tab[0]=tete;
@@ -312,10 +312,12 @@ t_scene3d*dragon(t_scene3d*** tab)
   tab[3]=aileg;
   tab[4]=queue;
 
-  t_objet3d*corp=parallelepipede(640,240,240);
-  t_objet3d*a1=parallelepipede(120,60,20);
-  t_objet3d*a2=parallelepipede(120,60,20);
-  t_objet3d*a3=parallelepipede(120,60,20);
+  //body + aileron
+
+  t_objet3d*corp=parallelepipede(320,120,120);
+  t_objet3d*a1=parallelepipede(60,30,10);
+  t_objet3d*a2=parallelepipede(60,30,10);
+  t_objet3d*a3=parallelepipede(60,30,10);
 
   t_scene3d*body=creerScene3d(corp);
 
@@ -326,17 +328,97 @@ t_scene3d*dragon(t_scene3d*** tab)
   ajoutObjet3d(body,a3);
   t_scene3d*ba3=body->fils;
 
-  tmp=definirPoint3d(-200,-150,0);
+  tmp=definirPoint3d(-100,-75,0);
   translationScene3d(ba1,tmp);
-  //free(tmp);
+  free(tmp);
 
-  tmp=definirPoint3d(0,-150,0);
+  tmp=definirPoint3d(0,-75,0);
   translationScene3d(ba2,tmp);
-  //free(tmp);
+  free(tmp);
 
-  tmp=definirPoint3d(200,-150,0);
+  tmp=definirPoint3d(100,-75,0);
   translationScene3d(ba3,tmp);
-  //free(tmp);
+  free(tmp);
+
+  //queue
+  
+  tmpo1=parallelepipede(50,50,50);
+  tmpo2=parallelepipede(30,20,10);
+  
+  ajoutObjet3d(body,tmpo1);
+  queue[0]=body->fils;
+  
+  ajoutObjet3d(queue[0],tmpo2);
+  tmps=queue[0]->fils;
+      
+  tmp=definirPoint3d(-185,0,0);
+  translationScene3d(queue[0],tmp);
+  free(tmp);
+
+  tmp=definirPoint3d(0,-35,0);
+  translationScene3d(tmps,tmp);
+  free(tmp);
+
+  for(i=1;i<12;i++)
+    {
+      tmpo1=parallelepipede(50,50,50);
+      tmpo2=parallelepipede(30,20,10);
+
+      ajoutObjet3d(queue[i-1],tmpo1);
+      queue[i]=queue[i-1]->fils;
+
+      ajoutObjet3d(queue[i],tmpo2);
+      tmps=queue[i]->fils;
+      
+      tmp=definirPoint3d(-50,0,0);
+      translationScene3d(queue[i],tmp);
+      free(tmp);
+
+      tmp=definirPoint3d(0,-35,0);
+      translationScene3d(tmps,tmp);
+      free(tmp);
+    }
+
+  //cou
+  
+  tmpo1=parallelepipede(50,50,50);
+  tmpo2=parallelepipede(30,20,10);
+  
+  ajoutObjet3d(body,tmpo1);
+  cou[0]=body->fils;
+  
+  ajoutObjet3d(cou[0],tmpo2);
+  tmps=cou[0]->fils;
+      
+  tmp=definirPoint3d(185,20,0);
+  translationScene3d(cou[0],tmp);
+  free(tmp);
+
+  tmp=definirPoint3d(0,-35,0);
+  translationScene3d(tmps,tmp);
+  free(tmp);
+  
+  for(i=1;i<5;i++)
+    {
+      tmpo1=parallelepipede(50,50,50);
+      tmpo2=parallelepipede(30,20,10);
+
+      ajoutObjet3d(cou[i-1],tmpo1);
+      cou[i]=cou[i-1]->fils;
+
+      ajoutObjet3d(cou[i],tmpo2);
+      tmps=cou[i]->fils;
+      
+      tmp=definirPoint3d(50,0,0);
+      translationScene3d(cou[i],tmp);
+      free(tmp);
+
+      tmp=definirPoint3d(0,-35,0);
+      translationScene3d(tmps,tmp);
+      free(tmp);
+    }
+  
+  
 
   return body;
 }
