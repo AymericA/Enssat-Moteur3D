@@ -294,7 +294,7 @@ void affscene(t_scene3d*scene)
 
 t_scene3d*dragon(t_scene3d** tab[5])
 {
-  t_scene3d* tete[1];
+  t_scene3d* tete[3];
   t_scene3d* cou[5];
   t_scene3d* queue[12];
   t_scene3d* ailed[12];
@@ -418,7 +418,69 @@ t_scene3d*dragon(t_scene3d** tab[5])
       free(tmp);
     }
   
+  //tete
+
+  tmpo1=parallelepipede(80,80,80);//tete
+  ajoutObjet3d(cou[4],tmpo1);
+  tete[1]=cou[4]->fils;
+
+  tmp=definirPoint3d(65,-10,0);
+  translationScene3d(tete[1],tmp);
+  free(tmp);
   
+  tmpo1=parallelepipede(30,20,10);//aileron gauche
+  ajoutObjet3d(tete[1],tmpo1);
+  tmps=tete[1]->fils;
+
+  tmp=definirPoint3d(-5,-50,-20);
+  translationScene3d(tmps,tmp);
+  free(tmp);
+  
+  tmpo1=parallelepipede(30,20,10);//aileron droit
+  ajoutObjet3d(tete[1],tmpo1);
+  tmps=tete[1]->fils;
+  
+  tmp=definirPoint3d(-5,-50,20);
+  translationScene3d(tmps,tmp);
+  free(tmp);
+  
+  tmpo1=parallelepipede(80,25,60);//machoire sup
+  ajoutObjet3d(tete[1],tmpo1);
+  tete[2]=tete[1]->fils;
+
+  tmp=definirPoint3d(80,7,-10);
+  translationScene3d(tete[2],tmp);
+  free(tmp);
+
+  tmpo1=parallelepipede(20,10,10);//narine gauche
+  ajoutObjet3d(tete[2],tmpo1);
+  tmps=tete[2]->fils;
+  
+  tmp=definirPoint3d(20,-17,-15);
+  translationScene3d(tmps,tmp);
+  free(tmp);
+
+  tmpo1=parallelepipede(20,10,10);//narine droite
+  ajoutObjet3d(tete[2],tmpo1);
+  tmps=tete[2]->fils;
+  
+  tmp=definirPoint3d(20,-17,15);
+  translationScene3d(tmps,tmp);
+  free(tmp); 
+
+  tmpo1=parallelepipede(80,20,60);//machoire inf
+  ajoutObjet3d(tete[1],tmpo1);
+  tete[3]=tete[1]->fils;
+
+  tmp=definirPoint3d(80,30,-10);
+  translationScene3d(tete[3],tmp);
+  free(tmp);
+
+  //aile droite
+
+  
+
+
 
   return body;
 }
