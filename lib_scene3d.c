@@ -159,14 +159,16 @@ void transformationScene3d(t_scene3d *pt_scene3d,double mat[4][4],double inv[4][
 t_scene3d*creerScene3d(t_objet3d*pt_objet3d)
 {
   t_scene3d * pt_scene3d=malloc(sizeof(t_scene3d));
-  t_point3d * vecteur=definirPoint3d(0,0,0);
+  t_point3d * vect=definirPoint3d(0,0,0);
+
   pt_scene3d->objet3d=pt_objet3d;
   pt_scene3d->pere=NULL;
   pt_scene3d->fils=NULL;
   pt_scene3d->frere=NULL;
-  matTranslation(vecteur,pt_scene3d->mat);
-  matTranslation(vecteur,pt_scene3d->inv);
-  free(vecteur);  
+
+  matTranslation(vect,pt_scene3d->mat);
+  matTranslation(vect,pt_scene3d->inv);
+  //free(vect);  
   return pt_scene3d;
 }
 
@@ -270,13 +272,15 @@ void Racine(t_scene3d*scene)
 
 void affscene(t_scene3d*scene)
 {
+printf("scene : %p(\n",scene);
+  printf("bula\n");
   if(scene==NULL)
     printf("NULL\n");
   else
     {
-      printf("scene : %d(\n",scene);
+      printf("scene : %p(\n",scene);
       if(scene->pere!=NULL)
-	printf("pere : %d\n",scene->pere);
+	printf("pere : %p\n",scene->pere);
       else
 	printf("pere : NULL\n");
 
@@ -290,4 +294,49 @@ void affscene(t_scene3d*scene)
       printf(")\n");
 
     }
+}
+
+t_scene3d*dragon(t_scene3d*** tab)
+{
+  t_scene3d* tete[1];
+  t_scene3d* cou[5];
+  t_scene3d* queue[12];
+  t_scene3d* ailed[12];
+  t_scene3d* aileg[12];
+  
+  t_point3d*tmp;
+ 
+  tab[0]=tete;
+  tab[1]=cou;
+  tab[2]=ailed;
+  tab[3]=aileg;
+  tab[4]=queue;
+
+  t_objet3d*corp=parallelepipede(640,240,240);
+  t_objet3d*a1=parallelepipede(120,60,20);
+  t_objet3d*a2=parallelepipede(120,60,20);
+  t_objet3d*a3=parallelepipede(120,60,20);
+
+  t_scene3d*body=creerScene3d(corp);
+
+  ajoutObjet3d(body,a1);
+  t_scene3d*ba1=body->fils;
+  ajoutObjet3d(body,a2);
+  t_scene3d*ba2=body->fils;
+  ajoutObjet3d(body,a3);
+  t_scene3d*ba3=body->fils;
+
+  tmp=definirPoint3d(-200,-150,0);
+  translationScene3d(ba1,tmp);
+  //free(tmp);
+
+  tmp=definirPoint3d(0,-150,0);
+  translationScene3d(ba2,tmp);
+  //free(tmp);
+
+  tmp=definirPoint3d(200,-150,0);
+  translationScene3d(ba3,tmp);
+  //free(tmp);
+
+  return body;
 }

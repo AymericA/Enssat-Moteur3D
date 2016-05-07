@@ -27,6 +27,8 @@ t_point3d*Getcentre(t_scene3d*pt_scene3d);
 void Getcentre_rec(double mat[4][4],t_scene3d*pt_scene3d);
 t_point3d*GetcentreR(t_scene3d*pt_scene3d);
 
+void ajoutfils(t_scene3d*pere,t_scene3d*fils);
+
 void translationScene3d(t_scene3d*pt_scene3d,t_point3d*vecteur);
 void rotationScene3d(t_scene3d*pt_scene3d,t_point3d*centre,float degreX,float degreY,float degreZ);
 
@@ -43,5 +45,8 @@ void affscene(t_scene3d*scene);
 
 void Racine(t_scene3d*scene);
 void extract(t_scene3d*pt_scene3d);
+
+t_scene3d*dragon(t_scene3d*** tab);
+
 
 #endif

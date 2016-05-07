@@ -65,13 +65,19 @@ int main(int argc,char** argv)
   t_objet3d*t1=tore(100,10,10,50);
   t_objet3d*n1=n64(100);
 
+  t_scene3d*** tab;
+  printf("bula1\n");
+  t_scene3d*drag=dragon(tab);
+  printf("bula1\n");
   t_scene3d*scene;
-
+  printf("bula1\n");
   t_scene3d*sc1=creerScene3d(c1);
+  printf("bula1\n");
 
   ajoutObjet3d(sc1,p1);
   t_scene3d*sp1=sc1->fils;
 
+  /*
   ajoutObjet3d(sp1,s1);
   t_scene3d*ss1=sp1->fils;
   
@@ -83,32 +89,43 @@ int main(int argc,char** argv)
 
   ajoutObjet3d(sp1,n1);
   t_scene3d*sn1=sp1->fils;
+  */
+  // ajoutfils(sp1,drag);
+  printf("bula\n");
 
   scene=sc1;
 
+
   vecteur=definirPoint3d(0,150,-500);
   translationScene3d(sp1,vecteur);
-  free(vecteur);
+  //free(vecteur);
 
-  vecteur=definirPoint3d(0,-150,0);
-  translationScene3d(ss1,vecteur);
-  free(vecteur);
+  //  vecteur=definirPoint3d(0,-150,0);
+  //translationScene3d(drag,vecteur);
+  //free(vecteur);
+  printf("bulala1\n");
 
+  /*
   vecteur=definirPoint3d(0,100,0);
   translationScene3d(st1,vecteur);
-  free(vecteur);
+  //free(vecteur);
 
   vecteur=definirPoint3d(500,-150,0);
   translationScene3d(sc2,vecteur);
-  free(vecteur);
+  //free(vecteur);
 
   vecteur=definirPoint3d(200,-50,0);
   translationScene3d(sn1,vecteur);
-  free(vecteur);
+//  free(vecteur);
 
   vecteur=GetcentreR(sc2);
   rotationScene3d(sc2,vecteur,0,90,0);
-  free(vecteur);
+  //free(vecteur);
+  */
+
+ printf("bulala1\n");
+  affscene(scene);
+ printf("bulala1\n");
 
 #endif
 
@@ -173,6 +190,7 @@ int main(int argc,char** argv)
 	*/
       case SDL_KEYDOWN:
 	switch(event.key.keysym.sym){
+	  /*
 	case SDLK_m:
 	  Racine(sc2);
 	  scene=sc2;
@@ -181,6 +199,7 @@ int main(int argc,char** argv)
 	  Racine(sc1);
 	  scene=sc1;
 	  break;
+	  */
 	case SDLK_KP9:
 	  dy++;
 	  break;
@@ -261,10 +280,11 @@ int main(int argc,char** argv)
 	  rotationScene3d(scene->fils,origine,0,0,1);
 	}
 
-      
+      /*
       centre=GetcentreR(ss1);
       rotationScene3d(ss1,centre,0,8,0);
       free(centre);
+      */
       /*
       centre=GetcentreR(st1);
       rotationScene3d(st1,centre,5,0,0);
