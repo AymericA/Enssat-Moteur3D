@@ -46,6 +46,6 @@ void Racine(t_scene3d*scene);
 void extract(t_scene3d*pt_scene3d);
 
 t_scene3d*dragon(t_scene3d** tab[5]);
-
+t_scene3d*mer(double lx,double ly,Uint32 **tab);
 
 #endif

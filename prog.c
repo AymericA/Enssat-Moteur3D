@@ -62,6 +62,8 @@ int main(int argc,char** argv)
   
   Uint32 bula=BLANC;
 
+  //  Uint32 c1p1=ROUGEF,c2p1=GRISC;
+
   t_objet3d*p1=damier(800,800,16,16,NULL,NULL);
   t_objet3d*s1=sphere(100,10,20,&bula);
   t_objet3d*t1=tore(100,10,10,50,&bula);
@@ -277,7 +279,7 @@ int main(int argc,char** argv)
 	}
 
       bula=echelle_de_couleur(i);
-
+      
       /*
       centre=GetcentreR(ss1);
       rotationScene3d(ss1,centre,0,8,0);
