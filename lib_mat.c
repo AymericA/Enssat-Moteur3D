@@ -1,4 +1,5 @@
 #include "lib_3d.h"
+#include <stdlib.h>
 #include "lib_mat.h"
 
 void affPoint(t_point3d *p)
@@ -63,4 +64,10 @@ void copierMatrice3d(double m1[4][4], double m2[4][4]) // m1 = m2
     for(j=0;j<4;j++){
       m1[i][j]=m2[i][j];
     }}
+}
+
+
+int randy(int a,int b)
+{
+  return rand()%(b-a)+a;
 }

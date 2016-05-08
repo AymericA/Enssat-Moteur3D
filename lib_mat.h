@@ -8,4 +8,5 @@ void multiplicationMatrice3d(double m1[4][4], double m2[4][4], double m3[4][4]);
 // effectue une copie de matrices : m1 = m2
 void copierMatrice3d(double m1[4][4], double m2[4][4]);
 
+int randy(int a,int b);
 #endif

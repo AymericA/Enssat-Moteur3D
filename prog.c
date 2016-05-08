@@ -1,5 +1,7 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
+#include <time.h>
 #include <math.h>
 #include "lib_surface.h"
 #include "lib_2d.h"
@@ -15,6 +17,7 @@
 
 int main(int argc,char** argv)
 {
+  //srand(time(NULL));
   t_surface *surface=NULL;
   int cpt = 0;
   int timestart;
@@ -92,18 +95,35 @@ int main(int argc,char** argv)
 
   scene=sc1;
 
-  t_scene3d**tab[5];
-  t_scene3d*drag=dragon(tab);
+  t_scene3d**tabd[5];
+  t_scene3d*drag=dragon(tabd);
+  t_scene3d*tabm[10][10];
+  
+  Uint32 tabc[10][10];
+  mer_init(10,10,tabc);
 
-  ajoutfils(sp1,drag);
+  t_scene3d*rive=mer(200,200,10,10,tabc,tabm);
+  
+  ajoutfils(sp1,rive);
+  //ajoutfils(sp1,drag);
+
+
+  printf("couleur : %d\n",tabc[0][0]);
+
 
   vecteur=definirPoint3d(0,150,-500);
   translationScene3d(sp1,vecteur);
   free(vecteur);
 
   vecteur=definirPoint3d(0,-100,0);
+  translationScene3d(rive,vecteur);
+  free(vecteur);
+
+  /*
+  vecteur=definirPoint3d(0,-100,0);
   translationScene3d(drag,vecteur);
   free(vecteur);
+  */
 
   vecteur=definirPoint3d(0,-400,0);
   translationScene3d(ss1,vecteur);
@@ -151,9 +171,9 @@ int main(int argc,char** argv)
 #endif
 
 #ifdef S3D
-      
+
       dessinerScene3d(surface,scene,h);
-      
+
       SDL_PollEvent(&event);
       switch(event.type){
 	/*

@@ -478,9 +478,63 @@ t_scene3d*dragon(t_scene3d** tab[5])
 
   //aile droite
 
+  //aile gauche
+
   
-
-
-
   return body;
+}
+
+
+void mer_init(int nx,int nz,Uint32 tabc[nx][nz])
+{
+  int c,i,j;
+  for(i=0;i<nx;i++){
+    for(j=0;j<nz;j++){
+      switch((2*i+j)%5){
+      case 0:
+	tabc[i][j]=0x0000fff9;
+	break;
+      case 1:
+	tabc[i][j]=0x0000afb4;
+	break;
+      case 2:
+	tabc[i][j]=0x00009489;
+	break;
+      case 3:
+	tabc[i][j]=0x00086c74;
+	break;
+      case 4:
+	tabc[i][j]=0x00074d5c;
+	break;
+      }
+    }
+  }
+}
+
+
+t_scene3d*mer(double lx,double lz,int nx,int nz,Uint32 tabc[nx][nz],t_scene3d*tab[nx][nz])
+{
+  t_objet3d*plan;//=damier(lx,lz,1,1,&tabc[1][1],&tabc[1][1]);
+  
+  t_scene3d*main=creerScene3d(plan);
+  int i,j;
+  t_objet3d*tmpo;
+  t_point3d*tmp;
+  double ux=lx/nx,uz=lz/nz;
+
+  for(i=0;i<nx;i++)
+    {
+      for(j=0;j<nz;j++)
+	{
+	  tmpo=parallelepipede(ux,3,uz,&(tabc[i][j]));
+	  ajoutObjet3d(main,tmpo);
+	  tab[i][j]=main->fils;
+	  
+	  tmp=definirPoint3d((i+0.5)*ux-lx/2,0,(j+0.5)*uz-lz/2);
+	  translationScene3d(tab[i][j],tmp);
+	  free(tmp);
+	}
+    }
+
+  return main;
 }
