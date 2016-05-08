@@ -103,12 +103,13 @@ int main(int argc,char** argv)
   mer_init(10,10,tabc);
 
   t_scene3d*rive=mer(200,200,10,10,tabc,tabm);
-  
+  int Crive=0;
+
   ajoutfils(sp1,rive);
   //ajoutfils(sp1,drag);
 
 
-  printf("couleur : %d\n",tabc[0][0]);
+  //printf("couleur : %d\n",tabc[0][0]);
 
 
   vecteur=definirPoint3d(0,150,-500);
@@ -299,7 +300,9 @@ int main(int argc,char** argv)
 	}
 
       bula=echelle_de_couleur(i);
-      
+      Umer(10,10,tabm,&Crive);
+
+
       /*
       centre=GetcentreR(ss1);
       rotationScene3d(ss1,centre,0,8,0);

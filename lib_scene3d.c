@@ -512,6 +512,22 @@ void mer_init(int nx,int nz,Uint32 tabc[nx][nz])
 }
 
 
+void Umer(int nx,int nz,t_scene3d*tab[nx][nz],int*cycle)
+{
+  t_point3d*tmp;
+  int c,i,j;
+  for(i=0;i<nx;i++){
+    for(j=0;j<nz;j++){
+      tmp=definirPoint3d(0,-1*cos(i*2*M_PI/nx)*cos(j*2*M_PI/nz)*(double)*cycle/10,0);
+      translationScene3d(tab[i][j],tmp);
+      free(tmp);
+    }
+  }
+  (*cycle)++;
+}
+
+
+
 t_scene3d*mer(double lx,double lz,int nx,int nz,Uint32 tabc[nx][nz],t_scene3d*tab[nx][nz])
 {
   t_objet3d*plan;//=damier(lx,lz,1,1,&tabc[1][1],&tabc[1][1]);
@@ -538,3 +554,6 @@ t_scene3d*mer(double lx,double lz,int nx,int nz,Uint32 tabc[nx][nz],t_scene3d*ta
 
   return main;
 }
+
+
+
