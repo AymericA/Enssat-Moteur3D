@@ -6,6 +6,31 @@
 #include "lib_surface.h"
 
 
+Uint32 blanc=BLANC;
+Uint32 grisc=GRISC;
+Uint32 grisf=GRISF;
+Uint32 noir=NOIR;
+
+Uint32 rougec=ROUGEC;
+Uint32 rougef=ROUGEF;
+Uint32 vertc=VERTC;
+Uint32 vertf=VERTF;
+Uint32 bleuc=BLEUC;
+Uint32 bleuf=BLEUF;
+
+Uint32 jaunec=JAUNEC;
+Uint32 jaunef=JAUNEF;
+Uint32 palec=PALEC;
+Uint32 palef=PALEF;
+Uint32 rosec=ROSEC;
+Uint32 rosef=ROSEF;
+
+Uint32 marron1=MARRON1;
+Uint32 marron2=MARRON2;
+Uint32 marron3=MARRON3;
+Uint32 marron4=MARRON4;
+
+
 double moy_z(t_triangle3d *t)
 {
   return ((t->abc[0]->xyzt[2])+(t->abc[1]->xyzt[2])+(t->abc[0]->xyzt[2]))/3;
@@ -74,7 +99,7 @@ t_point3d *customPoint3d(t_point3d *p,t_objet3d *pt_objet)
 }
 
 
-t_maillon* __cree_maillon(t_triangle3d *face, Uint32 couleur)
+t_maillon* __cree_maillon(t_triangle3d *face, Uint32*couleur)
 {
   t_maillon* pt_maillon = malloc(sizeof(t_maillon));
   pt_maillon->face=face;
@@ -111,7 +136,7 @@ t_objet3d *camera()
   return pt_objet;
 }
 
-t_objet3d* parallelepipede(double lx, double ly, double lz)
+t_objet3d* parallelepipede(double lx, double ly, double lz,Uint32*couleur)
 {
   t_objet3d *pt_objet = NULL;
   pt_objet = objet_vide();
@@ -156,29 +181,51 @@ t_objet3d* parallelepipede(double lx, double ly, double lz)
   t_triangle3d *t11 = definirTriangle3d(p4, p7, p8);
   t_triangle3d *t12 = definirTriangle3d(p3, p4, p7);
 
-  __insere_tete(pt_objet, __cree_maillon(t1,ROUGEF));
-  __insere_tete(pt_objet, __cree_maillon(t2,ROUGEC));
+  if(couleur==NULL)
+    {
+      __insere_tete(pt_objet, __cree_maillon(t1,&rougef));
+      __insere_tete(pt_objet, __cree_maillon(t2,&rougec));
 
-  __insere_tete(pt_objet, __cree_maillon(t3,VERTF));
-  __insere_tete(pt_objet, __cree_maillon(t4,VERTC));
+      __insere_tete(pt_objet, __cree_maillon(t3,&vertf));
+      __insere_tete(pt_objet, __cree_maillon(t4,&vertc));
 
-  __insere_tete(pt_objet, __cree_maillon(t5,BLEUF));
-  __insere_tete(pt_objet, __cree_maillon(t6,BLEUC));
+      __insere_tete(pt_objet, __cree_maillon(t5,&bleuf));
+      __insere_tete(pt_objet, __cree_maillon(t6,&bleuc));
 
-  __insere_tete(pt_objet, __cree_maillon(t7,JAUNEF));
-  __insere_tete(pt_objet, __cree_maillon(t8,JAUNEC));
+      __insere_tete(pt_objet, __cree_maillon(t7,&jaunef));
+      __insere_tete(pt_objet, __cree_maillon(t8,&jaunec));
 
-  __insere_tete(pt_objet, __cree_maillon(t9,ROSEF));
-  __insere_tete(pt_objet, __cree_maillon(t10,ROSEC));
+      __insere_tete(pt_objet, __cree_maillon(t9,&rosef));
+      __insere_tete(pt_objet, __cree_maillon(t10,&rosec));
 
-  __insere_tete(pt_objet, __cree_maillon(t11,GRISC));
-  __insere_tete(pt_objet, __cree_maillon(t12,BLANC));
+      __insere_tete(pt_objet, __cree_maillon(t11,&grisc));
+      __insere_tete(pt_objet, __cree_maillon(t12,&blanc));
+    }
+  else
+    {
+      __insere_tete(pt_objet, __cree_maillon(t1,couleur));
+      __insere_tete(pt_objet, __cree_maillon(t2,couleur));
 
+      __insere_tete(pt_objet, __cree_maillon(t3,couleur));
+      __insere_tete(pt_objet, __cree_maillon(t4,couleur));
+
+      __insere_tete(pt_objet, __cree_maillon(t5,couleur));
+      __insere_tete(pt_objet, __cree_maillon(t6,couleur));
+
+      __insere_tete(pt_objet, __cree_maillon(t7,couleur));
+      __insere_tete(pt_objet, __cree_maillon(t8,couleur));
+
+      __insere_tete(pt_objet, __cree_maillon(t9,couleur));
+      __insere_tete(pt_objet, __cree_maillon(t10,couleur));
+
+      __insere_tete(pt_objet, __cree_maillon(t11,couleur));
+      __insere_tete(pt_objet, __cree_maillon(t12,couleur));
+    }
   pt_objet->est_trie=false;
   return pt_objet;
 }
 
-t_objet3d* cylindre(double lh,double r, double nlong)
+t_objet3d* cylindre(double lh,double r, double nlong,Uint32*c)
 {
   t_objet3d *pt_objet = NULL;
   pt_objet = objet_vide();
@@ -206,33 +253,60 @@ t_objet3d* cylindre(double lh,double r, double nlong)
   
   for(i=0;i<nlong-1;i++){
     tmp = definirTriangle3d(p0,tp[i][0],tp[i+1][0]);
-    __insere_tete(pt_objet, __cree_maillon(tmp,GRISC));
+    if(c==NULL)
+      __insere_tete(pt_objet, __cree_maillon(tmp,&grisc));
+    else
+      __insere_tete(pt_objet, __cree_maillon(tmp,c));
+
     tmp = definirTriangle3d(tp[i][1],tp[i+1][1],p1);
-    __insere_tete(pt_objet, __cree_maillon(tmp,GRISC));
-    
+    if(c==NULL)
+      __insere_tete(pt_objet, __cree_maillon(tmp,&grisc));
+    else
+      __insere_tete(pt_objet, __cree_maillon(tmp,c));
+
     tmp = definirTriangle3d(tp[i][0],tp[i+1][0],tp[i+1][1]);
-    __insere_tete(pt_objet, __cree_maillon(tmp,ROUGEC));
+    if(c==NULL)
+      __insere_tete(pt_objet, __cree_maillon(tmp,&rougec));
+    else
+      __insere_tete(pt_objet, __cree_maillon(tmp,c));
+
     tmp = definirTriangle3d(tp[i][0],tp[i][1],tp[i+1][1]);
-    __insere_tete(pt_objet, __cree_maillon(tmp,BLANC));    
-    
+    if(c==NULL)
+      __insere_tete(pt_objet, __cree_maillon(tmp,&blanc));    
+    else
+      __insere_tete(pt_objet, __cree_maillon(tmp,c));
   }
 
   tmp = definirTriangle3d(p0,tp[(int)nlong-1][0],tp[0][0]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,GRISC));
+  if(c==NULL)
+    __insere_tete(pt_objet, __cree_maillon(tmp,&grisc));
+  else
+    __insere_tete(pt_objet, __cree_maillon(tmp,c));
+
   tmp = definirTriangle3d(tp[(int)nlong-1][1],tp[0][1],p1);
-  __insere_tete(pt_objet, __cree_maillon(tmp,GRISC));
+  if(c==NULL)
+    __insere_tete(pt_objet, __cree_maillon(tmp,&grisc));
+  else
+    __insere_tete(pt_objet, __cree_maillon(tmp,c));
   
   tmp = definirTriangle3d(tp[(int)nlong-1][0],tp[0][0],tp[0][1]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,ROUGEC));
+  if(c==NULL)
+    __insere_tete(pt_objet, __cree_maillon(tmp,&rougec));
+  else
+    __insere_tete(pt_objet, __cree_maillon(tmp,c));
+
   tmp = definirTriangle3d(tp[(int)nlong-1][0],tp[(int)nlong-1][1],tp[0][1]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,BLANC));    
+  if(c==NULL)
+    __insere_tete(pt_objet, __cree_maillon(tmp,&blanc));    
+  else
+    __insere_tete(pt_objet, __cree_maillon(tmp,c));
   
   pt_objet->est_trie=false;
   return pt_objet;
 }
 
 
-t_objet3d* cone(double lh,double r, double nlat, double nlong)
+t_objet3d* cone(double lh,double r, double nlat, double nlong,Uint32*c)
 {
   t_objet3d *pt_objet = NULL;
   pt_objet = objet_vide();
@@ -255,27 +329,54 @@ t_objet3d* cone(double lh,double r, double nlat, double nlong)
 
   for(i=0;i<nlong-1;i++){
     tmp = definirTriangle3d(p0,tp[i][0],tp[i+1][0]);
-    __insere_tete(pt_objet, __cree_maillon(tmp,GRISC));
+    if(c==NULL)
+      __insere_tete(pt_objet, __cree_maillon(tmp,&grisc));
+    else
+      __insere_tete(pt_objet, __cree_maillon(tmp,c));
     tmp = definirTriangle3d(p1,tp[i][(int)nlat-1],tp[i+1][(int)nlat-1]);
-    __insere_tete(pt_objet, __cree_maillon(tmp,GRISC));
+    if(c==NULL)
+      __insere_tete(pt_objet, __cree_maillon(tmp,&grisc));
+    else
+      __insere_tete(pt_objet, __cree_maillon(tmp,c));
+
     for(j=0;j<nlat-1;j++){    
       tmp = definirTriangle3d(tp[i][j],tp[i+1][j],tp[i+1][j+1]);
-      __insere_tete(pt_objet, __cree_maillon(tmp,ROUGEC));
+      if(c==NULL)
+	__insere_tete(pt_objet, __cree_maillon(tmp,&rougec));
+      else
+	__insere_tete(pt_objet, __cree_maillon(tmp,c));
+      
       tmp = definirTriangle3d(tp[i][j],tp[i][j+1],tp[i+1][j+1]);
-      __insere_tete(pt_objet, __cree_maillon(tmp,BLANC));
+      if(c==NULL)
+	__insere_tete(pt_objet, __cree_maillon(tmp,&blanc));
+      else
+	__insere_tete(pt_objet, __cree_maillon(tmp,c));
     }
   }
   for(j=0;j<nlat-1;j++){    
     tmp = definirTriangle3d(tp[(int)nlong-1][j],tp[0][j],tp[0][j+1]);
-    __insere_tete(pt_objet, __cree_maillon(tmp,ROUGEC));
+    if(c==NULL)
+      __insere_tete(pt_objet, __cree_maillon(tmp,&rougec));
+    else
+      __insere_tete(pt_objet, __cree_maillon(tmp,c));
+
     tmp = definirTriangle3d(tp[(int)nlong-1][j],tp[(int)nlong-1][j+1],tp[0][j+1]);
-    __insere_tete(pt_objet, __cree_maillon(tmp,BLANC));
+    if(c==NULL)
+      __insere_tete(pt_objet, __cree_maillon(tmp,&blanc));
+    else
+      __insere_tete(pt_objet, __cree_maillon(tmp,c));
   }
   tmp = definirTriangle3d(p0,tp[(int)nlong-1][0],tp[0][0]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,GRISC));
+  if(c==NULL)
+    __insere_tete(pt_objet, __cree_maillon(tmp,&grisc));
+  else
+    __insere_tete(pt_objet, __cree_maillon(tmp,c));
   tmp = definirTriangle3d(p1,tp[(int)nlong-1][(int)nlat-1],tp[0][(int)nlat-1]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,GRISC));
-
+  if(c==NULL)
+    __insere_tete(pt_objet, __cree_maillon(tmp,&grisc));
+  else
+    __insere_tete(pt_objet, __cree_maillon(tmp,c));
+  
   pt_objet->est_trie=false;
   return pt_objet;
 }
@@ -345,9 +446,9 @@ t_objet3d* n64(double lx)
       for(k=0;k<2;k++){
 
 	tmp = definirTriangle3d(tp[2*i][2*j][3*k],tp[i*2][2*j+1][3*k],tp[i*2+1][2*j+1][3*k]);
-	__insere_tete(pt_objet, __cree_maillon(tmp,JAUNEC));
+	__insere_tete(pt_objet, __cree_maillon(tmp,&jaunec));
 	tmp = definirTriangle3d(tp[2*i][2*j][3*k],tp[i*2+1][2*j][3*k],tp[i*2+1][2*j+1][3*k]);
-	__insere_tete(pt_objet, __cree_maillon(tmp,JAUNEC));
+	__insere_tete(pt_objet, __cree_maillon(tmp,&jaunec));
       }}}
 
   //face avant et arriere des "N" bleu&vert
@@ -357,26 +458,26 @@ t_objet3d* n64(double lx)
   for(j=0;j<2;j++){
     //barre transversal arrière       
     tmp = definirTriangle3d(tp[i][j][k],tp[i][j][k+1],tp[i+1][j][k-1]);
-    __insere_tete(pt_objet, __cree_maillon(tmp,BLEUF));
+    __insere_tete(pt_objet, __cree_maillon(tmp,&bleuf));
     tmp = definirTriangle3d(tp[i][j][k],tp[i+1][j][k-2],tp[i+1][j][k-1]);
-    __insere_tete(pt_objet, __cree_maillon(tmp,BLEUF));
+    __insere_tete(pt_objet, __cree_maillon(tmp,&bleuf));
     
 
     tmp = definirTriangle3d(tp[j+2][i][k],tp[j+2][i][k+1],tp[j+2][i+1][k-1]);
-    __insere_tete(pt_objet, __cree_maillon(tmp,VERTF));
+    __insere_tete(pt_objet, __cree_maillon(tmp,&vertf));
     tmp = definirTriangle3d(tp[j+2][i][k],tp[j+2][i+1][k-2],tp[j+2][i+1][k-1]);
-    __insere_tete(pt_objet, __cree_maillon(tmp,VERTF));
+    __insere_tete(pt_objet, __cree_maillon(tmp,&vertf));
 
     //barre transversal avant j+2
     tmp = definirTriangle3d(tp[i][j+2][k-1],tp[i][j+2][k-2],tp[i+1][j+2][k]);
-    __insere_tete(pt_objet, __cree_maillon(tmp,BLEUF));
+    __insere_tete(pt_objet, __cree_maillon(tmp,&bleuf));
     tmp = definirTriangle3d(tp[i][j+2][k-1],tp[i+1][j+2][k+1],tp[i+1][j+2][k]);
-    __insere_tete(pt_objet, __cree_maillon(tmp,BLEUF));
+    __insere_tete(pt_objet, __cree_maillon(tmp,&bleuf));
 
     tmp = definirTriangle3d(tp[j][i][k-1],tp[j][i][k-2],tp[j][i+1][k]);
-    __insere_tete(pt_objet, __cree_maillon(tmp,VERTF));
+    __insere_tete(pt_objet, __cree_maillon(tmp,&vertf));
     tmp = definirTriangle3d(tp[j][i][k-1],tp[j][i+1][k+1],tp[j][i+1][k]);
-    __insere_tete(pt_objet, __cree_maillon(tmp,VERTF));
+    __insere_tete(pt_objet, __cree_maillon(tmp,&vertf));
   }
 
   i=0;
@@ -384,118 +485,117 @@ t_objet3d* n64(double lx)
   for(j=0;j<2;j++){
     //barre verticale gauche
     tmp = definirTriangle3d(tp[i][3*j][k],tp[i][3*j][k+3],tp[i+1][3*j][k+3]);
-    __insere_tete(pt_objet, __cree_maillon(tmp,BLEUF));
+    __insere_tete(pt_objet, __cree_maillon(tmp,&bleuf));
     tmp = definirTriangle3d(tp[i][3*j][k],tp[i+1][3*j][k],tp[i+1][3*j][k+3]);
-    __insere_tete(pt_objet, __cree_maillon(tmp,BLEUF));
+    __insere_tete(pt_objet, __cree_maillon(tmp,&bleuf));
 
     tmp = definirTriangle3d(tp[3*j][i][k],tp[3*j][i][k+3],tp[3*j][i+1][k+3]);
-    __insere_tete(pt_objet, __cree_maillon(tmp,VERTF));
+    __insere_tete(pt_objet, __cree_maillon(tmp,&vertf));
     tmp = definirTriangle3d(tp[3*j][i][k],tp[3*j][i+1][k],tp[3*j][i+1][k+3]);
-    __insere_tete(pt_objet, __cree_maillon(tmp,VERTF));
+    __insere_tete(pt_objet, __cree_maillon(tmp,&vertf));
 
     //barre verticale droite
     tmp = definirTriangle3d(tp[i+2][3*j][k],tp[i+2][3*j][k+3],tp[i+3][3*j][k+3]);
-    __insere_tete(pt_objet, __cree_maillon(tmp,BLEUF));
+    __insere_tete(pt_objet, __cree_maillon(tmp,&bleuf));
     tmp = definirTriangle3d(tp[i+2][3*j][k],tp[i+3][3*j][k],tp[i+3][3*j][k+3]);
-    __insere_tete(pt_objet, __cree_maillon(tmp,BLEUF));
+    __insere_tete(pt_objet, __cree_maillon(tmp,&bleuf));
 
     tmp = definirTriangle3d(tp[3*j][i+2][k],tp[3*j][i+2][k+3],tp[3*j][i+3][k+3]);
-    __insere_tete(pt_objet, __cree_maillon(tmp,VERTF));
+    __insere_tete(pt_objet, __cree_maillon(tmp,&vertf));
     tmp = definirTriangle3d(tp[3*j][i+2][k],tp[3*j][i+3][k],tp[3*j][i+3][k+3]);
-    __insere_tete(pt_objet, __cree_maillon(tmp,VERTF));
+    __insere_tete(pt_objet, __cree_maillon(tmp,&vertf));
 
   }
 
   
   //face supérieur #hardcode
   tmp = definirTriangle3d(tp[1][0][2],tp[1][1][2],tp[2][1][0]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,VERTF));
+  __insere_tete(pt_objet, __cree_maillon(tmp,&vertf));
   tmp = definirTriangle3d(tp[1][0][2],tp[2][0][0],tp[2][1][0]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,VERTF));
+  __insere_tete(pt_objet, __cree_maillon(tmp,&vertf));
 
   tmp = definirTriangle3d(tp[1][2][0],tp[1][3][0],tp[2][3][2]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,VERTF));
+  __insere_tete(pt_objet, __cree_maillon(tmp,&vertf));
   tmp = definirTriangle3d(tp[1][2][0],tp[2][2][2],tp[2][3][2]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,VERTF));
+  __insere_tete(pt_objet, __cree_maillon(tmp,&vertf));
 
   tmp = definirTriangle3d(tp[0][1][1],tp[0][2][3],tp[1][2][3]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,BLEUF));
+  __insere_tete(pt_objet, __cree_maillon(tmp,&bleuf));
   tmp = definirTriangle3d(tp[0][1][1],tp[1][1][1],tp[1][2][3]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,BLEUF));
+  __insere_tete(pt_objet, __cree_maillon(tmp,&bleuf));
 
   tmp = definirTriangle3d(tp[2][2][1],tp[2][1][3],tp[3][1][3]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,BLEUF));
+  __insere_tete(pt_objet, __cree_maillon(tmp,&bleuf));
   tmp = definirTriangle3d(tp[2][2][1],tp[3][2][1],tp[3][1][3]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,BLEUF));
+  __insere_tete(pt_objet, __cree_maillon(tmp,&bleuf));
  
   tmp = definirTriangle3d(tp[1][0][3],tp[1][1][3],tp[2][1][1]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,ROUGEF));
+  __insere_tete(pt_objet, __cree_maillon(tmp,&rougef));
   tmp = definirTriangle3d(tp[1][0][3],tp[2][0][1],tp[2][1][1]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,ROUGEF));
+  __insere_tete(pt_objet, __cree_maillon(tmp,&rougef));
 
   tmp = definirTriangle3d(tp[1][2][1],tp[1][3][1],tp[2][3][3]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,ROUGEF));
+  __insere_tete(pt_objet, __cree_maillon(tmp,&rougef));
   tmp = definirTriangle3d(tp[1][2][1],tp[2][2][3],tp[2][3][3]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,ROUGEF));
+  __insere_tete(pt_objet, __cree_maillon(tmp,&rougef));
 
   tmp = definirTriangle3d(tp[0][1][0],tp[0][2][2],tp[1][2][2]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,ROUGEF));
+  __insere_tete(pt_objet, __cree_maillon(tmp,&rougef));
   tmp = definirTriangle3d(tp[0][1][0],tp[1][1][0],tp[1][2][2]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,ROUGEF));
+  __insere_tete(pt_objet, __cree_maillon(tmp,&rougef));
 
   tmp = definirTriangle3d(tp[2][1][2],tp[2][2][0],tp[3][2][0]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,ROUGEF));
+  __insere_tete(pt_objet, __cree_maillon(tmp,&rougef));
   tmp = definirTriangle3d(tp[2][1][2],tp[3][1][2],tp[3][2][0]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,ROUGEF));
+  __insere_tete(pt_objet, __cree_maillon(tmp,&rougef));
 
   //petite face ch***** #hardcode
 
   tmp = definirTriangle3d(tp[0][1][1],tp[1][1][1],tp[1][1][3]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,BLEUF));
+  __insere_tete(pt_objet, __cree_maillon(tmp,&bleuf));
   tmp = definirTriangle3d(tp[0][1][1],tp[0][1][3],tp[1][1][3]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,BLEUF));
+  __insere_tete(pt_objet, __cree_maillon(tmp,&bleuf));
 
   tmp = definirTriangle3d(tp[2][1][0],tp[2][1][2],tp[3][1][2]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,BLEUF));
+  __insere_tete(pt_objet, __cree_maillon(tmp,&bleuf));
   tmp = definirTriangle3d(tp[2][1][0],tp[3][1][0],tp[3][1][2]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,BLEUF));
+  __insere_tete(pt_objet, __cree_maillon(tmp,&bleuf));
 
   tmp = definirTriangle3d(tp[0][2][0],tp[0][2][2],tp[1][2][2]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,BLEUF));
+  __insere_tete(pt_objet, __cree_maillon(tmp,&bleuf));
   tmp = definirTriangle3d(tp[0][2][0],tp[1][2][0],tp[1][2][2]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,BLEUF));
+  __insere_tete(pt_objet, __cree_maillon(tmp,&bleuf));
 
   tmp = definirTriangle3d(tp[2][2][1],tp[2][2][3],tp[3][2][3]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,BLEUF));
+  __insere_tete(pt_objet, __cree_maillon(tmp,&bleuf));
   tmp = definirTriangle3d(tp[2][2][1],tp[3][2][1],tp[3][2][3]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,BLEUF));
+  __insere_tete(pt_objet, __cree_maillon(tmp,&bleuf));
 
   tmp = definirTriangle3d(tp[1][0][0],tp[1][0][2],tp[1][1][2]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,VERTF));
+  __insere_tete(pt_objet, __cree_maillon(tmp,&vertf));
   tmp = definirTriangle3d(tp[1][0][0],tp[1][1][0],tp[1][1][2]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,VERTF));
+  __insere_tete(pt_objet, __cree_maillon(tmp,&vertf));
 
   tmp = definirTriangle3d(tp[1][2][1],tp[1][2][3],tp[1][3][3]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,VERTF));
+  __insere_tete(pt_objet, __cree_maillon(tmp,&vertf));
   tmp = definirTriangle3d(tp[1][2][1],tp[1][3][1],tp[1][3][3]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,VERTF));
+  __insere_tete(pt_objet, __cree_maillon(tmp,&vertf));
 
   tmp = definirTriangle3d(tp[2][0][1],tp[2][0][3],tp[2][1][3]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,VERTF));
+  __insere_tete(pt_objet, __cree_maillon(tmp,&vertf));
   tmp = definirTriangle3d(tp[2][0][1],tp[2][1][1],tp[2][1][3]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,VERTF));
+  __insere_tete(pt_objet, __cree_maillon(tmp,&vertf));
 
   tmp = definirTriangle3d(tp[2][2][0],tp[2][2][2],tp[2][3][2]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,VERTF));
+  __insere_tete(pt_objet, __cree_maillon(tmp,&vertf));
   tmp = definirTriangle3d(tp[2][2][0],tp[2][3][0],tp[2][3][2]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,VERTF));
-
+  __insere_tete(pt_objet, __cree_maillon(tmp,&vertf));
 
   pt_objet->est_trie=false;
   return pt_objet;
 }
 
-t_objet3d* sphere(double r, double nlat, double nlong)
+t_objet3d* sphere(double r, double nlat, double nlong,Uint32*c)
 {
   t_objet3d *pt_objet = NULL;
   t_point3d *tp[(int)nlat][(int)nlong];
@@ -516,41 +616,61 @@ t_objet3d* sphere(double r, double nlat, double nlong)
     for(j=0;j<nlong-1;j++){
 
       tmp = definirTriangle3d(tp[i][j],tp[i][j+1],tp[i+1][j+1]);
-      __insere_tete(pt_objet, __cree_maillon(tmp,ROUGEC));
-
+      if(c==NULL)
+	__insere_tete(pt_objet, __cree_maillon(tmp,&rougec));
+      else
+	__insere_tete(pt_objet, __cree_maillon(tmp,c));
       tmp = definirTriangle3d(tp[i][j],tp[i+1][j],tp[i+1][j+1]);
-      __insere_tete(pt_objet, __cree_maillon(tmp,BLANC));
+      if(c==NULL)
+	__insere_tete(pt_objet, __cree_maillon(tmp,&blanc));
+      else
+	__insere_tete(pt_objet, __cree_maillon(tmp,c));
     }
 
     tmp = definirTriangle3d(tp[i][(int)nlong-1],tp[i][0],tp[i+1][0]);
-    __insere_tete(pt_objet, __cree_maillon(tmp,ROUGEC));
-
+    if(c==NULL)
+      __insere_tete(pt_objet, __cree_maillon(tmp,&rougec));
+    else
+      __insere_tete(pt_objet, __cree_maillon(tmp,c));
     tmp = definirTriangle3d(tp[i][(int)nlong-1],tp[i+1][(int)nlong-1],tp[i+1][0]);
-    __insere_tete(pt_objet, __cree_maillon(tmp,BLANC));
-    
+    if(c==NULL)
+      __insere_tete(pt_objet, __cree_maillon(tmp,&blanc));
+    else
+      __insere_tete(pt_objet, __cree_maillon(tmp,c));
   }
   
   for(j=0;j<nlong-1;j++){
 
     tmp = definirTriangle3d(p0,tp[0][j],tp[0][j+1]);
-    __insere_tete(pt_objet, __cree_maillon(tmp,GRISC));
-
+    if(c==NULL)
+      __insere_tete(pt_objet, __cree_maillon(tmp,&grisc));
+    else
+      __insere_tete(pt_objet, __cree_maillon(tmp,c));
     tmp = definirTriangle3d(tp[(int)nlat-1][j],tp[(int)nlat-1][j+1],p1);
-    __insere_tete(pt_objet, __cree_maillon(tmp,GRISF));
+if(c==NULL)
+    __insere_tete(pt_objet, __cree_maillon(tmp,&grisf));
+else
+      __insere_tete(pt_objet, __cree_maillon(tmp,c));
     
   }
 
   tmp = definirTriangle3d(p0,tp[0][(int)nlong-1],tp[0][0]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,GRISC));
+  if(c==NULL)
+    __insere_tete(pt_objet, __cree_maillon(tmp,&grisc));
+  else
+    __insere_tete(pt_objet, __cree_maillon(tmp,c));
 
   tmp = definirTriangle3d(tp[(int)nlat-1][(int)nlong-1],tp[(int)nlat-1][0],p1);
-  __insere_tete(pt_objet, __cree_maillon(tmp,GRISF));
+  if(c==NULL)
+    __insere_tete(pt_objet, __cree_maillon(tmp,&grisf));
+  else
+    __insere_tete(pt_objet, __cree_maillon(tmp,c));
   
   pt_objet->est_trie=false;
   return pt_objet;
 }
 
-t_objet3d* geode(double r)
+t_objet3d* geode(double r,Uint32*c)
 {
   t_objet3d *pt_objet = NULL;
   int i;
@@ -583,40 +703,40 @@ t_objet3d* geode(double r)
   for(i=0;i<4;i++){
     
     tmp = definirTriangle3d(p0,tp[0][i],tp[0][i+1]);
-    __insere_tete(pt_objet, __cree_maillon(tmp,ROUGEC));
+    __insere_tete(pt_objet, __cree_maillon(tmp,&rougec));
     
     tmp = definirTriangle3d(p1,tp[1][i],tp[1][i+1]);
-    __insere_tete(pt_objet, __cree_maillon(tmp,GRISC));
+    __insere_tete(pt_objet, __cree_maillon(tmp,&grisc));
 
     
     tmp = definirTriangle3d(tp[0][i],tp[0][i+1],tp[1][i]);
-    __insere_tete(pt_objet, __cree_maillon(tmp,GRISF));
+    __insere_tete(pt_objet, __cree_maillon(tmp,&grisf));
 
     tmp = definirTriangle3d(tp[1][i],tp[1][i+1],tp[0][i+1]);
-    __insere_tete(pt_objet, __cree_maillon(tmp,ROUGEF));
+    __insere_tete(pt_objet, __cree_maillon(tmp,&rougef));
     
   }
 
   
   tmp = definirTriangle3d(p0,tp[0][4],tp[0][0]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,ROUGEF));
+  __insere_tete(pt_objet, __cree_maillon(tmp,&rougef));
   
   tmp = definirTriangle3d(p1,tp[1][4],tp[1][0]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,GRISF));
+  __insere_tete(pt_objet, __cree_maillon(tmp,&grisf));
     
   
   tmp = definirTriangle3d(tp[0][4],tp[0][0],tp[1][4]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,ROUGEF));
+  __insere_tete(pt_objet, __cree_maillon(tmp,&rougef));
   
   tmp = definirTriangle3d(tp[1][4],tp[1][0],tp[0][0]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,GRISF));
+  __insere_tete(pt_objet, __cree_maillon(tmp,&grisf));
   
   pt_objet->est_trie=false;
   return pt_objet;
 }
 
 
-t_objet3d* sphere_amiga(double r, double nlat, double nlong)
+t_objet3d* sphere_amiga(double r, double nlat, double nlong,Uint32*c1,Uint32*c2)
 {
   t_objet3d *pt_objet = NULL;
   t_point3d *tp[(int)nlat][(int)nlong];
@@ -638,33 +758,53 @@ t_objet3d* sphere_amiga(double r, double nlat, double nlong)
 
       if((i+j)%2){
 	tmp = definirTriangle3d(tp[i][j],tp[i][j+1],tp[i+1][j+1]);
-	__insere_tete(pt_objet, __cree_maillon(tmp,ROUGEC));
-	
+	if(c1==NULL)
+	  __insere_tete(pt_objet, __cree_maillon(tmp,&rougec));
+	else
+	  __insere_tete(pt_objet, __cree_maillon(tmp,c1));
 	tmp = definirTriangle3d(tp[i][j],tp[i+1][j],tp[i+1][j+1]);
-	__insere_tete(pt_objet, __cree_maillon(tmp,ROUGEF));
+	if(c1==NULL)
+	  __insere_tete(pt_objet, __cree_maillon(tmp,&rougef));
+	else
+	  __insere_tete(pt_objet, __cree_maillon(tmp,c1));
       }
       else{
 	tmp = definirTriangle3d(tp[i][j],tp[i][j+1],tp[i+1][j+1]);
-	__insere_tete(pt_objet, __cree_maillon(tmp,BLANC));
-	
+	if(c2==NULL)
+	  __insere_tete(pt_objet, __cree_maillon(tmp,&blanc));
+	else
+	  __insere_tete(pt_objet, __cree_maillon(tmp,c2));
 	tmp = definirTriangle3d(tp[i][j],tp[i+1][j],tp[i+1][j+1]);
-	__insere_tete(pt_objet, __cree_maillon(tmp,BLANC));
+	if(c2==NULL)
+	  __insere_tete(pt_objet, __cree_maillon(tmp,&blanc));
+	else
+	  __insere_tete(pt_objet, __cree_maillon(tmp,c2));
       }
     }
     if((i+1)%2){
       tmp = definirTriangle3d(tp[i][(int)nlong-1],tp[i][0],tp[i+1][0]);
-      __insere_tete(pt_objet, __cree_maillon(tmp,ROUGEC));
-
+      if(c1==NULL)
+	__insere_tete(pt_objet, __cree_maillon(tmp,&rougec));
+      else
+	__insere_tete(pt_objet, __cree_maillon(tmp,c1));
       tmp = definirTriangle3d(tp[i][(int)nlong-1],tp[i+1][(int)nlong-1],tp[i+1][0]);
-      __insere_tete(pt_objet, __cree_maillon(tmp,ROUGEF));
+      if(c1==NULL)
+	__insere_tete(pt_objet, __cree_maillon(tmp,&rougef));
+      else
+	__insere_tete(pt_objet, __cree_maillon(tmp,c1));
     }
     else{
 
       tmp = definirTriangle3d(tp[i][(int)nlong-1],tp[i][0],tp[i+1][0]);
-      __insere_tete(pt_objet, __cree_maillon(tmp,BLANC));
-
+      if(c2==NULL)
+	__insere_tete(pt_objet, __cree_maillon(tmp,&blanc));
+      else
+	__insere_tete(pt_objet, __cree_maillon(tmp,c2));
       tmp = definirTriangle3d(tp[i][(int)nlong-1],tp[i+1][(int)nlong-1],tp[i+1][0]);
-      __insere_tete(pt_objet, __cree_maillon(tmp,BLANC));
+      if(c2==NULL)
+	__insere_tete(pt_objet, __cree_maillon(tmp,&blanc));
+      else
+	__insere_tete(pt_objet, __cree_maillon(tmp,c2));
 
     }
   }
@@ -672,39 +812,63 @@ t_objet3d* sphere_amiga(double r, double nlat, double nlong)
   for(j=0;j<nlong-1;j++){
     if((j+1)%2){
       tmp = definirTriangle3d(p0,tp[0][j],tp[0][j+1]);
-      __insere_tete(pt_objet, __cree_maillon(tmp,ROUGEC));
+      if(c1==NULL)
+	__insere_tete(pt_objet, __cree_maillon(tmp,&rougec));
+      else
+	__insere_tete(pt_objet, __cree_maillon(tmp,c1));
     }
     else{
       tmp = definirTriangle3d(p0,tp[0][j],tp[0][j+1]);
-      __insere_tete(pt_objet, __cree_maillon(tmp,BLANC));
+      if(c2==NULL)
+	__insere_tete(pt_objet, __cree_maillon(tmp,&blanc));
+      else
+	__insere_tete(pt_objet, __cree_maillon(tmp,c2));
     }
 
     if((j+(int)nlat)%2){
       tmp = definirTriangle3d(tp[(int)nlat-1][j],tp[(int)nlat-1][j+1],p1);
-      __insere_tete(pt_objet, __cree_maillon(tmp,BLANC));
+      if(c2==NULL)
+	__insere_tete(pt_objet, __cree_maillon(tmp,&blanc));
+      else
+	__insere_tete(pt_objet, __cree_maillon(tmp,c2));
     }
     else{
       tmp = definirTriangle3d(tp[(int)nlat-1][j],tp[(int)nlat-1][j+1],p1);
-      __insere_tete(pt_objet, __cree_maillon(tmp,ROUGEC));
+      if(c1==NULL)
+	__insere_tete(pt_objet, __cree_maillon(tmp,&rougec));
+      else
+	__insere_tete(pt_objet, __cree_maillon(tmp,c1));
     }
 
   }
   if(((int)nlong)%2){
     tmp = definirTriangle3d(p0,tp[0][(int)nlong-1],tp[0][0]);
-    __insere_tete(pt_objet, __cree_maillon(tmp,ROUGEC));
+    if(c1==NULL)
+      __insere_tete(pt_objet, __cree_maillon(tmp,&rougec));
+    else
+      __insere_tete(pt_objet, __cree_maillon(tmp,c1));
   }
   else{
     tmp = definirTriangle3d(p0,tp[0][(int)nlong-1],tp[0][0]);
-    __insere_tete(pt_objet, __cree_maillon(tmp,BLANC));
+    if(c2==NULL)
+      __insere_tete(pt_objet, __cree_maillon(tmp,&blanc));
+    else
+      __insere_tete(pt_objet, __cree_maillon(tmp,c2));
   }
 
   if(((int)nlong+(int)nlat)%2){
     tmp = definirTriangle3d(tp[(int)nlat-1][(int)nlong-1],tp[(int)nlat-1][0],p1);
-    __insere_tete(pt_objet, __cree_maillon(tmp,ROUGEC));
+    if(c1==NULL)
+      __insere_tete(pt_objet, __cree_maillon(tmp,&rougec));
+    else
+      __insere_tete(pt_objet, __cree_maillon(tmp,c1));
   }
   else{
     tmp = definirTriangle3d(tp[(int)nlat-1][(int)nlong-1],tp[(int)nlat-1][0],p1);
-    __insere_tete(pt_objet, __cree_maillon(tmp,BLANC));
+    if(c2==NULL)
+      __insere_tete(pt_objet, __cree_maillon(tmp,&blanc));
+    else
+      __insere_tete(pt_objet, __cree_maillon(tmp,c1));
   }
   
   pt_objet->est_trie=false;
@@ -713,7 +877,7 @@ t_objet3d* sphere_amiga(double r, double nlat, double nlong)
 
 
 
-t_objet3d* tore(double r1, double r2,double nlat,double nlong)
+t_objet3d* tore(double r1, double r2,double nlat,double nlong,Uint32*c)
 {
   t_objet3d *pt_objet = NULL;
   t_point3d *tp[(int)nlat][(int)nlong];
@@ -733,26 +897,50 @@ t_objet3d* tore(double r1, double r2,double nlat,double nlong)
   for(i=0;i<nlat-1;i++){
     for(j=0;j<nlong-1;j++){
       tmp = definirTriangle3d(tp[i][j],tp[i][j+1],tp[i+1][j+1]);
-      __insere_tete(pt_objet, __cree_maillon(tmp,ROUGEC));
+      if(c==NULL)
+	__insere_tete(pt_objet, __cree_maillon(tmp,&rougec));
+      else
+	__insere_tete(pt_objet, __cree_maillon(tmp,c));
       tmp = definirTriangle3d(tp[i][j],tp[i+1][j],tp[i+1][j+1]);
-      __insere_tete(pt_objet, __cree_maillon(tmp,BLANC));
+      if(c==NULL)
+	__insere_tete(pt_objet, __cree_maillon(tmp,&blanc));
+      else
+	__insere_tete(pt_objet, __cree_maillon(tmp,c));
     }
     tmp = definirTriangle3d(tp[i][(int)nlong-1],tp[i][0],tp[i+1][0]);
-    __insere_tete(pt_objet, __cree_maillon(tmp,GRISC));
+    if(c==NULL)
+      __insere_tete(pt_objet, __cree_maillon(tmp,&grisc));
+    else
+      __insere_tete(pt_objet, __cree_maillon(tmp,c));
     tmp = definirTriangle3d(tp[i][(int)nlong-1],tp[i+1][(int)nlong-1],tp[i+1][0]);
-    __insere_tete(pt_objet, __cree_maillon(tmp,GRISF));  
+    if(c==NULL)
+      __insere_tete(pt_objet, __cree_maillon(tmp,&grisf));  
+    else
+      __insere_tete(pt_objet, __cree_maillon(tmp,c));
   }
   for(j=0;j<nlong-1;j++){
     tmp = definirTriangle3d(tp[(int)nlat-1][j],tp[0][j],tp[0][j+1]);
-    __insere_tete(pt_objet, __cree_maillon(tmp,GRISC));
+    if(c==NULL)
+      __insere_tete(pt_objet, __cree_maillon(tmp,&grisc));
+    else
+      __insere_tete(pt_objet, __cree_maillon(tmp,c));
     tmp = definirTriangle3d(tp[(int)nlat-1][j],tp[(int)nlat-1][j+1],tp[0][j+1]);
-    __insere_tete(pt_objet, __cree_maillon(tmp,GRISF)); 
+    if(c==NULL)
+      __insere_tete(pt_objet, __cree_maillon(tmp,&grisf)); 
+    else
+      __insere_tete(pt_objet, __cree_maillon(tmp,c));
   }
   tmp = definirTriangle3d(tp[(int)nlat-1][(int)nlong-1],tp[(int)nlat-1][0],tp[0][0]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,GRISC));
+  if(c==NULL)
+    __insere_tete(pt_objet, __cree_maillon(tmp,&grisc));
+  else
+    __insere_tete(pt_objet, __cree_maillon(tmp,c));
   tmp = definirTriangle3d(tp[(int)nlat-1][(int)nlong-1],tp[0][(int)nlong-1],tp[0][0]);
-  __insere_tete(pt_objet, __cree_maillon(tmp,GRISF));
-  
+  if(c==NULL)
+    __insere_tete(pt_objet, __cree_maillon(tmp,&grisf));
+  else
+    __insere_tete(pt_objet, __cree_maillon(tmp,c));
+
   return pt_objet;
 }
 
@@ -768,7 +956,7 @@ t_objet3d* arbre(double lx, double ly, double lz)
   return pt_objet;
 }
 
-t_objet3d* damier(double lx, double lz, double nx, double nz)
+t_objet3d* damier(double lx, double lz, double nx, double nz,Uint32*c1,Uint32*c2)
 {
   t_objet3d *pt_objet = NULL;
   pt_objet = objet_vide();
@@ -786,12 +974,26 @@ t_objet3d* damier(double lx, double lz, double nx, double nz)
       tmp1 = definirTriangle3d(tp[i][j],tp[i][j+1],tp[i+1][j+1]);
       tmp2 = definirTriangle3d(tp[i][j],tp[i+1][j],tp[i+1][j+1]);
       if((i+j)%2){
-	__insere_tete(pt_objet, __cree_maillon(tmp1,BLANC));
-	__insere_tete(pt_objet, __cree_maillon(tmp2,BLANC));
+	if(c1==NULL){
+	  __insere_tete(pt_objet, __cree_maillon(tmp1,&blanc));
+	  __insere_tete(pt_objet, __cree_maillon(tmp2,&blanc));
+	}
+	else{
+	  __insere_tete(pt_objet, __cree_maillon(tmp1,c1));
+	  __insere_tete(pt_objet, __cree_maillon(tmp2,c1));
+
+	}
       }
       else{
-	__insere_tete(pt_objet, __cree_maillon(tmp1,GRISF));
-	__insere_tete(pt_objet, __cree_maillon(tmp2,GRISF));
+	if(c2==NULL){
+	  __insere_tete(pt_objet, __cree_maillon(tmp1,&grisf));
+	  __insere_tete(pt_objet, __cree_maillon(tmp2,&grisf));
+	}
+	else{
+	  __insere_tete(pt_objet, __cree_maillon(tmp1,c2));
+	  __insere_tete(pt_objet, __cree_maillon(tmp2,c2));
+
+	}
       }
     }
   }
@@ -926,7 +1128,7 @@ void dessinerObjet3d(t_surface *surface, t_objet3d* pt_objet, double h)
     t_maillon *tmp=pt_objet->tete;
 
     while(tmp!=NULL){
-      remplirTriangle3d(surface,tmp->face,tmp->couleur,h);
+      remplirTriangle3d(surface,tmp->face,*(tmp->couleur),h);
       tmp=tmp->pt_suiv;
     }
   }
@@ -982,11 +1184,11 @@ void rotationObjet3d(t_objet3d* pt_objet, t_point3d *centre, float degreX, float
 void transformationObjet3d(t_objet3d* pt_objet, double mat[4][4])
 {
   if(!pt_objet->est_camera){
-  t_chaine *tmp=pt_objet->chaine;
-  do{
-    multiplicationVecteur3d(tmp->point,mat,tmp->point);
-    tmp=tmp->pt_suiv;
-  }
-  while(tmp!=NULL);
+    t_chaine *tmp=pt_objet->chaine;
+    do{
+      multiplicationVecteur3d(tmp->point,mat,tmp->point);
+      tmp=tmp->pt_suiv;
+    }
+    while(tmp!=NULL);
   }
 }

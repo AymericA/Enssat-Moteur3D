@@ -60,9 +60,11 @@ int main(int argc,char** argv)
   t_objet3d*c1=camera();
   t_objet3d*c2=camera();
   
-  t_objet3d*p1=damier(800,800,16,16);
-  t_objet3d*s1=sphere(100,10,20);
-  t_objet3d*t1=tore(100,10,10,50);
+  Uint32 bula=BLANC;
+
+  t_objet3d*p1=damier(800,800,16,16,NULL,NULL);
+  t_objet3d*s1=sphere(100,10,20,&bula);
+  t_objet3d*t1=tore(100,10,10,50,&bula);
   t_objet3d*n1=n64(100);
 
   t_scene3d*scene;
@@ -72,10 +74,10 @@ int main(int argc,char** argv)
   ajoutObjet3d(sc1,p1);
   t_scene3d*sp1=sc1->fils;
 
-  /*
-  ajoutObjet3d(sp1,s1);
-  t_scene3d*ss1=sp1->fils;
   
+  ajoutObjet3d(sp1,t1);
+  t_scene3d*ss1=sp1->fils;
+  /*
   ajoutObjet3d(ss1,t1);
   t_scene3d*st1=ss1->fils;
 
@@ -97,16 +99,14 @@ int main(int argc,char** argv)
   translationScene3d(sp1,vecteur);
   free(vecteur);
 
-  vecteur=definirPoint3d(0,-150,0);
+  vecteur=definirPoint3d(0,-100,0);
   translationScene3d(drag,vecteur);
   free(vecteur);
 
-
-  /*
-  vecteur=definirPoint3d(0,-150,0);
+  vecteur=definirPoint3d(0,-400,0);
   translationScene3d(ss1,vecteur);
   free(vecteur);
-
+  /*
   vecteur=definirPoint3d(0,100,0);
   translationScene3d(st1,vecteur);
   free(vecteur);
@@ -276,6 +276,8 @@ int main(int argc,char** argv)
 	  rotationScene3d(scene->fils,origine,0,0,1);
 	}
 
+      bula=echelle_de_couleur(i);
+
       /*
       centre=GetcentreR(ss1);
       rotationScene3d(ss1,centre,0,8,0);
@@ -290,7 +292,7 @@ int main(int argc,char** argv)
 
       afficherFenetre(surface,screen);
       majEcran(surface);
-      SDL_Delay(20);
+      SDL_Delay(10);
       i++;
 
       cpt++;
