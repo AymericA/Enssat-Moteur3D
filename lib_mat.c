@@ -67,7 +67,4 @@ void copierMatrice3d(double m1[4][4], double m2[4][4]) // m1 = m2
 }
 
 
-int randy(int a,int b)
-{
-  return rand()%(b-a)+a;
-}
+

@@ -97,12 +97,12 @@ int main(int argc,char** argv)
 
   t_scene3d**tabd[5];
   t_scene3d*drag=dragon(tabd);
-  t_scene3d*tabm[10][10];
+  t_scene3d*tabm[20][20];
   
-  Uint32 tabc[10][10];
-  mer_init(10,10,tabc);
+  Uint32 tabc[20][20];
+  mer_init(20,20,tabc);
 
-  t_scene3d*rive=mer(200,200,10,10,tabc,tabm);
+  t_scene3d*rive=mer(400,400,20,20,tabc,tabm);
   int Crive=0;
 
   ajoutfils(sp1,rive);
@@ -300,7 +300,8 @@ int main(int argc,char** argv)
 	}
 
       bula=echelle_de_couleur(i);
-      Umer(10,10,tabm,&Crive);
+      Umer(20,20,tabm,&Crive,tabc);
+      //printf("i : %d cycle : %d\n",i,Crive);
 
 
       /*
@@ -317,7 +318,7 @@ int main(int argc,char** argv)
 
       afficherFenetre(surface,screen);
       majEcran(surface);
-      SDL_Delay(10);
+      SDL_Delay(50);
       i++;
 
       cpt++;

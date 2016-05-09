@@ -48,5 +48,5 @@ void extract(t_scene3d*pt_scene3d);
 t_scene3d*dragon(t_scene3d** tab[5]);
 void mer_init(int nx,int nz,Uint32 tabc[nx][nz]);
 t_scene3d*mer(double lx,double ly,int nx,int nz,Uint32 tabc[nx][nz],t_scene3d*tab[nx][nz]);
-
+ 
 #endif

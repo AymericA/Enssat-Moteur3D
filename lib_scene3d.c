@@ -488,39 +488,63 @@ t_scene3d*dragon(t_scene3d** tab[5])
 void mer_init(int nx,int nz,Uint32 tabc[nx][nz])
 {
   int c,i,j;
+  //c=rand();                //si décommenté provoque une erreur de segmentation
   for(i=0;i<nx;i++){
     for(j=0;j<nz;j++){
       switch((2*i+j)%5){
       case 0:
-	tabc[i][j]=0x0000fff9;
+	tabc[i][j]=0xd6e3e3;
 	break;
       case 1:
-	tabc[i][j]=0x0000afb4;
+	tabc[i][j]=0xc4d8d8;
 	break;
       case 2:
-	tabc[i][j]=0x00009489;
+	tabc[i][j]=0x7d9e9f;
 	break;
       case 3:
-	tabc[i][j]=0x00086c74;
+	tabc[i][j]=0x709798;
 	break;
       case 4:
-	tabc[i][j]=0x00074d5c;
+	tabc[i][j]=0x537b7c;
 	break;
       }
     }
   }
 }
 
+Uint32 next(int lon,Uint32 val,const Uint32 tab[lon])
+{
+  int i;
+  for(i=0;i<lon-1;i++)
+    if(val==tab[i])
+      return tab[i+1];
+}
 
-void Umer(int nx,int nz,t_scene3d*tab[nx][nz],int*cycle)
+
+const Uint32 colmer[41]={0xD6E3E3,0xD34814,0xCFAC45,0xCC1076,0xC874A7,	\
+			 0xC4D8D8,0xB699FF,0xA85B27,0x9A1C4E,0x8BDD76,	\
+			 0x7D9E9F,0x7B039D,0x78689C,0x75CD9A,0x733299,	\
+			 0x709798,0x6AC52C,0x64F2C0,0x5F2054,0x594DE8,	\
+			 0x537B7C,0x594DE7,0x5F2053,0x64F2BF,0x6AC52B,	\
+			 0x709797,0x7332CB,0x75CE00,0x786935,0x7B046A,	\
+			 0x7D9F9F,0x8BDE10,0x9A1C82,0xA85AF4,0xB69966,	\
+			 0xC4D7D8,0xC873DA,0xCC0FDC,0xCFABDE,0xD347E0,	\
+			 0xD6E3E3};
+
+
+
+void Umer(int nx,int nz,t_scene3d*tab[nx][nz],int*cycle,Uint32 tabc[nx][nz])
 {
   t_point3d*tmp;
-  int c,i,j;
+  int i,j;
   for(i=0;i<nx;i++){
     for(j=0;j<nz;j++){
-      tmp=definirPoint3d(0,-1*cos(i*2*M_PI/nx)*cos(j*2*M_PI/nz)*(double)*cycle/10,0);
-      translationScene3d(tab[i][j],tmp);
-      free(tmp);
+      //if(cycle-i>0){
+	tmp=definirPoint3d(0,sin(2*M_PI*((*cycle-i)%10)/10)+cos(2*M_PI*((*cycle-j)%10)/10),0);
+	translationScene3d(tab[i][j],tmp);
+	free(tmp);
+	//}
+	//tabc[i][j]=next(41,tabc[i][j],colmer);
     }
   }
   (*cycle)++;
