@@ -17,16 +17,15 @@
 
 int main(int argc,char** argv)
 {
-  //srand(time(NULL));
+  srand(time(NULL));
   t_surface *surface=NULL;
   int cpt = 0;
   int timestart;
   char buf[50];
   SDL_Event event;
-
   t_bool fin=true;
   int turnlr=0,turnhb=0;
-
+  int db1,db2;
 #ifdef T2D
 
 #endif
@@ -67,7 +66,7 @@ int main(int argc,char** argv)
 
   //  Uint32 c1p1=ROUGEF,c2p1=GRISC;
 
-  t_objet3d*p1=damier(800,800,16,16,NULL,NULL);
+  t_objet3d*p1=objet_vide();//damier(800,800,16,16,NULL,NULL);
   t_objet3d*s1=sphere(100,10,20,&bula);
   t_objet3d*t1=tore(100,10,10,50,&bula);
   t_objet3d*n1=n64(100);
@@ -97,28 +96,47 @@ int main(int argc,char** argv)
 
   t_scene3d**tabd[5];
   t_scene3d*drag=dragon(tabd);
-  t_scene3d*tabm[20][20];
   
+  //la mer !
+  t_scene3d*tabm1[20][20];
+  t_scene3d*tabm2[20][20];
+  t_scene3d*tabm3[20][20];
   Uint32 tabc[20][20];
   mer_init(20,20,tabc);
-
-  t_scene3d*rive=mer(400,400,20,20,tabc,tabm);
+  t_scene3d*rive1=mer(400,400,20,20,tabc,tabm1);
+  t_scene3d*rive2=mer(400,400,20,20,tabc,tabm2);
+  t_scene3d*rive3=mer(400,400,20,20,tabc,tabm3);
   int Crive=0;
 
-  ajoutfils(sp1,rive);
+  //le pont !
+  t_bool move=false,haut=false,anim=false;
+  t_scene3d*tabp[
+
+  ajoutfils(sp1,rive1); 
+  ajoutfils(sp1,rive2);
+  ajoutfils(sp1,rive3);
+
   //ajoutfils(sp1,drag);
-
-
-  //printf("couleur : %d\n",tabc[0][0]);
 
 
   vecteur=definirPoint3d(0,150,-500);
   translationScene3d(sp1,vecteur);
   free(vecteur);
 
-  vecteur=definirPoint3d(0,-100,0);
-  translationScene3d(rive,vecteur);
+
+  vecteur=definirPoint3d(-200,-20,200);
+  translationScene3d(rive1,vecteur);
   free(vecteur);
+
+  vecteur=definirPoint3d(200,-20,200);
+  translationScene3d(rive2,vecteur);
+  free(vecteur);
+
+  vecteur=definirPoint3d(200,-20,-200);
+  translationScene3d(rive3,vecteur);
+  free(vecteur);
+  
+
 
   /*
   vecteur=definirPoint3d(0,-100,0);
@@ -147,6 +165,10 @@ int main(int argc,char** argv)
   free(vecteur);
   */
 #endif
+
+
+  
+
 
   int i=0;
 
@@ -255,6 +277,13 @@ int main(int argc,char** argv)
 	case SDLK_s:
 	  drx--;
 	  break;
+	  /*
+	case SDLK_g:
+	  printf("coucou\n");
+	  tabc[0][0]=next(37,tabc[0][0],colmer);
+printf("valeur : 0x%08.8X  \n", tabc[0][0]);
+	  break;
+	  */
 	case SDLK_SPACE:
 	  dx=0;
 	  dy=0;
@@ -299,8 +328,11 @@ int main(int argc,char** argv)
 	  rotationScene3d(scene->fils,origine,0,0,1);
 	}
 
-      bula=echelle_de_couleur(i);
-      Umer(20,20,tabm,&Crive,tabc);
+      //bula=echelle_de_couleur(i);
+      Umer(20,20,10,10,tabm1,Crive,tabc);
+      Umer(20,20,10,10,tabm2,Crive,tabc);
+      Umer(20,20,10,10,tabm3,Crive,tabc);
+      Crive++;
       //printf("i : %d cycle : %d\n",i,Crive);
 
 
@@ -318,7 +350,7 @@ int main(int argc,char** argv)
 
       afficherFenetre(surface,screen);
       majEcran(surface);
-      SDL_Delay(50);
+      SDL_Delay(5);
       i++;
 
       cpt++;

@@ -1185,10 +1185,9 @@ void transformationObjet3d(t_objet3d* pt_objet, double mat[4][4])
 {
   if(!pt_objet->est_camera){
     t_chaine *tmp=pt_objet->chaine;
-    do{
+    while(tmp!=NULL){
       multiplicationVecteur3d(tmp->point,mat,tmp->point);
       tmp=tmp->pt_suiv;
     }
-    while(tmp!=NULL);
   }
 }

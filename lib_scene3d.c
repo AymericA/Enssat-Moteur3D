@@ -488,24 +488,23 @@ t_scene3d*dragon(t_scene3d** tab[5])
 void mer_init(int nx,int nz,Uint32 tabc[nx][nz])
 {
   int c,i,j;
-  //c=rand();                //si décommenté provoque une erreur de segmentation
   for(i=0;i<nx;i++){
     for(j=0;j<nz;j++){
-      switch((2*i+j)%5){
+      switch(rand()%5){
       case 0:
-	tabc[i][j]=0xd6e3e3;
+	tabc[i][j]=0x00fff9;
 	break;
       case 1:
-	tabc[i][j]=0xc4d8d8;
+	tabc[i][j]=0x00afb4;
 	break;
       case 2:
-	tabc[i][j]=0x7d9e9f;
+	tabc[i][j]=0x009489;
 	break;
       case 3:
-	tabc[i][j]=0x709798;
+	tabc[i][j]=0x086c74;
 	break;
       case 4:
-	tabc[i][j]=0x537b7c;
+	tabc[i][j]=0x074d5c;
 	break;
       }
     }
@@ -515,46 +514,41 @@ void mer_init(int nx,int nz,Uint32 tabc[nx][nz])
 Uint32 next(int lon,Uint32 val,const Uint32 tab[lon])
 {
   int i;
-  for(i=0;i<lon-1;i++)
+  for(i=0;i<lon;i++)
     if(val==tab[i])
       return tab[i+1];
 }
 
-
-const Uint32 colmer[41]={0xD6E3E3,0xD34814,0xCFAC45,0xCC1076,0xC874A7,	\
-			 0xC4D8D8,0xB699FF,0xA85B27,0x9A1C4E,0x8BDD76,	\
-			 0x7D9E9F,0x7B039D,0x78689C,0x75CD9A,0x733299,	\
-			 0x709798,0x6AC52C,0x64F2C0,0x5F2054,0x594DE8,	\
-			 0x537B7C,0x594DE7,0x5F2053,0x64F2BF,0x6AC52B,	\
-			 0x709797,0x7332CB,0x75CE00,0x786935,0x7B046A,	\
-			 0x7D9F9F,0x8BDE10,0x9A1C82,0xA85AF4,0xB69966,	\
-			 0xC4D7D8,0xC873DA,0xCC0FDC,0xCFABDE,0xD347E0,	\
-			 0xD6E3E3};
+const Uint32 colmer[37]={0x00FFF9,0x00f2ed,0x00e4e2,0x00d7d7,0x00cacb,0x00bcc0, \
+			   0x00AFB4,0x00abad,0x00a6a6,0x00a19e,0x009d97,0x009890, \
+			   0x009489,0x018d85,0x038782,0x04807e,0x05797b,0x077378, \
+			   0x086C74,0x086770,0x08626c,0x085d68,0x075764,0x075260, \
+			   0x074D5C,0x065c69,0x066b76,0x057a83,0x058890,0x04979d, \
+			   0x04a6ab,0x03b5b8,0x02c4c5,0x02d3d2,0x01e1df,0x01f0ec, \
+			   0x00FFF9};
 
 
 
-void Umer(int nx,int nz,t_scene3d*tab[nx][nz],int*cycle,Uint32 tabc[nx][nz])
+void Umer(int nx,int nz,int freqx,int freqz,t_scene3d*tab[nx][nz],int cycle,Uint32 tabc[nx][nz])
 {
   t_point3d*tmp;
   int i,j;
   for(i=0;i<nx;i++){
     for(j=0;j<nz;j++){
-      //if(cycle-i>0){
-	tmp=definirPoint3d(0,sin(2*M_PI*((*cycle-i)%10)/10)+cos(2*M_PI*((*cycle-j)%10)/10),0);
-	translationScene3d(tab[i][j],tmp);
-	free(tmp);
-	//}
-	//tabc[i][j]=next(41,tabc[i][j],colmer);
+      tmp=definirPoint3d(0,sin(2*M_PI*((cycle/2-i)%freqx)/freqx)+cos(2*M_PI*((cycle/2-j)%freqz)/freqz),0);
+      translationScene3d(tab[i][j],tmp);
+      free(tmp);
+      //if(cycle%2)
+	tabc[i][j]=next(37,tabc[i][j],colmer);
     }
   }
-  (*cycle)++;
 }
 
 
 
 t_scene3d*mer(double lx,double lz,int nx,int nz,Uint32 tabc[nx][nz],t_scene3d*tab[nx][nz])
 {
-  t_objet3d*plan;//=damier(lx,lz,1,1,&tabc[1][1],&tabc[1][1]);
+  t_objet3d*plan=objet_vide();
   
   t_scene3d*main=creerScene3d(plan);
   int i,j;
@@ -566,7 +560,7 @@ t_scene3d*mer(double lx,double lz,int nx,int nz,Uint32 tabc[nx][nz],t_scene3d*ta
     {
       for(j=0;j<nz;j++)
 	{
-	  tmpo=parallelepipede(ux,3,uz,&(tabc[i][j]));
+	  tmpo=parallelepipede(ux,5,uz,&(tabc[i][j]));
 	  ajoutObjet3d(main,tmpo);
 	  tab[i][j]=main->fils;
 	  
