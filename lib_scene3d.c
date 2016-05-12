@@ -575,3 +575,72 @@ t_scene3d*mer(double lx,double lz,int nx,int nz,Uint32 tabc[nx][nz],t_scene3d*ta
 
 
 
+t_scene3d*tentacle(int nb,int sec,Uint32 tabc[nb][sec],t_scene3d*tab[nb][sec],double r,double rapr,double lh,double raph)
+{
+  t_objet3d*plan=objet_vide();
+  t_scene3d*main=creerScene3d(plan);
+  int i,j;
+  t_objet3d*tmpo;
+  t_point3d*tmp;
+  
+  for(i=0;i<nb;i++)
+    {
+      j=0;
+      tmpo=cylindre(lh,r,20,&(tabc[i][j]));
+      ajoutObjet3d(main,tmpo);
+      tab[i][j]=main->fils;
+      
+      tmp=definirPoint3d(-120*sin(i*2*M_PI/nb),0,120*cos(i*2*M_PI/nb));
+      translationScene3d(tab[i][j],tmp);
+      free(tmp);
+      for(j=1;j<sec;j++)
+	{
+	  tmpo=cylindre(lh*pow(raph,j),r*pow(rapr,j),20,&(tabc[i][j]));
+	  ajoutObjet3d(tab[i][j-1],tmpo);
+	  tab[i][j]=tab[i][j-1]->fils;
+	  
+	  tmp=definirPoint3d(0,5-(lh*(pow(raph,j)+pow(raph,j-1)))/2.0,0);
+	  translationScene3d(tab[i][j],tmp);
+	  free(tmp);
+	 
+	}
+    }
+  return main;	  
+}
+
+
+void Ukraken(int nb,int sec,t_scene3d*tab[nb][sec],float trtabk[nb][sec][2],double lh,double raph,int cycle)
+{
+  int i,j;
+  t_point3d*tmp;
+  int a=3;
+  float rx,rz;
+  for(i=0;i<nb;i++)
+    {
+      if(!(cycle%5)){
+	rx=1;
+	rz=1;
+
+	trtabk[i][0][0]=rx;
+	trtabk[i][0][1]=rz;
+	/*
+	trtabk[i][0][0]=trtabk[i][0][0]+rx;
+	trtabk[i][0][1]=trtabk[i][0][1]+rz;
+	*/
+      }
+      for(j=0;j<sec;j++)
+	{
+
+if(j>1){
+	    trtabk[i][j][0]=trtabk[i][j-1][0];
+	    trtabk[i][j][1]=trtabk[i][j-1][1];
+ }
+	  if(j==0){
+	    tmp=definirPoint3d(-120*sin(i*2*M_PI/nb),lh/2.0,120*cos(i*2*M_PI/nb));}
+	  else{
+	    tmp=definirPoint3d(0,-lh*pow(raph,j-1)/2.0,0);}
+	  rotationScene3d(tab[i][j],tmp,trtabk[i][(j+cycle)%sec][0],0,trtabk[i][(j+cycle)%sec][1]);
+	  free(tmp);
+	  
+	  	}}
+}

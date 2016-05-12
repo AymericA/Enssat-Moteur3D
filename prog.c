@@ -97,6 +97,8 @@ int main(int argc,char** argv)
   t_scene3d**tabd[5];
   t_scene3d*drag=dragon(tabd);
   
+
+  
   //la mer !
   t_scene3d*tabm1[20][20];
   t_scene3d*tabm2[20][20];
@@ -108,22 +110,41 @@ int main(int argc,char** argv)
   t_scene3d*rive3=mer(400,400,20,20,tabc,tabm3);
   int Crive=0;
 
-  //le pont !
-  t_bool move=false,haut=false,anim=false;
-  t_scene3d*tabp[
-
+  /*
   ajoutfils(sp1,rive1); 
   ajoutfils(sp1,rive2);
   ajoutfils(sp1,rive3);
+  */
 
+  //le pont !
+  t_bool btabp[3]={false,false,false}; //haut, move, anim
+  t_scene3d*tabp[5];
+
+
+  //kraken !
+  int Ctent=0;
+  t_bool btabk[3]={false,false,false}; //haut, move, anim
+  float trtabk[8][7][2]={{{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}},	\
+		       {{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}},	\
+		       {{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}},	\
+		       {{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}},	\
+		       {{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}},	\
+		       {{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}},	\
+		       {{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}},	\
+		       {{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}}};
+  t_scene3d*tabt[8][7];
+  Uint32 tabct[8][7];
+  t_scene3d*baset=tentacle(8,7,tabct,tabt,20,0.7,60,0.85);
+  ajoutfils(sp1,baset); 
+  mer_init(8,7,tabct);
+  
   //ajoutfils(sp1,drag);
 
 
   vecteur=definirPoint3d(0,150,-500);
   translationScene3d(sp1,vecteur);
   free(vecteur);
-
-
+  
   vecteur=definirPoint3d(-200,-20,200);
   translationScene3d(rive1,vecteur);
   free(vecteur);
@@ -136,9 +157,11 @@ int main(int argc,char** argv)
   translationScene3d(rive3,vecteur);
   free(vecteur);
   
+  vecteur=definirPoint3d(-200,0,-200);
+  translationScene3d(baset,vecteur);
+  free(vecteur);
 
-
-  /*
+   /*
   vecteur=definirPoint3d(0,-100,0);
   translationScene3d(drag,vecteur);
   free(vecteur);
@@ -164,6 +187,12 @@ int main(int argc,char** argv)
   rotationScene3d(sc2,vecteur,0,90,0);
   free(vecteur);
   */
+
+
+
+  // affscene();
+
+
 #endif
 
 
@@ -329,10 +358,16 @@ printf("valeur : 0x%08.8X  \n", tabc[0][0]);
 	}
 
       //bula=echelle_de_couleur(i);
-      Umer(20,20,10,10,tabm1,Crive,tabc);
-      Umer(20,20,10,10,tabm2,Crive,tabc);
-      Umer(20,20,10,10,tabm3,Crive,tabc);
-      Crive++;
+      
+      /*      
+	      Umer(20,20,10,10,tabm1,Crive,tabc);
+	      Umer(20,20,10,10,tabm2,Crive,tabc);
+	      Umer(20,20,10,10,tabm3,Crive,tabc);
+	      Crive++;
+      */
+
+      Ukraken(8,7,tabt,trtabk,60,0.85,Ctent);
+      Ctent++;
       //printf("i : %d cycle : %d\n",i,Crive);
 
 
