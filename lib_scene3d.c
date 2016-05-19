@@ -599,7 +599,7 @@ t_scene3d*tentacle(int nb,int sec,Uint32 tabc[nb][sec],t_scene3d*tab[nb][sec],do
 	  ajoutObjet3d(tab[i][j-1],tmpo);
 	  tab[i][j]=tab[i][j-1]->fils;
 	  
-	  tmp=definirPoint3d(0,5-(lh*(pow(raph,j)+pow(raph,j-1)))/2.0,0);
+	  tmp=definirPoint3d(0,5*pow(raph,j)-(lh*(pow(raph,j)+pow(raph,j-1)))/2.0,0);
 	  translationScene3d(tab[i][j],tmp);
 	  free(tmp);
 	 
@@ -608,39 +608,62 @@ t_scene3d*tentacle(int nb,int sec,Uint32 tabc[nb][sec],t_scene3d*tab[nb][sec],do
   return main;	  
 }
 
+void kraken_init(int nb,int sec,Uint32 tabc[nb][sec])
+{
+  int c,i,j;
+  for(i=0;i<nb;i++){
+    for(j=0;j<sec;j++){
+      switch(rand()%5){
+      case 0:
+	tabc[i][j]=0xc62828;
+	break;
+      case 1:
+	tabc[i][j]=0xb10f0f;
+	break;
+      case 2:
+	tabc[i][j]=0x951212;
+	break;
+      case 3:
+	tabc[i][j]=0x731010;
+	break;
+      case 4:
+	tabc[i][j]=0x5b0707;
+	break;
+      }
+    }
+  }
+}
 
-void Ukraken(int nb,int sec,t_scene3d*tab[nb][sec],float trtabk[nb][sec][2],double lh,double raph,int cycle)
+
+
+void Ukraken(int nb,int sec,t_scene3d*tab[nb][sec],double lh,double raph,int cycle)
 {
   int i,j;
-  t_point3d*tmp;
-  int a=3;
+  t_point3d*tmp,*dy;
   float rx,rz;
+  int T=100;
+  float omega=2*M_PI/T;
+  int dec=16;
+  int inv;
+
   for(i=0;i<nb;i++)
     {
-      if(!(cycle%5)){
-	rx=1;
-	rz=1;
-
-	trtabk[i][0][0]=rx;
-	trtabk[i][0][1]=rz;
-	/*
-	trtabk[i][0][0]=trtabk[i][0][0]+rx;
-	trtabk[i][0][1]=trtabk[i][0][1]+rz;
-	*/
-      }
       for(j=0;j<sec;j++)
 	{
-
-if(j>1){
-	    trtabk[i][j][0]=trtabk[i][j-1][0];
-	    trtabk[i][j][1]=trtabk[i][j-1][1];
- }
-	  if(j==0){
-	    tmp=definirPoint3d(-120*sin(i*2*M_PI/nb),lh/2.0,120*cos(i*2*M_PI/nb));}
+	  if(j==0){//problème : on bouge le centre de roation en faisant translation pas corriger ensuite !
+	    tmp=definirPoint3d(-120*sin(i*2*M_PI/nb),lh/2.0,120*cos(i*2*M_PI/nb));
+	    dy=definirPoint3d(0,sin(omega*cycle/2),0);
+	    translationScene3d(tab[i][j],dy);
+	    free(dy);
+	  }
 	  else{
-	    tmp=definirPoint3d(0,-lh*pow(raph,j-1)/2.0,0);}
-	  rotationScene3d(tab[i][j],tmp,trtabk[i][(j+cycle)%sec][0],0,trtabk[i][(j+cycle)%sec][1]);
+	    tmp=definirPoint3d(0,-lh*pow(raph,j-1)/2.0,0);
+	  }
+	  if(cycle-dec*j>=0){
+	  inv=pow(-1,((cycle-dec*j)/T)%2);
+	  rotationScene3d(tab[i][j],tmp,inv*cos(i*2*M_PI/nb)*sin(omega*(cycle-dec*j)),0,inv*sin(i*2*M_PI/nb)*sin(omega*(cycle-dec*j)));
+	  }
 	  free(tmp);
-	  
-	  	}}
+	}
+    }
 }

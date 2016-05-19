@@ -25,6 +25,7 @@ t_surface *creerFenetre(int x, int y)
 {
     t_surface *S;
     SDL_Surface *ecran = NULL;
+    int i;
 
     S = (t_surface *) malloc(sizeof(t_surface));
 
@@ -38,7 +39,12 @@ t_surface *creerFenetre(int x, int y)
         S->y = y;
         S->xmin = (int*)malloc(RY*sizeof(int));
         S->xmax = (int*)malloc(RY*sizeof(int));
-
+	for ( i = 0 ; i < RY ; i++ )
+	{
+		S->xmax[i] = 0;
+		S->xmin[i] = RX-1;
+	}
+	
         if (S->xmin==NULL || S->xmax==NULL)
         {
         	free(S->xmin);
@@ -49,6 +55,7 @@ t_surface *creerFenetre(int x, int y)
     return S;
 }
 
+#if 0
 void afficherFenetre(t_surface *surface,t_zbuffer screen[RY][RX]){
   int i,j;
   for(i=0;i<RY;i++){
@@ -56,6 +63,22 @@ void afficherFenetre(t_surface *surface,t_zbuffer screen[RY][RX]){
       definirPixel(surface,j,i,screen[i][j].couleur);
     }}
 }
+#else
+void afficherFenetre(t_surface *surface,t_zbuffer screen[RY][RX]){
+  t_zbuffer * zbuffer=(t_zbuffer*)screen;
+  SDL_Surface *ecran = obtenirEcran(surface);
+
+  int bpp = ecran->format->BytesPerPixel;
+  unsigned char * p = (unsigned char *)ecran->pixels;
+  int i;
+  for(i=0;i<RY*RX;i++)
+  {
+      *(Uint32*)p = zbuffer->couleur;  
+      p += bpp;
+      zbuffer++;
+  }
+}
+#endif
 
 void effacerFenetre(t_surface * surface, Uint32 couleur)
 {

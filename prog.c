@@ -110,11 +110,11 @@ int main(int argc,char** argv)
   t_scene3d*rive3=mer(400,400,20,20,tabc,tabm3);
   int Crive=0;
 
-  /*
+  
   ajoutfils(sp1,rive1); 
   ajoutfils(sp1,rive2);
   ajoutfils(sp1,rive3);
-  */
+  
 
   //le pont !
   t_bool btabp[3]={false,false,false}; //haut, move, anim
@@ -124,19 +124,11 @@ int main(int argc,char** argv)
   //kraken !
   int Ctent=0;
   t_bool btabk[3]={false,false,false}; //haut, move, anim
-  float trtabk[8][7][2]={{{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}},	\
-		       {{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}},	\
-		       {{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}},	\
-		       {{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}},	\
-		       {{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}},	\
-		       {{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}},	\
-		       {{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}},	\
-		       {{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}}};
-  t_scene3d*tabt[8][7];
-  Uint32 tabct[8][7];
-  t_scene3d*baset=tentacle(8,7,tabct,tabt,20,0.7,60,0.85);
+  t_scene3d*tabt[1][10];
+  Uint32 tabct[1][10];
+  t_scene3d*baset=tentacle(1,10,tabct,tabt,20,0.7,50,0.85);
   ajoutfils(sp1,baset); 
-  mer_init(8,7,tabct);
+  kraken_init(1,10,tabct);
   
   //ajoutfils(sp1,drag);
 
@@ -157,7 +149,7 @@ int main(int argc,char** argv)
   translationScene3d(rive3,vecteur);
   free(vecteur);
   
-  vecteur=definirPoint3d(-200,0,-200);
+  vecteur=definirPoint3d(200,0,-200);
   translationScene3d(baset,vecteur);
   free(vecteur);
 
@@ -196,7 +188,7 @@ int main(int argc,char** argv)
 #endif
 
 
-  
+ 
 
 
   int i=0;
@@ -359,14 +351,14 @@ printf("valeur : 0x%08.8X  \n", tabc[0][0]);
 
       //bula=echelle_de_couleur(i);
       
-      /*      
-	      Umer(20,20,10,10,tabm1,Crive,tabc);
-	      Umer(20,20,10,10,tabm2,Crive,tabc);
-	      Umer(20,20,10,10,tabm3,Crive,tabc);
-	      Crive++;
-      */
+            
+      Umer(20,20,10,10,tabm1,Crive,tabc);
+      Umer(20,20,10,10,tabm2,Crive,tabc);
+      Umer(20,20,10,10,tabm3,Crive,tabc);
+      Crive++;
+      
 
-      Ukraken(8,7,tabt,trtabk,60,0.85,Ctent);
+      Ukraken(1,10,tabt,60,0.85,Ctent);
       Ctent++;
       //printf("i : %d cycle : %d\n",i,Crive);
 
