@@ -56,6 +56,7 @@ void Umer(int nx,int nz,int freqx,int freqz,t_scene3d*tab[nx][nz],int cycle,Uint
 
 void kraken_init(int nb,int sec,Uint32 tabc[nb][sec]);
 t_scene3d*tentacle(int nb,int sec,Uint32 tabc[nb][sec],t_scene3d*tab[nb][sec],double r,double rapr,double lh,double raph);
-void Ukraken(int nb,int sec,t_scene3d*tab[nb][sec],double lh,double raph,int cycle);
+void Ukraken(int nb,int sec,t_scene3d*tab[nb][sec],int kinfo[nb][sec],double lh,double raph,int cycle);
+void kapp(t_scene3d*baset,t_bool btabk[3],int ckapp);
  
 #endif

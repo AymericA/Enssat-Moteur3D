@@ -117,18 +117,20 @@ int main(int argc,char** argv)
   
 
   //le pont !
-  t_bool btabp[3]={false,false,false}; //haut, move, anim
+  t_bool btabp[3]={false,true,false}; //haut, move, anim
   t_scene3d*tabp[5];
 
 
   //kraken !
   int Ctent=0;
-  t_bool btabk[3]={false,false,false}; //haut, move, anim
-  t_scene3d*tabt[1][10];
-  Uint32 tabct[1][10];
-  t_scene3d*baset=tentacle(1,10,tabct,tabt,20,0.7,50,0.85);
+  int ckapp=0;
+  t_bool btabk[3]={false,true,true}; //haut, move, anim
+  t_scene3d*tabt[8][10];
+  Uint32 tabct[8][10];
+  int kinfo[8][10];
+  t_scene3d*baset=tentacle(8,10,tabct,tabt,20,0.7,50,0.85);
   ajoutfils(sp1,baset); 
-  kraken_init(1,10,tabct);
+  kraken_init(8,10,tabct);
   
   //ajoutfils(sp1,drag);
 
@@ -149,7 +151,7 @@ int main(int argc,char** argv)
   translationScene3d(rive3,vecteur);
   free(vecteur);
   
-  vecteur=definirPoint3d(200,0,-200);
+  vecteur=definirPoint3d(200,250,-200);
   translationScene3d(baset,vecteur);
   free(vecteur);
 
@@ -297,14 +299,10 @@ int main(int argc,char** argv)
 	  break;
 	case SDLK_s:
 	  drx--;
-	  break;
-	  /*
+	  break;       
 	case SDLK_g:
-	  printf("coucou\n");
-	  tabc[0][0]=next(37,tabc[0][0],colmer);
-printf("valeur : 0x%08.8X  \n", tabc[0][0]);
-	  break;
-	  */
+	  btabk[1]=true;
+	  break;	  
 	case SDLK_SPACE:
 	  dx=0;
 	  dy=0;
@@ -357,9 +355,17 @@ printf("valeur : 0x%08.8X  \n", tabc[0][0]);
       Umer(20,20,10,10,tabm3,Crive,tabc);
       Crive++;
       
-
-      Ukraken(1,10,tabt,60,0.85,Ctent);
+      if(btabk[2] && (btabk[0] || btabk[1])){
+      Ukraken(8,10,tabt,kinfo,60,0.85,Ctent);
       Ctent++;
+      }
+
+      if(btabk[1]){
+	ckapp++;
+	kapp(baset,btabk,ckapp);
+      }
+
+
       //printf("i : %d cycle : %d\n",i,Crive);
 
 

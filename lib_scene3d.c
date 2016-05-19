@@ -573,7 +573,22 @@ t_scene3d*mer(double lx,double lz,int nx,int nz,Uint32 tabc[nx][nz],t_scene3d*ta
   return main;
 }
 
-
+void kapp(t_scene3d*baset,t_bool btabk[3],int ckapp)
+{
+  t_point3d*tmp;
+  if(btabk[0])
+    tmp=definirPoint3d(0,5,0);
+  else
+    tmp=definirPoint3d(0,-5,0);
+  translationScene3d(baset,tmp);
+  if(ckapp%50==0){
+    btabk[1]=false;   //mouvement fini
+    if(btabk[0])      //actualisation de la position avec un toggle
+      btabk[0]=false; 
+    else
+      btabk[0]=true;
+  }
+}
 
 t_scene3d*tentacle(int nb,int sec,Uint32 tabc[nb][sec],t_scene3d*tab[nb][sec],double r,double rapr,double lh,double raph)
 {
@@ -582,6 +597,7 @@ t_scene3d*tentacle(int nb,int sec,Uint32 tabc[nb][sec],t_scene3d*tab[nb][sec],do
   int i,j;
   t_objet3d*tmpo;
   t_point3d*tmp;
+  int rayon=150;
   
   for(i=0;i<nb;i++)
     {
@@ -590,7 +606,7 @@ t_scene3d*tentacle(int nb,int sec,Uint32 tabc[nb][sec],t_scene3d*tab[nb][sec],do
       ajoutObjet3d(main,tmpo);
       tab[i][j]=main->fils;
       
-      tmp=definirPoint3d(-120*sin(i*2*M_PI/nb),0,120*cos(i*2*M_PI/nb));
+      tmp=definirPoint3d(-rayon*sin(i*2*M_PI/nb),0,rayon*cos(i*2*M_PI/nb));
       translationScene3d(tab[i][j],tmp);
       free(tmp);
       for(j=1;j<sec;j++)
@@ -636,33 +652,49 @@ void kraken_init(int nb,int sec,Uint32 tabc[nb][sec])
 
 
 
-void Ukraken(int nb,int sec,t_scene3d*tab[nb][sec],double lh,double raph,int cycle)
+void Ukraken(int nb,int sec,t_scene3d*tab[nb][sec],int kinfo[nb][sec],double lh,double raph,int cycle)
 {
   int i,j;
   t_point3d*tmp,*dy;
   float rx,rz;
   int T=100;
   float omega=2*M_PI/T;
-  int dec=16;
-  int inv;
-
+  float omega2=omega/1.4;
+  int dec1=16;
+  int dec2=20;
+  int inv=1;
+  float somsin;
   for(i=0;i<nb;i++)
     {
+
+      if((cycle-i*dec2)%T==0)
+	{
+	  kinfo[i][0]=(kinfo[i][0]+rand()%101-50);
+	}
+      if((cycle-i*dec2)%dec1==0)
+	{
+	  for(j=sec-1;j>0;j--)
+	    {
+	      kinfo[i][j]=kinfo[i][j-1];
+	    }
+	}
+      somsin=sin(omega2*((cycle-i*dec2)/2+1))*sin(omega2*(cycle-i*dec2)/2)/sin(omega2/2); //formule de la somme de sinus by constance !
       for(j=0;j<sec;j++)
 	{
-	  if(j==0){//problème : on bouge le centre de roation en faisant translation pas corriger ensuite !
-	    tmp=definirPoint3d(-120*sin(i*2*M_PI/nb),lh/2.0,120*cos(i*2*M_PI/nb));
-	    dy=definirPoint3d(0,sin(omega*cycle/2),0);
+	  if(j==0){
+	    dy=definirPoint3d(0,sin(omega2*(cycle-i*dec2)),0);
 	    translationScene3d(tab[i][j],dy);
 	    free(dy);
+	    tmp=definirPoint3d(-120*sin(i*2*M_PI/nb),lh/2.0+somsin,120*cos(i*2*M_PI/nb));
 	  }
 	  else{
 	    tmp=definirPoint3d(0,-lh*pow(raph,j-1)/2.0,0);
 	  }
-	  if(cycle-dec*j>=0){
-	  inv=pow(-1,((cycle-dec*j)/T)%2);
-	  rotationScene3d(tab[i][j],tmp,inv*cos(i*2*M_PI/nb)*sin(omega*(cycle-dec*j)),0,inv*sin(i*2*M_PI/nb)*sin(omega*(cycle-dec*j)));
-	  }
+	  if(cycle-i*dec2-dec1*j>=0){
+	    inv=pow(-1,((cycle-i*dec2-dec1*j)/T)%2);
+
+	    rotationScene3d(tab[i][j],tmp,inv*cos(kinfo[i][j]*M_PI/180)*sin(omega*(cycle-i*dec2-dec1*j)),0,inv*sin(kinfo[i][j]*M_PI/180)*sin(omega*(cycle-i*dec2-dec1*j)));
+	   }
 	  free(tmp);
 	}
     }
