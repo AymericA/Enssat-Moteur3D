@@ -292,7 +292,7 @@ void affscene(t_scene3d*scene)
     }
 }
 
-t_scene3d*dragon(t_scene3d** tab[5])
+t_scene3d*dragon(t_scene3d** tab[5]) //tete, cou, queue, ailed, ailg 
 {
   t_scene3d* tete[3];
   t_scene3d* cou[5];
@@ -484,6 +484,17 @@ t_scene3d*dragon(t_scene3d** tab[5])
   return body;
 }
 
+void Udragon(t_scene3d**tabd[5],int cycle)
+{
+  //anim cou 2 (12)
+  for(i=0;i<12;i++)
+    {
+      translationScene3d(tabd[2][i],tmp);
+      
+    }
+
+}
+
 
 void mer_init(int nx,int nz,Uint32 tabc[nx][nz])
 {
@@ -571,6 +582,24 @@ t_scene3d*mer(double lx,double lz,int nx,int nz,Uint32 tabc[nx][nz],t_scene3d*ta
     }
 
   return main;
+}
+
+
+void ksolp(t_scene3d*sn,t_bool btabs[3],int csolp)
+{
+  t_point3d*tmp;
+  if(btabs[0])
+    tmp=definirPoint3d(0,-5,0);
+  else
+    tmp=definirPoint3d(0,5,0);
+  translationScene3d(sn,tmp);
+  if(csolp%100==0){
+    btabs[1]=false;   //mouvement fini
+    if(btabs[0])      //actualisation de la position avec un toggle
+      btabs[0]=false; 
+    else
+      btabs[0]=true;
+  }
 }
 
 void kapp(t_scene3d*baset,t_bool btabk[3],int ckapp)
@@ -661,15 +690,16 @@ void Ukraken(int nb,int sec,t_scene3d*tab[nb][sec],int kinfo[nb][sec],double lh,
   float omega=2*M_PI/T;
   float omega2=omega/1.4;
   int dec1=16;
-  int dec2=20;
+  int dec2=50;
   int inv=1;
   float somsin;
+  float roty=0;
   for(i=0;i<nb;i++)
     {
 
       if((cycle-i*dec2)%T==0)
 	{
-	  kinfo[i][0]=(kinfo[i][0]+rand()%101-50);
+	  kinfo[i][0]=(kinfo[i][0]+rand()%101-50)%360;
 	}
       if((cycle-i*dec2)%dec1==0)
 	{
@@ -686,14 +716,16 @@ void Ukraken(int nb,int sec,t_scene3d*tab[nb][sec],int kinfo[nb][sec],double lh,
 	    translationScene3d(tab[i][j],dy);
 	    free(dy);
 	    tmp=definirPoint3d(-120*sin(i*2*M_PI/nb),lh/2.0+somsin,120*cos(i*2*M_PI/nb));
+	    roty=0;
 	  }
 	  else{
+	    roty=0;
 	    tmp=definirPoint3d(0,-lh*pow(raph,j-1)/2.0,0);
 	  }
 	  if(cycle-i*dec2-dec1*j>=0){
 	    inv=pow(-1,((cycle-i*dec2-dec1*j)/T)%2);
 
-	    rotationScene3d(tab[i][j],tmp,inv*cos(kinfo[i][j]*M_PI/180)*sin(omega*(cycle-i*dec2-dec1*j)),0,inv*sin(kinfo[i][j]*M_PI/180)*sin(omega*(cycle-i*dec2-dec1*j)));
+	    rotationScene3d(tab[i][j],tmp,inv*cos(kinfo[i][j]*M_PI/180)*sin(omega*(cycle-i*dec2-dec1*j)),roty,inv*sin(kinfo[i][j]*M_PI/180)*sin(omega*(cycle-i*dec2-dec1*j)));
 	   }
 	  free(tmp);
 	}

@@ -60,45 +60,26 @@ int main(int argc,char** argv)
   double h = -500;
   
   t_objet3d*c1=camera();
-  t_objet3d*c2=camera();
-  
-  Uint32 bula=BLANC;
-
-  //  Uint32 c1p1=ROUGEF,c2p1=GRISC;
 
   t_objet3d*p1=objet_vide();//damier(800,800,16,16,NULL,NULL);
-  t_objet3d*s1=sphere(100,10,20,&bula);
-  t_objet3d*t1=tore(100,10,10,50,&bula);
-  t_objet3d*n1=n64(100);
-
+  
   t_scene3d*scene;
 
   t_scene3d*sc1=creerScene3d(c1);
-
   ajoutObjet3d(sc1,p1);
   t_scene3d*sp1=sc1->fils;
 
-  
-  ajoutObjet3d(sp1,t1);
-  t_scene3d*ss1=sp1->fils;
-  /*
-  ajoutObjet3d(ss1,t1);
-  t_scene3d*st1=ss1->fils;
-
-  ajoutObjet3d(sp1,c2);
-  t_scene3d*sc2=sp1->fils;
-
-  ajoutObjet3d(sp1,n1);
-  t_scene3d*sn1=sp1->fils;
-  */
-
   scene=sc1;
 
+
+
+  //dragon ?
   t_scene3d**tabd[5];
   t_scene3d*drag=dragon(tabd);
   
-
+  ajoutfils(sp1,drag);
   
+
   //la mer !
   t_scene3d*tabm1[20][20];
   t_scene3d*tabm2[20][20];
@@ -121,19 +102,41 @@ int main(int argc,char** argv)
   t_scene3d*tabp[5];
 
 
+
+  //soleil
+  int csolp=0;
+  Uint32 stabc[3]={ROUGEF,VERTF,BLEUF};
+  t_bool btabs[3]={false,false,true}; //bas, move, anim
+  t_objet3d*n1=n64(80);
+  t_objet3d*t1=tore(85,5,10,50,&stabc[0]);//r1 r2 nlat nlong
+  t_objet3d*t2=tore(100,5,10,50,&stabc[1]);
+  t_objet3d*t3=tore(115,5,10,50,&stabc[2]);
+  ajoutObjet3d(sp1,n1);
+  t_scene3d*sn1=sp1->fils;
+  ajoutObjet3d(sn1,t1);
+  t_scene3d*st1=sn1->fils;
+  ajoutObjet3d(st1,t2);
+  t_scene3d*st2=st1->fils;
+  ajoutObjet3d(st2,t3);
+  t_scene3d*st3=st2->fils;
+
+
   //kraken !
   int Ctent=0;
   int ckapp=0;
-  t_bool btabk[3]={false,true,true}; //haut, move, anim
+  t_bool btabk[3]={false,false,true}; //haut, move, anim
   t_scene3d*tabt[8][10];
   Uint32 tabct[8][10];
   int kinfo[8][10];
   t_scene3d*baset=tentacle(8,10,tabct,tabt,20,0.7,50,0.85);
-  ajoutfils(sp1,baset); 
+  ajoutfils(rive3,baset); 
   kraken_init(8,10,tabct);
   
-  //ajoutfils(sp1,drag);
 
+  //cam 2
+  t_objet3d*c2=camera();
+  ajoutObjet3d(baset,c2);
+  t_scene3d*sc2=baset->fils;  
 
   vecteur=definirPoint3d(0,150,-500);
   translationScene3d(sp1,vecteur);
@@ -151,24 +154,36 @@ int main(int argc,char** argv)
   translationScene3d(rive3,vecteur);
   free(vecteur);
   
-  vecteur=definirPoint3d(200,250,-200);
+  vecteur=definirPoint3d(0,270,0);
   translationScene3d(baset,vecteur);
   free(vecteur);
 
-   /*
-  vecteur=definirPoint3d(0,-100,0);
+  vecteur=definirPoint3d(0,-900,0);
+  translationScene3d(sn1,vecteur);
+  free(vecteur);
+
+  vecteur=definirPoint3d(0,0,0);
+  rotationScene3d(st2,vecteur,0,0,90);
+  free(vecteur);
+
+  vecteur=definirPoint3d(0,0,0);
+  rotationScene3d(st3,vecteur,90,0,0);
+  free(vecteur);
+
+  vecteur=definirPoint3d(0,0,0);
+  rotationScene3d(sc2,vecteur,0,180,0);
+  free(vecteur);
+
+  vecteur=definirPoint3d(0,0,-400);
+  translationScene3d(sc2,vecteur);
+  free(vecteur);
+
+  
+  vecteur=definirPoint3d(0,-100,-500);
   translationScene3d(drag,vecteur);
   free(vecteur);
-  */
 
-  vecteur=definirPoint3d(0,-400,0);
-  translationScene3d(ss1,vecteur);
-  free(vecteur);
   /*
-  vecteur=definirPoint3d(0,100,0);
-  translationScene3d(st1,vecteur);
-  free(vecteur);
-
   vecteur=definirPoint3d(500,-150,0);
   translationScene3d(sc2,vecteur);
   free(vecteur);
@@ -222,48 +237,17 @@ int main(int argc,char** argv)
 
       SDL_PollEvent(&event);
       switch(event.type){
-	/*
-      case SDL_MOUSEMOTION:
-	if(is_button_down)
-	  {
-	    int xd,yd;
-	    t_point3d *centre = definirPoint3d(0, 0, 0);
-	    
-	    xd = event.motion.x;
-	    yd = event.motion.y;
-	
-	    //rotation de la caméra active
-	    // definition : 100px = rotation de 90° sur un axe
-	    rotationScene3d(scene, centre, 90.0*(yd-y)/100.0, 0, 0);
-	    rotationScene3d(scene, centre, 0, -90.0*(xd-x)/100.0, 0);
 
-	    x = xd;
-	    y = yd;
-
-	    free(centre);
-	  }
-	break;
-      case SDL_MOUSEBUTTONDOWN:
-        is_button_down = true;
-        x = event.motion.x;
-        y = event.motion.y;
-	break;
-      case SDL_MOUSEBUTTONUP:
-        is_button_down = false;
-	break;
-	*/
       case SDL_KEYDOWN:
 	switch(event.key.keysym.sym){
-	  /*
-	case SDLK_m:
-	  Racine(sc2);
-	  scene=sc2;
-	  break;
-	case SDLK_l:
+	case SDLK_F1:
 	  Racine(sc1);
 	  scene=sc1;
 	  break;
-	  */
+	case SDLK_F2:
+	  Racine(sc2);
+	  scene=sc2;
+	  break;	  
 	case SDLK_KP9:
 	  dy++;
 	  break;
@@ -302,7 +286,10 @@ int main(int argc,char** argv)
 	  break;       
 	case SDLK_g:
 	  btabk[1]=true;
-	  break;	  
+	  break;	
+	case SDLK_h:
+	  btabs[1]=true;
+	  break;	
 	case SDLK_SPACE:
 	  dx=0;
 	  dy=0;
@@ -365,20 +352,25 @@ int main(int argc,char** argv)
 	kapp(baset,btabk,ckapp);
       }
 
-
-      //printf("i : %d cycle : %d\n",i,Crive);
-
-
-      /*
-      centre=GetcentreR(ss1);
-      rotationScene3d(ss1,centre,0,8,0);
-      free(centre);
-      */      
-      /*
-      centre=GetcentreR(st1);
-      rotationScene3d(st1,centre,5,0,0);
-      free(centre);
-      */
+      if(btabs[2] && (btabs[0] || btabs[1])){
+	centre=GetcentreR(sn1);
+	rotationScene3d(sn1,centre,0,-5,0);
+	free(centre);
+	centre=GetcentreR(st1);
+	rotationScene3d(st1,centre,5,0,0);
+	free(centre);
+	centre=GetcentreR(st2);
+	rotationScene3d(st2,centre,0,5,0);
+	free(centre);
+	centre=GetcentreR(st3);
+	rotationScene3d(st3,centre,0,0,-5);
+	free(centre);
+      }
+      if(btabs[1]){
+	csolp++;
+	ksolp(sn1,btabs,csolp);
+      }
+      
 #endif
 
       afficherFenetre(surface,screen);
