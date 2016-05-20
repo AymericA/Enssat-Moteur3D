@@ -294,17 +294,11 @@ void affscene(t_scene3d*scene)
 
 t_scene3d*dragon(t_scene3d** tab[5]) //tete, cou, queue, ailed, ailg 
 {
-  t_scene3d* tete[3];
-  t_scene3d* cou[5];
-  t_scene3d* queue[12];
-  t_scene3d* ailed[12];
-  t_scene3d* aileg[12];
-
-  t_scene3d* tmps;
-  t_objet3d* tmpo1;
-  t_objet3d* tmpo2;
-  int i;  
-  t_point3d*tmp;
+  t_scene3d**tete=malloc(sizeof(t_scene3d*)*3);
+  t_scene3d**cou=malloc(sizeof(t_scene3d*)*5);
+  t_scene3d**queue=malloc(sizeof(t_scene3d*)*12);
+  t_scene3d**aileg=malloc(sizeof(t_scene3d*)*12);
+  t_scene3d**ailed=malloc(sizeof(t_scene3d*)*12);
  
   tab[0]=tete;
   tab[1]=cou;
@@ -312,6 +306,12 @@ t_scene3d*dragon(t_scene3d** tab[5]) //tete, cou, queue, ailed, ailg
   tab[3]=aileg;
   tab[4]=queue;
 
+  t_scene3d* tmps;
+  t_objet3d* tmpo1;
+  t_objet3d* tmpo2;
+  int i;  
+  t_point3d*tmp;
+ 
   //body + aileron
 
   t_objet3d*corp=parallelepipede(320,120,120,NULL);
@@ -480,19 +480,37 @@ t_scene3d*dragon(t_scene3d** tab[5]) //tete, cou, queue, ailed, ailg
 
   //aile gauche
 
-  
+ 
   return body;
 }
 
 void Udragon(t_scene3d**tabd[5],int cycle)
 {
-  //anim cou 2 (12)
+  int i,inv;
+  int dec=5;
+  t_point3d*tmp;
+  int T=80;
+  float omega=2*M_PI/T;
+  //anim cou 1 (5)
+  for(i=0;i<5;i++)
+    {
+      inv=pow(-1,((cycle-i*dec)/T)%2);
+      tmp=definirPoint3d(0,inv*cos(omega*(cycle-i*dec)),0);
+      translationScene3d(tabd[1][i],tmp);
+      free(tmp);
+       
+    }
+  /*
+  //anim queue 4 (12)
   for(i=0;i<12;i++)
     {
-      translationScene3d(tabd[2][i],tmp);
-      
+      // if(omega*(cycle-i*dec)>=0){
+	tmp=definirPoint3d(0,sin(omega*(cycle-i*dec)),0);
+	translationScene3d(tabd[4][i],tmp);
+	free(tmp);
+	//}
     }
-
+  */
 }
 
 

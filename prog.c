@@ -74,6 +74,7 @@ int main(int argc,char** argv)
 
 
   //dragon ?
+  int cdragon=0;
   t_scene3d**tabd[5];
   t_scene3d*drag=dragon(tabd);
   
@@ -336,12 +337,16 @@ int main(int argc,char** argv)
 
       //bula=echelle_de_couleur(i);
       
-            
+      /*      
       Umer(20,20,10,10,tabm1,Crive,tabc);
       Umer(20,20,10,10,tabm2,Crive,tabc);
       Umer(20,20,10,10,tabm3,Crive,tabc);
       Crive++;
-      
+      */
+
+      Udragon(tabd,cdragon);
+      cdragon++;
+
       if(btabk[2] && (btabk[0] || btabk[1])){
       Ukraken(8,10,tabt,kinfo,60,0.85,Ctent);
       Ctent++;

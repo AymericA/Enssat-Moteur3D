@@ -1,0 +1,62 @@
+penser a add les homotéthie (agrandissement + translation cf wikipédia)
+rajouter importation par fichier
+DRAGON !
+pointeur sur couleur #structure
+
+
+void handle_events()
+{
+    if( event.type == SDL_MOUSEMOTION && is_button_down)
+    {
+        int xd,yd;
+        t_point3d *centre = definirPoint3d(0, 0, 0);
+
+        xd = event.motion.x;
+        yd = event.motion.y;
+
+        //rotation de la camra active
+        // definition : 100px = rotation de 90° sur un axe
+        rotationScene3d(scene, centre, 90.0*(yd-y)/100.0, 0, 0);
+        rotationScene3d(scene, centre, 0, 90.0*(xd-x)/100.0, 0);
+
+
+        x = xd;
+        y = yd;
+
+        free(centre);
+
+    } else if( event.type == SDL_MOUSEBUTTONDOWN ) {
+        is_button_down = true;
+
+        x = event.motion.x;
+        y = event.motion.y;
+    } else if( event.type == SDL_MOUSEBUTTONUP) {
+        is_button_down = false;
+    } else {
+        const Uint8* currentKeyStates = SDL_GetKeyState( NULL );
+        if( currentKeyStates[ SDLK_UP ] ) {
+            t_point3d *deplacement = definirVecteur3d(0,0,10);
+            translationScene3d(scene, deplacement);
+            free(deplacement);
+        } else if ( currentKeyStates[ SDLK_DOWN ] ) {
+            t_point3d *deplacement = definirVecteur3d(0,0,-10);
+            translationScene3d(scene, deplacement);
+            free(deplacement);
+        } else if ( currentKeyStates[ SDLK_0 ] ) {
+            t_point3d *deplacement = definirVecteur3d(0,10,0);
+            translationScene3d(scene, deplacement);
+            free(deplacement);
+        } else if ( currentKeyStates[ SDLK_9 ] ) {
+            t_point3d *deplacement = definirVecteur3d(0,-10,0);
+            translationScene3d(scene, deplacement);
+            free(deplacement);
+        } else if ( currentKeyStates[ SDLK_1 ] ) {
+            changerCamera(cams[0]);
+            scene = cams[0];
+        } else if ( currentKeyStates[ SDLK_2 ] ) {
+            changerCamera(cams[1]);
+            scene = cams[1];
+        }
+
+    }
+}
