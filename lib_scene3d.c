@@ -486,31 +486,34 @@ t_scene3d*dragon(t_scene3d** tab[5]) //tete, cou, queue, ailed, ailg
 
 void Udragon(t_scene3d**tabd[5],int cycle)
 {
-  int i,inv;
-  int dec=5;
+  int i;
+  float inv;
+  int dec=3;
   t_point3d*tmp;
-  int T=80;
-  float omega=2*M_PI/T;
+  int T1=55;
+  float omega1=2*M_PI/T1;
+  int T2=55;
+  float omega2=2*M_PI/T2;
+
+  
   //anim cou 1 (5)
   for(i=0;i<5;i++)
     {
-      inv=pow(-1,((cycle-i*dec)/T)%2);
-      tmp=definirPoint3d(0,inv*cos(omega*(cycle-i*dec)),0);
+     
+      tmp=definirPoint3d(0,1.5*sin(omega2*(cycle-((8+i)*dec))),0);
       translationScene3d(tabd[1][i],tmp);
-      free(tmp);
-       
+      free(tmp); 
     }
-  /*
+  
+ 
   //anim queue 4 (12)
   for(i=0;i<12;i++)
     {
-      // if(omega*(cycle-i*dec)>=0){
-	tmp=definirPoint3d(0,sin(omega*(cycle-i*dec)),0);
-	translationScene3d(tabd[4][i],tmp);
-	free(tmp);
-	//}
+      tmp=definirPoint3d(0,1.5*sin(omega1*(cycle-i*dec)),0);
+      translationScene3d(tabd[4][i],tmp);
+      free(tmp);
     }
-  */
+  
 }
 
 
