@@ -108,31 +108,31 @@ void __calculerBornes(int xi,int yi,int xf,int yf,
 }
 #else
 void __calculerBornes(int xi,int yi,int xf,int yf,
-		int *xmin,int *xmax,int ymin)
+		      int *xmin,int *xmax,int ymin)
 {
   int y;
   
   if (xi!=xf && yi!=yf)
-  {
-    double a,b;
-    a=((double)(yf-yi))/(xf-xi);
-    b=yf-a*xf;
+    {
+      double a,b;
+      a=((double)(yf-yi))/(xf-xi);
+      b=yf-a*xf;
 
-	for(y=MIN(yi,yf);y< MAX(yi,yf);y++)
+      for(y=MIN(yi,yf);y< MAX(yi,yf);y++)
 	{
-	__majMinMax((y-b)/a,y,xmin,xmax);
+	  __majMinMax((y-b)/a,y,xmin,xmax);
 	}
-  } else if (xi==xf) { /* xi==xf && yi!=yf */
-	for(y=MIN(yi,yf);y< MAX(yi,yf);y++)
-	{
-	   __majMinMax(xi,y,xmin,xmax);
-	}    
+    } else if (xi==xf) { /* xi==xf && yi!=yf */
+    for(y=MIN(yi,yf);y< MAX(yi,yf);y++)
+      {
+	__majMinMax(xi,y,xmin,xmax);
+      }    
   } else if (yi>=0 && yi<RY) { /* xi!=xf && yi==yf */
-	  int xm = MIN(xi,xf), xM = MAX(xi,xf);
-	  if ( xm>0 && xm < xmin[yi] )
-	    xmin[yi] = xi;
-	  if ( xi<RX && xi > xmax[yi] )
-	    xmax[yi] = xi;
+    int xm = MIN(xi,xf), xM = MAX(xi,xf);
+    if ( xm>0 && xm < xmin[yi] )
+      xmin[yi] = xi;
+    if ( xi<RX && xi > xmax[yi] )
+      xmax[yi] = xi;
   }
 }
 #endif
@@ -154,11 +154,11 @@ void remplirTriangle2d(t_surface * surface, t_triangle2d * triangle,double A,dou
   /*__imprimerTriangle2d(triangle);*/
   ymin = triangle->t[0].y;
   ymax = triangle->t[2].y;
-/*  for ( y = 0 ; y < RY ; y++ ){
-    xmax[y] = 0;
-    xmin[y] = RX-1;
-  }
-*/
+  /*  for ( y = 0 ; y < RY ; y++ ){
+      xmax[y] = 0;
+      xmin[y] = RX-1;
+      }
+  */
   
   __calculerBornes(triangle->t[0].x, triangle->t[0].y,
 		   triangle->t[1].x, triangle->t[1].y,
@@ -170,27 +170,25 @@ void remplirTriangle2d(t_surface * surface, t_triangle2d * triangle,double A,dou
 		   triangle->t[2].x, triangle->t[2].y,
 		   xmin,xmax,ymin);
 
- double Ch = C*h;
+  double Ch = C*h;
   double Dh = D*h;
   double By = B*(MAX(0,ymin)-RY/2.0);
   for (y = MAX(0,ymin) ; y <= MIN(RY-1,ymax) ; y++ ){
     double Ax = A*(xmin[y]-RX/2.0);
     for (x = xmin[y] ; x <= xmax[y] ; x++ ){
-      //if(x>0 && x<=RX && y>0 && y<= RY){    //première condition pixel dans le cadre (utile ?)
-	//z=t*h
-	//double tmp =A*(x-RX/2)+B*(y-RY/2)+C*h;
-	double tmp = Ax+By+Ch;
-	if(tmp){ //vérif aplanéisme
-	  t=-Dh/tmp;
-	  if(t>screen[y][x].z && t<0){ //deuxième vérif pixel pas derrière caméra
-	    screen[y][x].couleur=c;
-	    screen[y][x].z=t;
-	  }
-	Ax += A/2.0;
+      //double z=t*h;
+      //double tmp=A*(x-RX/2)+B*(y-RY/2)+C*h;
+      double tmp = Ax+By+Ch;
+      if(tmp){ //vérif aplanéisme
+	t=-Dh/tmp;
+	if(t>screen[y][x].z && t<0){ //deuxième vérif pixel pas derrière caméra
+	  screen[y][x].couleur=c;
+	  screen[y][x].z=t;
 	}
-      By += B/2.0;
-      //}
+      }
+      Ax += A/2;
     }
+    By += B/2;
     xmin[y] = RX-1;
     xmax[y] = 0;
   }
