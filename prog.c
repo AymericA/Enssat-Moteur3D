@@ -76,7 +76,8 @@ int main(int argc,char** argv)
   //dragon ?
   int cdragon=0;
   t_scene3d**tabd[5];
-  t_scene3d*drag=dragon(tabd);
+  Uint32*tabdc[5];
+  t_scene3d*drag=dragon(tabd,tabdc);
   
   ajoutfils(sp1,drag);
   
@@ -92,11 +93,11 @@ int main(int argc,char** argv)
   t_scene3d*rive3=mer(400,400,20,20,tabc,tabm3);
   int Crive=0;
 
-  
+  /*
   ajoutfils(sp1,rive1); 
   ajoutfils(sp1,rive2);
   ajoutfils(sp1,rive3);
-  
+  */
 
   //le pont !
   t_bool btabp[3]={false,true,false}; //haut, move, anim
@@ -343,10 +344,10 @@ int main(int argc,char** argv)
       Umer(20,20,10,10,tabm3,Crive,tabc);
       Crive++;
       */
-
+      
       Udragon(tabd,cdragon);
       cdragon++;
-
+      
       if(btabk[2] && (btabk[0] || btabk[1])){
       Ukraken(8,10,tabt,kinfo,60,0.85,Ctent);
       Ctent++;

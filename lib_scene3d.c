@@ -293,19 +293,31 @@ void affscene(t_scene3d*scene)
     }
 }
 
-t_scene3d*dragon(t_scene3d** tab[5]) //tete, cou, queue, ailed, ailg 
+t_scene3d*dragon(t_scene3d** tab[5],Uint32*tabdc[5]) //tete, cou, queue, ailed, ailg 
 {
   t_scene3d**tete=malloc(sizeof(t_scene3d*)*3);
   t_scene3d**cou=malloc(sizeof(t_scene3d*)*5);
   t_scene3d**queue=malloc(sizeof(t_scene3d*)*12);
-  t_scene3d**aileg=malloc(sizeof(t_scene3d*)*8);
-  t_scene3d**ailed=malloc(sizeof(t_scene3d*)*8);
+  t_scene3d**aileg=malloc(sizeof(t_scene3d*)*5);
+  t_scene3d**ailed=malloc(sizeof(t_scene3d*)*5);
  
   tab[0]=tete;
   tab[1]=cou;
   tab[2]=ailed;
   tab[3]=aileg;
   tab[4]=queue;
+
+  Uint32*tetec=malloc(sizeof(Uint32)*3);
+  Uint32*couc=malloc(sizeof(Uint32)*3);
+  Uint32*queuec=malloc(sizeof(Uint32)*3);
+  Uint32*ailegc=malloc(sizeof(Uint32)*3);
+  Uint32*ailedc=malloc(sizeof(Uint32)*3);
+
+  tabdc[0]=tetec;
+  tabdc[1]=couc;
+  tabdc[2]=ailedc;
+  tabdc[3]=ailegc;
+  tabdc[4]=queuec;
 
   t_scene3d* tmps;
   t_objet3d* tmpo1;
@@ -478,90 +490,132 @@ t_scene3d*dragon(t_scene3d** tab[5]) //tete, cou, queue, ailed, ailg
   free(tmp);
 
   //aile droite
-
-  t_point3d *p1d = definirPoint3d(0,0,280);
+  t_point3d *p0d = definirPoint3d(0,0,0);
+  t_point3d *p1d = definirPoint3d(0,-100,280);
   t_point3d *p2d = definirPoint3d(-235,0,225);
+
   t_point3d *p3d = definirPoint3d(-280,0,0);
-  t_point3d *p4d = definirPoint3d(-235,0,-225);
-  t_point3d *p5d = definirPoint3d(0,0,-280);
-  t_point3d *p6d = definirPoint3d(0,0,0);
+  t_point3d *p4d = definirPoint3d(-205,0,-130);
+  t_point3d *p5d = definirPoint3d(0,-100,-280);
 
-  t_triangle3d*t1d=definirTriangle3d(p1d,p2d,p6d);
-  t_triangle3d*t2d=definirTriangle3d(p2d,p3d,p6d);
-  t_triangle3d*t3d=definirTriangle3d(p3d,p4d,p6d);
-  t_triangle3d*t4d=definirTriangle3d(p4d,p5d,p6d);
-
-  t_objet3d*ad=objet_vide();
+  t_triangle3d*t1d=definirTriangle3d(p0d,p1d,p2d);
+  t_triangle3d*t2d=definirTriangle3d(p0d,p2d,p3d);
+  t_triangle3d*t3d=definirTriangle3d(p0d,p3d,p4d);
+  t_triangle3d*t4d=definirTriangle3d(p0d,p4d,p5d);
 
   Uint32* rougef=malloc(sizeof(Uint32));
+  Uint32* rougec=malloc(sizeof(Uint32));
   *rougef=ROUGEF;
-
-  __insere_tete_chaine(ad,__cree_chaine(p1d));
-  __insere_tete_chaine(ad,__cree_chaine(p2d));
-  __insere_tete_chaine(ad,__cree_chaine(p3d));
-  __insere_tete_chaine(ad,__cree_chaine(p4d));
-  __insere_tete_chaine(ad,__cree_chaine(p5d));
-  __insere_tete_chaine(ad,__cree_chaine(p6d));
-
-  __insere_tete(ad, __cree_maillon(t1d,rougef));
-  __insere_tete(ad, __cree_maillon(t2d,rougef));
-  __insere_tete(ad, __cree_maillon(t3d,rougef));
-  __insere_tete(ad, __cree_maillon(t4d,rougef));
-
+  *rougec=VERTC;
+  
   t_objet3d*b1d=parallelepipede(40,40,280,rougef);
-
   t_objet3d*b2d=parallelepipede(20,20,280,rougef);
-
+  t_objet3d*b3d=parallelepipede(280,20,20,rougef);
+  t_objet3d*b4d=objet_vide();
+  t_objet3d*b5d=objet_vide();
+  
+  tmp=definirPoint3d(0,0,-140);
+  translationObjet3d(b1d,tmp);
+  free(tmp);
+  tmp=definirPoint3d(0,0,140);
+  translationObjet3d(b2d,tmp);
+  free(tmp);
+  tmp=definirPoint3d(-140,0,0);
+  translationObjet3d(b3d,tmp);
+  free(tmp);
+  
+  __insere_tete_chaine(b1d,__cree_chaine(p0d));
+  __insere_tete_chaine(b3d,__cree_chaine(p3d));
+  
+  __insere_tete_chaine(b4d,__cree_chaine(p4d));
+  __insere_tete_chaine(b1d,__cree_chaine(p5d));
+  
+  __insere_tete_chaine(b5d,__cree_chaine(p1d));
+  __insere_tete_chaine(b2d,__cree_chaine(p2d));
+  
+  __insere_tete(b2d, __cree_maillon(t1d,rougec)); 
+  __insere_tete(b1d, __cree_maillon(t4d,rougec));
+  __insere_tete(b3d, __cree_maillon(t2d,rougec));
+  __insere_tete(b3d, __cree_maillon(t3d,rougec));
+  
   ajoutObjet3d(body,b1d);
   ailed[0]=body->fils;
-
-  tmp=definirPoint3d(80,0,200);
+  tmp=definirPoint3d(80,0,340);
   translationScene3d(ailed[0],tmp);
   free(tmp);
 
   ajoutObjet3d(ailed[0],b2d);
   ailed[1]=ailed[0]->fils;
-
-  tmp=definirPoint3d(0,0,280);
+  tmp=definirPoint3d(0,0,0);
   translationScene3d(ailed[1],tmp);
   free(tmp);
 
+  ajoutObjet3d(ailed[0],b3d);
+  ailed[2]=ailed[0]->fils;
+  tmp=definirPoint3d(0,0,0);
+  translationScene3d(ailed[2],tmp);
+  free(tmp);
+  
+  ajoutObjet3d(ailed[0],b4d);
+  ailed[3]=ailed[0]->fils;
+  tmp=definirPoint3d(0,0,0);
+  translationScene3d(ailed[3],tmp);
+  free(tmp);
+
+  ajoutObjet3d(ailed[1],b5d);
+  ailed[4]=ailed[1]->fils;
+  tmp=definirPoint3d(0,0,0);
+  translationScene3d(ailed[4],tmp);
+  free(tmp);
+  
   //aile gauche
+  t_point3d *p0g = definirPoint3d(0,0,-140);
+  t_point3d *p1g = definirPoint3d(0,0,140);
+  t_point3d *p2g = definirPoint3d(-235,0,-85);
 
-  t_point3d *p1g = definirPoint3d(0,0,-280);
-  t_point3d *p2g = definirPoint3d(-235,0,-225);
-  t_point3d *p3g = definirPoint3d(-280,0,0);
-  t_point3d *p4g = definirPoint3d(-235,0,225);
-  t_point3d *p5g = definirPoint3d(0,0,280);
-  t_point3d *p6g = definirPoint3d(0,0,0);
+  t_point3d *p3g = definirPoint3d(0,0,140);
+  t_point3d *p4g = definirPoint3d(0,0,-140);
+  t_point3d *p5g = definirPoint3d(-205,0,-10);
 
-  t_triangle3d*t1g=definirTriangle3d(p1d,p2d,p6d);
-  t_triangle3d*t2g=definirTriangle3d(p2d,p3d,p6d);
-  t_triangle3d*t3g=definirTriangle3d(p3d,p4d,p6d);
-  t_triangle3d*t4g=definirTriangle3d(p4d,p5d,p6d);
+  t_point3d *p6g = definirPoint3d(140,0,0);
+  t_point3d *p7g = definirPoint3d(-95,0,-225);
+  t_point3d *p8g = definirPoint3d(-65,0,130);
+  t_point3d *p9g = definirPoint3d(-140,0,0);
+  
 
-  t_objet3d*ag=objet_vide();
+  t_triangle3d*t1g=definirTriangle3d(p0g,p1g,p2g);
+  t_triangle3d*t2g=definirTriangle3d(p3g,p4g,p5g);
+  t_triangle3d*t3g=definirTriangle3d(p6g,p7g,p9g);
+  t_triangle3d*t4g=definirTriangle3d(p6g,p8g,p9g);
 
-
-  __insere_tete_chaine(ag,__cree_chaine(p1d));
-  __insere_tete_chaine(ag,__cree_chaine(p2d));
-  __insere_tete_chaine(ag,__cree_chaine(p3d));
-  __insere_tete_chaine(ag,__cree_chaine(p4d));
-  __insere_tete_chaine(ag,__cree_chaine(p5d));
-  __insere_tete_chaine(ag,__cree_chaine(p6d));
-
-  __insere_tete(ad, __cree_maillon(t1g,rougef));
-  __insere_tete(ad, __cree_maillon(t2g,rougef));
-  __insere_tete(ad, __cree_maillon(t3g,rougef));
-  __insere_tete(ad, __cree_maillon(t4g,rougef));
-
+ 
+  
   t_objet3d*b1g=parallelepipede(40,40,280,rougef);
   t_objet3d*b2g=parallelepipede(20,20,280,rougef);
+  t_objet3d*b3g=parallelepipede(280,20,20,rougef);
+
+  __insere_tete_chaine(b2g,__cree_chaine(p0g));
+  __insere_tete_chaine(b2g,__cree_chaine(p1g));
+  __insere_tete_chaine(b2g,__cree_chaine(p2g));
+
+  __insere_tete_chaine(b3g,__cree_chaine(p6g));
+  __insere_tete_chaine(b3g,__cree_chaine(p7g));
+  __insere_tete_chaine(b3g,__cree_chaine(p8g));
+  __insere_tete_chaine(b3g,__cree_chaine(p9g));
+
+  __insere_tete_chaine(b1g,__cree_chaine(p3g));
+  __insere_tete_chaine(b1g,__cree_chaine(p4g));
+  __insere_tete_chaine(b1g,__cree_chaine(p5g));
+
+  __insere_tete(b2g, __cree_maillon(t1g,rougec)); 
+  __insere_tete(b1g, __cree_maillon(t2g,rougec));
+  __insere_tete(b3g, __cree_maillon(t3g,rougec));
+  __insere_tete(b3g, __cree_maillon(t4g,rougec));
 
   ajoutObjet3d(body,b1g);
   aileg[0]=body->fils;
 
-  tmp=definirPoint3d(80,0,-200);
+  tmp=definirPoint3d(80,-10,-200);
   translationScene3d(aileg[0],tmp);
   free(tmp);
 
@@ -570,6 +624,13 @@ t_scene3d*dragon(t_scene3d** tab[5]) //tete, cou, queue, ailed, ailg
 
   tmp=definirPoint3d(0,0,-280);
   translationScene3d(aileg[1],tmp);
+  free(tmp);
+
+  ajoutObjet3d(aileg[0],b3g);
+  aileg[2]=aileg[0]->fils;
+
+  tmp=definirPoint3d(-140,0,-140);
+  translationScene3d(aileg[2],tmp);
   free(tmp);
 
  
@@ -587,16 +648,47 @@ void Udragon(t_scene3d**tabd[5],int cycle)
   int T2=55;
   float omega2=2*M_PI/T2;
 
-  
+  //anim tete 0 (3)  
+
+
   //anim cou 1 (5)
   for(i=0;i<5;i++)
     {
-     
-      tmp=definirPoint3d(0,1.5*sin(omega2*(cycle-((8+i)*dec))),0);
+      tmp=definirPoint3d(0,1.5*sin(omega1*(cycle-((7+i)*dec))),0); //valeur 7 = distance du corp en element de cou pour faire le raccord du sinus
       translationScene3d(tabd[1][i],tmp);
       free(tmp); 
     }
+
+  //anim ailed 2 (3)
+
+  tmp=definirPoint3d(0,0,60);
+  rotationScene3d(tabd[2][0],tmp,pow(-1,1+((cycle+20)/60)%2),0,0);
+  free(tmp); 
+
+  tmp=definirPoint3d(0,0,0);
+  rotationScene3d(tabd[2][1],tmp,pow(-1,1+((cycle+20)/60)%2),0,0);
+  free(tmp); 
+
+  tmp=definirPoint3d(0,0,0);
+  rotationScene3d(tabd[2][2],tmp,pow(-1,1+((cycle+20)/60)%2),0,0);
+  free(tmp); 
+
+
   
+  //anim aileg 3 (3)
+
+  tmp=definirPoint3d(0,0,0);
+  rotationScene3d(tabd[3][0],tmp,pow(-1,((cycle+20)/60)%2),0,0);
+  free(tmp); 
+
+  tmp=definirPoint3d(0,0,-140);
+  rotationScene3d(tabd[3][1],tmp,pow(-1,((cycle+20)/60)%2),0,0);
+  free(tmp); 
+
+  tmp=definirPoint3d(0,0,-140);
+  rotationScene3d(tabd[3][2],tmp,pow(-1,((cycle+20)/60)%2),0,0);
+  free(tmp); 
+
  
   //anim queue 4 (12)
   for(i=0;i<12;i++)
