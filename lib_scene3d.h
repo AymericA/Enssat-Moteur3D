@@ -54,6 +54,12 @@ t_scene3d*mer(double lx,double ly,int nx,int nz,Uint32 tabc[nx][nz],t_scene3d*ta
 Uint32 next(int lon,Uint32 val,const Uint32 tab[lon]);
 void Umer(int nx,int nz,int freqx,int freqz,t_scene3d*tab[nx][nz],int cycle,Uint32 tabc[nx][nz]);
 
+
+void plage_init(int nx,int nz,Uint32 tabc[nx][nz]);
+void deco_init(int nx,Uint32 tabc[nx]);
+void deco(int sec,Uint32 tabc[sec],t_scene3d*tab[sec],double r,double rapr,double lh,double raph);
+
+
 void kraken_init(int nb,int sec,Uint32 tabc[nb][sec]);
 t_scene3d*tentacle(int nb,int sec,Uint32 tabc[nb][sec],t_scene3d*tab[nb][sec],double r,double rapr,double lh,double raph);
 void Ukraken(int nb,int sec,t_scene3d*tab[nb][sec],int kinfo[nb][sec],double lh,double raph,int cycle);

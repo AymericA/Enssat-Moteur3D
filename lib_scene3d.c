@@ -700,6 +700,32 @@ void Udragon(t_scene3d**tabd[5],int cycle)
   
 }
 
+void plage_init(int nx,int nz,Uint32 tabc[nx][nz])
+{
+  int c,i,j;
+  for(i=0;i<nx;i++){
+    for(j=0;j<nz;j++){
+      switch(rand()%5){
+      case 0:
+	tabc[i][j]=0xcc9f29;
+	break;
+      case 1:
+	tabc[i][j]=0xc9a84f;
+	break;
+      case 2:
+	tabc[i][j]=0xffc52e;
+	break;
+      case 3:
+	tabc[i][j]=0xf6b301;
+	break;
+      case 4:
+	tabc[i][j]=0xf0dca6;
+	break;
+      }
+    }
+  }
+}
+
 
 void mer_init(int nx,int nz,Uint32 tabc[nx][nz])
 {
@@ -788,6 +814,54 @@ t_scene3d*mer(double lx,double lz,int nx,int nz,Uint32 tabc[nx][nz],t_scene3d*ta
 
   return main;
 }
+
+
+void deco_init(int nx,Uint32 tabc[nx])
+{
+  int c,i;
+  for(i=0;i<nx;i++){
+      switch(rand()%5){
+      case 0:
+	tabc[i]=0x856539;
+	break;
+      case 1:
+	tabc[i]=0x8d5622;
+	break;
+      case 2:
+	tabc[i]=0x80461b;
+	break;
+      case 3:
+	tabc[i]=0x5d2c04;
+	break;
+      case 4:
+	tabc[i]=0x4e3119;
+	break;
+      }
+    }
+}
+
+
+void deco(int sec,Uint32 tabdec[sec],t_scene3d*tab[sec],double r,double rapr,double lh,double raph)
+{
+  int i;
+  t_objet3d*tmpo;
+  t_point3d*tmp;
+
+  tmpo=cylindre(lh,r,20,&(tabdec[0]));
+  tab[0]=creerScene3d(tmpo);
+  
+  for(i=1;i<sec-1;i++)
+    {
+      tmpo=cylindre(lh*pow(raph,i),r*pow(rapr,i),20,&(tabdec[i]));
+      ajoutObjet3d(tab[i-1],tmpo);
+      tab[i]=tab[i-1]->fils;
+          
+      tmp=definirPoint3d(0,pow(raph,i)-(lh*(pow(raph,i)+pow(raph,i-1)))/2.0,0);
+      translationScene3d(tab[i],tmp);
+      free(tmp);
+    }
+}
+
 
 
 void ksolp(t_scene3d*sn,t_bool btabs[3],int csolp)

@@ -72,7 +72,6 @@ int main(int argc,char** argv)
   scene=sc1;
 
 
-
   //dragon ?
   int cdragon=0;
   t_scene3d**tabd[5];
@@ -80,7 +79,15 @@ int main(int argc,char** argv)
   t_scene3d*drag=dragon(tabd,tabdc);
   
   ajoutfils(sp1,drag);
+
+  vecteur=definirPoint3d(0,150,-500);
+  translationScene3d(sp1,vecteur);
+  free(vecteur);
   
+  vecteur=definirPoint3d(0,-100,-500);
+  translationScene3d(drag,vecteur);
+  free(vecteur);
+
 
   //la mer !
   t_scene3d*tabm1[20][20];
@@ -93,16 +100,53 @@ int main(int argc,char** argv)
   t_scene3d*rive3=mer(400,400,20,20,tabc,tabm3);
   int Crive=0;
 
-  /*
+  
   ajoutfils(sp1,rive1); 
   ajoutfils(sp1,rive2);
   ajoutfils(sp1,rive3);
-  */
+  
+
+  vecteur=definirPoint3d(-200,-20,200);
+  translationScene3d(rive1,vecteur);
+  free(vecteur);
+
+  vecteur=definirPoint3d(200,-20,200);
+  translationScene3d(rive2,vecteur);
+  free(vecteur);
+
+  vecteur=definirPoint3d(200,-20,-200);
+  translationScene3d(rive3,vecteur);
+  free(vecteur);
+
+
 
   //le pont !
   t_bool btabp[3]={false,true,false}; //haut, move, anim
   t_scene3d*tabp[5];
 
+
+  //la plage
+  Uint32 tabcp[10][30];
+  Uint32 tabdec[15];
+  plage_init(10,30,tabcp);
+  deco_init(15,tabdec);
+
+  t_objet3d*plage=demisphere(100,10,30,tabcp);
+  t_scene3d*palmier[15];
+  deco(15,tabdec,palmier,20,0.9,20,0.95);
+
+  ajoutObjet3d(rive1,plage);
+  t_scene3d*splage=rive1->fils;
+
+  vecteur=definirPoint3d(0,10,0);
+  translationScene3d(splage,vecteur);
+  free(vecteur);
+
+  ajoutfils(rive1,palmier[0]); 
+
+  vecteur=definirPoint3d(0,-90,0);
+  translationScene3d(palmier[0],vecteur);
+  free(vecteur);
 
 
   //soleil
@@ -123,43 +167,6 @@ int main(int argc,char** argv)
   t_scene3d*st3=st2->fils;
 
 
-  //kraken !
-  int Ctent=0;
-  int ckapp=0;
-  t_bool btabk[3]={false,false,true}; //haut, move, anim
-  t_scene3d*tabt[8][10];
-  Uint32 tabct[8][10];
-  int kinfo[8][10];
-  t_scene3d*baset=tentacle(8,10,tabct,tabt,20,0.7,50,0.85);
-  ajoutfils(rive3,baset); 
-  kraken_init(8,10,tabct);
-  
-
-  //cam 2
-  t_objet3d*c2=camera();
-  ajoutObjet3d(baset,c2);
-  t_scene3d*sc2=baset->fils;  
-
-  vecteur=definirPoint3d(0,150,-500);
-  translationScene3d(sp1,vecteur);
-  free(vecteur);
-  
-  vecteur=definirPoint3d(-200,-20,200);
-  translationScene3d(rive1,vecteur);
-  free(vecteur);
-
-  vecteur=definirPoint3d(200,-20,200);
-  translationScene3d(rive2,vecteur);
-  free(vecteur);
-
-  vecteur=definirPoint3d(200,-20,-200);
-  translationScene3d(rive3,vecteur);
-  free(vecteur);
-  
-  vecteur=definirPoint3d(0,270,0);
-  translationScene3d(baset,vecteur);
-  free(vecteur);
-
   vecteur=definirPoint3d(0,-900,0);
   translationScene3d(sn1,vecteur);
   free(vecteur);
@@ -172,6 +179,29 @@ int main(int argc,char** argv)
   rotationScene3d(st3,vecteur,90,0,0);
   free(vecteur);
 
+
+  //kraken !
+  int Ctent=0;
+  int ckapp=0;
+  t_bool btabk[3]={false,false,true}; //haut, move, anim
+  t_scene3d*tabt[8][10];
+  Uint32 tabct[8][10];
+  int kinfo[8][10];
+  t_scene3d*baset=tentacle(8,10,tabct,tabt,20,0.7,50,0.85);
+
+  ajoutfils(rive3,baset); 
+  kraken_init(8,10,tabct);
+
+  vecteur=definirPoint3d(0,270,0);
+  translationScene3d(baset,vecteur);
+  free(vecteur);
+  
+
+  //cam 2
+  t_objet3d*c2=camera();
+  ajoutObjet3d(baset,c2);
+  t_scene3d*sc2=baset->fils;  
+
   vecteur=definirPoint3d(0,0,0);
   rotationScene3d(sc2,vecteur,0,180,0);
   free(vecteur);
@@ -180,24 +210,7 @@ int main(int argc,char** argv)
   translationScene3d(sc2,vecteur);
   free(vecteur);
 
-  
-  vecteur=definirPoint3d(0,-100,-500);
-  translationScene3d(drag,vecteur);
-  free(vecteur);
 
-  /*
-  vecteur=definirPoint3d(500,-150,0);
-  translationScene3d(sc2,vecteur);
-  free(vecteur);
-
-  vecteur=definirPoint3d(200,-50,0);
-  translationScene3d(sn1,vecteur);
-  free(vecteur);
-
-  vecteur=GetcentreR(sc2);
-  rotationScene3d(sc2,vecteur,0,90,0);
-  free(vecteur);
-  */
 
 
 
@@ -338,12 +351,12 @@ int main(int argc,char** argv)
 
       //bula=echelle_de_couleur(i);
       
-      /*      
+            
       Umer(20,20,10,10,tabm1,Crive,tabc);
       Umer(20,20,10,10,tabm2,Crive,tabc);
       Umer(20,20,10,10,tabm3,Crive,tabc);
       Crive++;
-      */
+      
       
       Udragon(tabd,cdragon);
       cdragon++;

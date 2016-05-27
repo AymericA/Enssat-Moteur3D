@@ -52,6 +52,7 @@ t_objet3d* camera(); // == objet vide
 t_objet3d* parallelepipede(double lx, double ly, double lz,Uint32*c);
 // retourne un object alloue mais avec une liste de faces centrees sur (0,0,0) de rayon r avec nlat latitudes et nlong longitudes
 t_objet3d* sphere(double r, double nlat, double nlong,Uint32*c);
+t_objet3d* demisphere(double r, int nlat, int nlong,Uint32 tabc[nlat][nlong]);
 t_objet3d* geode(double r,Uint32*c);
 t_objet3d* cone(double lh,double r, double nlat, double nlong,Uint32*c);
 t_objet3d* cylindre(double lh,double r, double nlong,Uint32*c);
