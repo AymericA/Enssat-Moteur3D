@@ -58,6 +58,7 @@ t_objet3d* cone(double lh,double r, double nlat, double nlong,Uint32*c);
 t_objet3d* cylindre(double lh,double r, double nlong,Uint32*c);
 t_objet3d* tore(double r1,double r2,double nlat,double nlong,Uint32*c);
 t_objet3d* n64(double r);
+t_objet3d* ellipse(double a,double b,int pres,Uint32*c);
 // retourne un object alloue mais avec une liste de faces centrees sur (0,0,0) de rayon r avec nlat latitudes et nlong longitudes, prend des couleurs rouges et blanches sur des carres adjacents, cf google
 t_objet3d* sphere_amiga(double r, double nlat, double nlong,Uint32*c1,Uint32*c2);
 // retourne un object alloue mais avec une liste de faces centrees sur (0,0,0) : c'est un rectangle marron (plusieurs marrons possibles) et une pyramide au verte (plusieurs verts possibles) au sommet

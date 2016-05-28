@@ -122,7 +122,6 @@ void Getcentre_rec(double mat[4][4],t_scene3d*pt_scene3d)
 t_point3d*GetcentreR(t_scene3d*pt_scene3d)
 {
   t_point3d*res=definirPoint3d(0,0,0);
-  double mat[4][4];
   multiplicationVecteur3d(res,pt_scene3d->mat,res);
  return res;
 }
@@ -840,6 +839,25 @@ void deco_init(int nx,Uint32 tabc[nx])
     }
 }
 
+void feuill_init(int nx,Uint32 tabc[nx])
+{
+  int c,i;
+  for(i=0;i<nx;i++){
+      switch(rand()%3){
+      case 0:
+	tabc[i]=0x69b64f;
+	break;
+      case 1:
+	tabc[i]=0x497f37;
+	break;
+      case 2:
+	tabc[i]=0x345b27;
+	break;
+      }
+  }
+}
+
+
 
 void deco(int sec,Uint32 tabdec[sec],t_scene3d*tab[sec],double r,double rapr,double lh,double raph)
 {
@@ -850,7 +868,7 @@ void deco(int sec,Uint32 tabdec[sec],t_scene3d*tab[sec],double r,double rapr,dou
   tmpo=cylindre(lh,r,20,&(tabdec[0]));
   tab[0]=creerScene3d(tmpo);
   
-  for(i=1;i<sec-1;i++)
+  for(i=1;i<sec;i++)
     {
       tmpo=cylindre(lh*pow(raph,i),r*pow(rapr,i),20,&(tabdec[i]));
       ajoutObjet3d(tab[i-1],tmpo);
@@ -862,6 +880,66 @@ void deco(int sec,Uint32 tabdec[sec],t_scene3d*tab[sec],double r,double rapr,dou
     }
 }
 
+
+
+void Uplage(t_scene3d*plage,t_bool btab[4],int cycle)
+{
+  t_point3d*tmp;
+  tmp=GetcentreR(plage);
+  rotationScene3d(plage,tmp,0,0,-2);
+  rotationScene3d(plage->fils,tmp,0,0.333,0);
+  free(tmp);
+  if(cycle%90==0){
+    btab[3]=false;   //mouvement fini
+    if(btab[2])      //actualisation de la position avec un toggle
+      btab[2]=false; 
+    else
+      btab[2]=true;
+  }
+}
+
+void palmier_init(int sec,t_scene3d*tab[sec],double lh,double raph)
+{
+  int i=0;
+  t_point3d*tmp;
+  tmp=definirPoint3d(0,-lh/2,0);
+  rotationScene3d(tab[i],tmp,5,0,0);
+  free(tmp);
+  for(i=1;i<sec;i++){
+    tmp=definirPoint3d(0,-lh*pow(raph,i-1)/2.0,0);
+    rotationScene3d(tab[i],tmp,-0.75,0.5,0.95);
+    free(tmp);
+  }
+}
+
+
+void Upalmier(t_bool btab[4],int n1,int n2,t_scene3d*tab1[n1],t_scene3d*tab2[n2],int cycle)
+{
+  int i;
+  int inv;
+  t_point3d*tmp;
+  t_point3d*origine=definirPoint3d(0,0,0);
+  double omega=2*M_PI/500;
+
+  if(btab[1]){//version fun !
+    for(i=0;i<n2;i++){
+      rotationScene3d(tab2[i],origine,0,15,0);
+    }
+    
+    for(i=1;i<n1;i++){
+      rotationScene3d(tab1[i],origine,(inv+2)%3*0.25*sin(omega*2*(cycle+200)),(inv+1)%3*0.05*sin(omega*2*(cycle+400)),inv*0.25*sin(omega*2*cycle));
+    }
+  }
+  else{
+    for(i=0;i<n2;i++){
+      inv=(cycle/500)%3-1;
+      rotationScene3d(tab2[i],origine,(inv+2)%3*0.05*sin(omega*(cycle+200)),(inv+1)%3*0.05*sin(omega*(cycle+400)),inv*0.05*sin(omega*cycle));
+    }
+    for(i=1;i<n1;i++){
+      rotationScene3d(tab1[i],origine,(inv+2)%3*0.01*sin(omega*(cycle+200)),(inv+1)%3*0.01*sin(omega*(cycle+400)),inv*0.01*sin(omega*cycle));
+    }
+  }
+}
 
 
 void ksolp(t_scene3d*sn,t_bool btabs[3],int csolp)

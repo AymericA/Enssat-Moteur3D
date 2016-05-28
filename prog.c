@@ -24,8 +24,6 @@ int main(int argc,char** argv)
   char buf[50];
   SDL_Event event;
   t_bool fin=true;
-  int turnlr=0,turnhb=0;
-  int db1,db2;
 #ifdef T2D
 
 #endif
@@ -45,18 +43,9 @@ int main(int argc,char** argv)
   t_point3d *vecteur,*centre;
   t_point3d *unitaire = definirPoint3d(1,1,1);
   t_point3d *translation;
-  double Tx=0,Ty=0,Tz=0;
-  double Rx=0,Ry=0,Rz=0;
 
   int dx=0,dy=0,dz=0;
   int drx=0,dry=0,drz=0;
-
-  double mat[4][4];
-  double inv[4][4];
-
-  double tmpmat[4][4];
-  double tmpinv[4][4];
-
   double h = -500;
   
   t_objet3d*c1=camera();
@@ -69,6 +58,12 @@ int main(int argc,char** argv)
   ajoutObjet3d(sc1,p1);
   t_scene3d*sp1=sc1->fils;
 
+
+  vecteur=definirPoint3d(0,150,-500);
+  translationScene3d(sp1,vecteur);
+  free(vecteur);
+
+
   scene=sc1;
 
 
@@ -78,13 +73,9 @@ int main(int argc,char** argv)
   Uint32*tabdc[5];
   t_scene3d*drag=dragon(tabd,tabdc);
   
-  ajoutfils(sp1,drag);
-
-  vecteur=definirPoint3d(0,150,-500);
-  translationScene3d(sp1,vecteur);
-  free(vecteur);
+  //ajoutfils(sp1,drag);
   
-  vecteur=definirPoint3d(0,-100,-500);
+  vecteur=definirPoint3d(0,-600,-500);
   translationScene3d(drag,vecteur);
   free(vecteur);
 
@@ -120,20 +111,51 @@ int main(int argc,char** argv)
 
 
 
-  //le pont !
-  t_bool btabp[3]={false,true,false}; //haut, move, anim
-  t_scene3d*tabp[5];
-
 
   //la plage
+  int cplage=0;
+  int cdeco=0;
+  t_bool btabp[4]={true,false,true,false};//animation palmier, fun?, haut, mouv
   Uint32 tabcp[10][30];
   Uint32 tabdec[15];
+  Uint32 tabcf[5];
+
+  feuill_init(5,tabcf);
   plage_init(10,30,tabcp);
   deco_init(15,tabdec);
 
   t_objet3d*plage=demisphere(100,10,30,tabcp);
   t_scene3d*palmier[15];
+  t_scene3d*feuille[5];
   deco(15,tabdec,palmier,20,0.9,20,0.95);
+  palmier_init(15,palmier,20,0.95);
+
+
+  ////a BOUGER UN JOUR DANS LES SCENE3D (si resolution du bug de la fonction ellipse ?
+  t_scene3d*gen_feuillage(int nb, t_scene3d* tab[nb],Uint32 tabc[nb])
+  {
+    int i;
+    t_objet3d*plan=objet_vide();
+    t_scene3d*main=creerScene3d(plan);
+    t_objet3d*tmpo;
+    t_point3d*tmp;
+    t_point3d*origine=definirPoint3d(0,0,0);
+    for(i=0;i<nb;i++){
+    
+      tmpo=ellipse(100,50,50,&(tabc[i]));    
+      ajoutObjet3d(main,tmpo);
+      tab[i]=main->fils;
+      
+      tmp=definirPoint3d(0,-10,0);
+      rotationScene3d(tab[i],origine,0,i*360/(nb+1),rand()%30);
+      translationScene3d(tab[i],tmp);
+      free(tmp);
+    }
+    free(origine);
+    return main;
+  }
+
+  t_scene3d*feuillage=gen_feuillage(5,feuille,tabcf);
 
   ajoutObjet3d(rive1,plage);
   t_scene3d*splage=rive1->fils;
@@ -142,11 +164,15 @@ int main(int argc,char** argv)
   translationScene3d(splage,vecteur);
   free(vecteur);
 
-  ajoutfils(rive1,palmier[0]); 
+  ajoutfils(splage,palmier[0]); 
 
-  vecteur=definirPoint3d(0,-90,0);
+  vecteur=definirPoint3d(0,-99,0);
   translationScene3d(palmier[0],vecteur);
   free(vecteur);
+
+  ajoutfils(palmier[14],feuillage); 
+
+
 
 
   //soleil
@@ -157,6 +183,7 @@ int main(int argc,char** argv)
   t_objet3d*t1=tore(85,5,10,50,&stabc[0]);//r1 r2 nlat nlong
   t_objet3d*t2=tore(100,5,10,50,&stabc[1]);
   t_objet3d*t3=tore(115,5,10,50,&stabc[2]);
+
   ajoutObjet3d(sp1,n1);
   t_scene3d*sn1=sp1->fils;
   ajoutObjet3d(sn1,t1);
@@ -210,12 +237,23 @@ int main(int argc,char** argv)
   translationScene3d(sc2,vecteur);
   free(vecteur);
 
+  //cam 3
+  t_objet3d*c3=camera();
+  ajoutObjet3d(splage,c3);
+  t_scene3d*sc3=splage->fils;  
+
+  vecteur=definirPoint3d(0,-100,50);
+  translationScene3d(sc3,vecteur);
+  free(vecteur);
+  
+  rotationScene3d(sc3,origine,0,10,0);
 
 
 
 
-  // affscene();
 
+  //affscene(palmier[14]);
+  
 
 #endif
 
@@ -262,7 +300,11 @@ int main(int argc,char** argv)
 	case SDLK_F2:
 	  Racine(sc2);
 	  scene=sc2;
-	  break;	  
+	  break;
+	case SDLK_F3:
+	  Racine(sc3);
+	  scene=sc3;
+	  break;
 	case SDLK_KP9:
 	  dy++;
 	  break;
@@ -304,7 +346,19 @@ int main(int argc,char** argv)
 	  break;	
 	case SDLK_h:
 	  btabs[1]=true;
-	  break;	
+	  break;
+	case SDLK_j:
+	  btabp[3]=true;
+	  break;
+	case SDLK_f:
+	  if(btabp[1])
+	    btabp[1]=false;
+	  break;
+	case SDLK_v:
+	  if(!btabp[1])
+	    btabp[1]=true;
+	  break;
+
 	case SDLK_SPACE:
 	  dx=0;
 	  dy=0;
@@ -321,35 +375,33 @@ int main(int argc,char** argv)
       }    
       
       translation=definirPoint3d(dx,dy,dz);
-      translationScene3d(scene->fils,translation);      
+      translationScene3d(scene,translation);      
       free(translation);
-
-    if(drx<0)
+          
+      if(drx<0)
 	{	
-	  rotationScene3d(scene->fils,origine,-1,0,0);
+	  rotationScene3d(scene,origine,-1,0,0);
 	}
       if(dry<0)
 	{
-	  rotationScene3d(scene->fils,origine,0,-1,0);
+	  rotationScene3d(scene,origine,0,-1,0);
 	}
       if(drz<0)
 	{
-	  rotationScene3d(scene->fils,origine,0,0,-1);
+	  rotationScene3d(scene,origine,0,0,-1);
 	}
       if(drx>0)
 	{
-	  rotationScene3d(scene->fils,origine,1,0,0);
+	  rotationScene3d(scene,origine,1,0,0);
 	}
       if(dry>0)
 	{
-	  rotationScene3d(scene->fils,origine,0,1,0);
+	  rotationScene3d(scene,origine,0,1,0);
 	}
       if(drz>0)
 	{
-	  rotationScene3d(scene->fils,origine,0,0,1);
+	  rotationScene3d(scene,origine,0,0,1);
 	}
-
-      //bula=echelle_de_couleur(i);
       
             
       Umer(20,20,10,10,tabm1,Crive,tabc);
@@ -361,9 +413,11 @@ int main(int argc,char** argv)
       Udragon(tabd,cdragon);
       cdragon++;
       
-      if(btabk[2] && (btabk[0] || btabk[1])){
-      Ukraken(8,10,tabt,kinfo,60,0.85,Ctent);
-      Ctent++;
+
+
+      if(btabk[2] && (btabk[0] || btabk[1])){ //animation des tentacule
+	Ukraken(8,10,tabt,kinfo,60,0.85,Ctent);
+	Ctent++;
       }
 
       if(btabk[1]){
@@ -371,7 +425,7 @@ int main(int argc,char** argv)
 	kapp(baset,btabk,ckapp);
       }
 
-      if(btabs[2] && (btabs[0] || btabs[1])){
+      if(btabs[2] && (btabs[0] || btabs[1])){ //animation du soleil
 	centre=GetcentreR(sn1);
 	rotationScene3d(sn1,centre,0,-5,0);
 	free(centre);
@@ -390,6 +444,16 @@ int main(int argc,char** argv)
 	ksolp(sn1,btabs,csolp);
       }
       
+      if(btabp[3]){
+	cplage++;
+	Uplage(splage,btabp,cplage);
+      }
+
+      if(btabp[0] && btabp[2]){
+	Upalmier(btabp,15,5,palmier,feuille,cdeco);
+	cdeco++;
+      }
+
 #endif
 
       afficherFenetre(surface,screen);
