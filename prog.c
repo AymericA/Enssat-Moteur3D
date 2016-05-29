@@ -50,7 +50,7 @@ int main(int argc,char** argv)
   
   t_objet3d*c1=camera();
 
-  t_objet3d*p1=objet_vide();//damier(800,800,16,16,NULL,NULL);
+  t_objet3d*p1=objet_vide();
   
   t_scene3d*scene;
 
@@ -59,7 +59,7 @@ int main(int argc,char** argv)
   t_scene3d*sp1=sc1->fils;
 
 
-  vecteur=definirPoint3d(0,150,-500);
+  vecteur=definirPoint3d(0,150,-700);
   translationScene3d(sp1,vecteur);
   free(vecteur);
 
@@ -73,11 +73,12 @@ int main(int argc,char** argv)
   Uint32*tabdc[5];
   t_scene3d*drag=dragon(tabd,tabdc);
   
-  //ajoutfils(sp1,drag);
+  ajoutfils(sp1,drag);
   
-  vecteur=definirPoint3d(0,-600,-500);
+  vecteur=definirPoint3d(0,-600,-1200);
   translationScene3d(drag,vecteur);
   free(vecteur);
+
 
 
   //la mer !
@@ -226,32 +227,30 @@ int main(int argc,char** argv)
 
   //cam 2
   t_objet3d*c2=camera();
-  ajoutObjet3d(baset,c2);
-  t_scene3d*sc2=baset->fils;  
+  ajoutObjet3d(sc1,c2);
+  t_scene3d*sc2=sc1->fils;  
 
   vecteur=definirPoint3d(0,0,0);
-  rotationScene3d(sc2,vecteur,0,180,0);
+  rotationScene3d(sc2,vecteur,90,0,0);
   free(vecteur);
 
-  vecteur=definirPoint3d(0,0,-400);
+  vecteur=definirPoint3d(0,-1500,-500);
   translationScene3d(sc2,vecteur);
   free(vecteur);
 
   //cam 3
   t_objet3d*c3=camera();
-  ajoutObjet3d(splage,c3);
-  t_scene3d*sc3=splage->fils;  
+  ajoutObjet3d(sc1,c3);
+  t_scene3d*sc3=sc1->fils;  
 
-  vecteur=definirPoint3d(0,-100,50);
+  vecteur=definirPoint3d(0,0,0);
+  rotationScene3d(sc3,vecteur,90,180,0);
+  free(vecteur);
+
+  vecteur=definirPoint3d(0,-3000,-2500);
   translationScene3d(sc3,vecteur);
   free(vecteur);
   
-  rotationScene3d(sc3,origine,0,10,0);
-
-
-
-
-
   //affscene(palmier[14]);
   
 
@@ -358,7 +357,9 @@ int main(int argc,char** argv)
 	  if(!btabp[1])
 	    btabp[1]=true;
 	  break;
-
+	case SDLK_p:
+	  dragon_init(tabdc);
+	  break;
 	case SDLK_SPACE:
 	  dx=0;
 	  dy=0;
@@ -409,7 +410,14 @@ int main(int argc,char** argv)
       Umer(20,20,10,10,tabm3,Crive,tabc);
       Crive++;
       
-      
+      centre=definirPoint3d(0,0,-2500);
+      rotationScene3d(drag,centre,0,1,0);
+      free(centre);      
+
+      vecteur=definirPoint3d(0,5*cos(M_PI*2*(cdragon+66)/30),0);
+      translationScene3d(drag,vecteur);
+      free(vecteur);
+
       Udragon(tabd,cdragon);
       cdragon++;
       
